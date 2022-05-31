@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/user.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
-
 import '../../../apis/user_api.dart';
-import '../../../store/store.dart';
 
 class LoginController extends GetxController {
   // 手机号的控制器
@@ -24,16 +22,21 @@ class LoginController extends GetxController {
     // }
 
     UserLoginParamsEntity params = UserLoginParamsEntity(
-        username: phoneController.value.text,
+        account: phoneController.value.text,
         // password: duSHA256(passController.value.text),
         password: passController.value.text);
 
     UserLoginResponseEntity userProfile = await UserAPI.login(
       params: params,
     );
-    UserStore.to.saveProfile(userProfile);
+    // if (userProfile.code == SERVER_RESULT_OK) {
+    //   UserStore.to.saveProfile(userProfile);
+    //   Get.offAndToNamed(Routes.HOME);
+    // } else {
+    //   toastInfo(msg: userProfile.msg!);
+    // }
 
-    Get.offAndToNamed(Routes.HOME);
+    Get.offAndToNamed(Routes.MAIN);
   }
 
   @override

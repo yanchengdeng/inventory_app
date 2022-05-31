@@ -2,9 +2,9 @@ import '../entity/user.dart';
 import '../utils/http.dart';
 
 /// 用户
-class UserAPI {
+class UserAPI<T> {
   /// 登录
-  static Future<UserLoginResponseEntity> login({
+  static Future<UserLoginResponseEntity> login<T>({
     UserLoginParamsEntity? params,
   }) async {
     var response = await HttpUtil().post(

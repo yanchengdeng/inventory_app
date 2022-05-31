@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:inventory_app/app/common/zh_hans.dart';
-import 'package:inventory_app/app/data/login_params.dart';
-
 import '../controllers/login_controller.dart';
-import 'package:inventory_app/app/data/login_params.dart';
 
 ///
 ///登录页
@@ -13,9 +9,7 @@ import 'package:inventory_app/app/data/login_params.dart';
 ///
 ///
 
-
 class LoginView extends GetView<LoginController> {
-  final loginParams = login_params();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,29 +27,31 @@ class LoginView extends GetView<LoginController> {
                   TextFormField(
                     autofocus: true,
                     textInputAction: TextInputAction.next,
+                    maxLines: 1,
                     decoration: const InputDecoration(
                       filled: true,
-                      hintText: '请输入手机号',
-                      labelText: '手机号',
+                      hintText: '请输入用户名',
+                      labelText: '用户名',
                     ),
-                    onChanged: (value) {
-                      loginParams.phone = value;
-                    },
+                    controller: controller.phoneController,
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
                       filled: true,
+                      hintText: "请输入密码",
                       labelText: '密码',
                     ),
                     obscureText: true,
-                    onChanged: (value) {
-                      loginParams.password = value;
-                    },
+                    maxLines: 1,
+                    // onChanged: (value) {
+                    //   loginParams.password = value;
+                    // },
+                    controller: controller.passController,
                   ),
                   TextButton(
                     child: const Text('登录'),
-                    onPressed: ()  {
-                     
+                    onPressed: () async {
+                      controller.handleSignIn();
                     },
                   ),
                 ].expand(

@@ -10,8 +10,46 @@ dependencies:
   get: 4.6.5
   flutter: 
     sdk: flutter
-  dio: ^4.0.4
-  shared_preferences: ^2.0.10
+
+  flutter_localizations: 
+    sdk: flutter
+  # localization:^2.1.0
+  
+  # 屏幕适配
+  flutter_screenutil: ^5.0.0+2
+
+
+ # 下拉刷新
+  pull_to_refresh: ^2.0.0
+
+  # toast
+  fluttertoast: ^8.0.7
+
+  # easyloading
+  flutter_easyloading: ^3.0.3
+
+   # http
+  dio: ^4.0.0
+  dio_cookie_manager: ^2.0.0
+  cookie_jar: ^3.0.1
+ 
+
+   # 缓存
+  shared_preferences: ^2.0.5
+  cached_network_image: ^3.0.0
+  flutter_cache_manager: ^3.0.2
+
+  # loading
+  loading_animations: ^2.2.0
+
+   # 设备信息
+  device_info: ^2.0.0
+
+  # 包信息
+  package_info: ^2.0.0
+
+   # 日期
+  intl: ^0.17.0
 
 dev_dependencies: 
   flutter_test: 
@@ -19,5 +57,10 @@ dev_dependencies:
 
 
 flutter: 
+
+  assets:
+    - assets/images/
+
+
   uses-material-design: true
 

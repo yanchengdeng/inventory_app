@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
-
+import 'package:flutter/material.dart';
+import 'package:inventory_app/app/routes/observers.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -11,6 +12,8 @@ part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
+   static final RouteObserver<Route> observer = RouteObservers();
+  static List<String> history = [];
 
   static const INITIAL = Routes.LOGIN;
 

@@ -6,7 +6,12 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text('首页')),
+      appBar: AppBar(
+        title: const Text('BottomNavigationBar Sample'),
+      ),
+      body: Center(
+        child: Text('fsdfsdfsdf'),
+      ),
     );
   }
 }

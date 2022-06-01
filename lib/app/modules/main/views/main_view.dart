@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:inventory_app/app/style/color.dart';
 
 import '../../home/views/home_view.dart';
 import '../../mine/views/mine_view.dart';
@@ -25,16 +26,15 @@ class MainView extends GetView<MainController> {
           onTap: controller.changeTabIndex,
           currentIndex: controller.tabIndex,
           type: BottomNavigationBarType.fixed,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
+          selectedItemColor: AppColor.accentColor,
           items: [
-            _bottomNavigationBarItem(
-              icon: CupertinoIcons.home,
-              label: 'Home',
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "首页"
             ),
-            _bottomNavigationBarItem(
-              icon: CupertinoIcons.person,
-              label: 'Account',
+             BottomNavigationBarItem(
+              icon: Icon(Icons.manage_accounts),
+              label: '我的'
             ),
           ],
         ),
@@ -43,9 +43,4 @@ class MainView extends GetView<MainController> {
   }
 }
 
-_bottomNavigationBarItem({required IconData icon, required String label}) {
-  return BottomNavigationBarItem(
-    icon: Icon(icon),
-    label: label,
-  );
-}
+

@@ -21,7 +21,7 @@ class AppPages {
   static final RouteObserver<Route> observer = RouteObservers();
   static List<String> history = [];
 
-  static const INITIAL = Routes.LOGIN;
+  static const INITIAL = Routes.MAIN;
 
   static final routes = [
     GetPage(

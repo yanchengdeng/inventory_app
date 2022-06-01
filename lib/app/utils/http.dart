@@ -88,6 +88,7 @@ class HttpUtil {
         // 这样请求将被中止并触发异常，上层catchError会被调用。
       },
       onResponse: (response, handler) {
+        EasyLoading.dismiss();
         // Do something with response data
         return handler.next(response); // continue
         // 如果你想终止请求并触发一个错误,你可以 reject 一个`DioError`对象,如`handler.reject(error)`，

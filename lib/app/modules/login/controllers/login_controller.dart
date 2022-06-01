@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/user.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
@@ -29,6 +30,7 @@ class LoginController extends GetxController {
 
     LogSingleton.getInstance()?.d("${params.toJson()}");
 
+    EasyLoading.show(status :  "登陆中");
     UserLoginResponseEntity userProfile = await UserAPI.login(
       params: params,
     );

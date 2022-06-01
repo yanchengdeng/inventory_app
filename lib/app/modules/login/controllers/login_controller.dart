@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/user.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
 import '../../../apis/user_api.dart';
+import '../../../utils/logger.dart';
 
 class LoginController extends GetxController {
   // 手机号的控制器
@@ -25,6 +26,8 @@ class LoginController extends GetxController {
         account: phoneController.value.text,
         // password: duSHA256(passController.value.text),
         password: passController.value.text);
+
+    LogSingleton.getInstance()?.d("${params.toJson()}");
 
     UserLoginResponseEntity userProfile = await UserAPI.login(
       params: params,

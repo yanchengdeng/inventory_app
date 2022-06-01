@@ -1,3 +1,10 @@
+enum Environment { DEVELOPMENT, PRODUCTION }
+
+
+
+
+const SERVER_ENV = Environment.DEVELOPMENT;
+
 //接口域名统一配置
 const SERVER_API_URL = 'https://api.liezhen4231.com/api';
 

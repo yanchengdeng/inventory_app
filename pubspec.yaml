@@ -32,6 +32,10 @@ dependencies:
   dio: ^4.0.0
   dio_cookie_manager: ^2.0.0
   cookie_jar: ^3.0.1
+
+  # 日志
+  logger: ^1.1.0
+  pretty_dio_logger: ^1.1.1
  
 
    # 缓存

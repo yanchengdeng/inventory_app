@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' hide FormData;
 import 'package:inventory_app/app/utils/utils.dart';
 import 'package:cookie_jar/cookie_jar.dart';
+import '../apis/pretty_dio_logger.dart';
 import '../store/store.dart';
 import '../values/values.dart';
 
@@ -62,6 +63,18 @@ class HttpUtil {
     // Cookie管理
     CookieJar cookieJar = CookieJar();
     dio.interceptors.add(CookieManager(cookieJar));
+
+    //添加日志
+    const int _maxLineWidth = 90;
+    final _prettyDioLogger = PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: SERVER_ENV == Environment.DEVELOPMENT,
+        responseHeader: false,
+        error: true,
+        compact: true,
+        maxWidth: _maxLineWidth);
+    dio.interceptors.add(_prettyDioLogger);
 
     // 添加拦截器
     dio.interceptors.add(InterceptorsWrapper(

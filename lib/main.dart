@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           locale: ConfigStore.to.locale,
           fallbackLocale: Locale('en', 'US'),
           enableLog: true,
-          logWriterCallback: Logger.write,
+          logWriterCallback: LoggerW.write,
         ),
       ),
     );

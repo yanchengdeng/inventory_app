@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:inventory_app/app/style/color.dart';
-
 import '../../home/views/home_view.dart';
 import '../../mine/views/mine_view.dart';
 import '../controllers/main_controller.dart';
@@ -28,19 +25,12 @@ class MainView extends GetView<MainController> {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppColor.accentColor,
           items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "首页"),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "首页"
-            ),
-             BottomNavigationBarItem(
-              icon: Icon(Icons.manage_accounts),
-              label: '我的'
-            ),
+                icon: Icon(Icons.manage_accounts), label: '我的'),
           ],
         ),
       );
     });
   }
 }
-
-

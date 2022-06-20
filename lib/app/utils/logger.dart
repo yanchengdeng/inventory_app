@@ -23,16 +23,29 @@ class LogSingleton {
     // ignore: unnecessary_null_comparison
     if (_log == null) {
       _log = Logger(
-      printer: PrettyPrinter(
-          methodCount: 2,
-          errorMethodCount: 8,
-          colors: true,
-          printEmojis: true,
-          printTime: true));
+          printer: PrettyPrinter(
+              methodCount: 2,
+              errorMethodCount: 8,
+              colors: true,
+              printEmojis: true,
+              printTime: true));
     }
 
     return _log;
   }
-  
 }
 
+class Log {
+  static String TAG = "yancheng";
+  static void d(String message) {
+    LogSingleton.getInstance()?.d("$TAG:$message");
+  }
+
+  static void w(String message) {
+    LogSingleton.getInstance()?.w("$TAG:$message");
+  }
+
+  static void e(String message) {
+    LogSingleton.getInstance()?.e("$TAG:$message");
+  }
+}

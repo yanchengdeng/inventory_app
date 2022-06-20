@@ -55,6 +55,9 @@ dependencies:
    # 日期
   intl: ^0.17.0
 
+  # webview
+  webview_flutter: ^3.0.4
+
 dev_dependencies: 
   flutter_test: 
     sdk: flutter

@@ -5,7 +5,8 @@ import 'package:inventory_app/app/widgets/button.dart';
 import '../controllers/login_controller.dart';
 
 ///
-///登录页
+///
+///登录页: 账号密码登录    已废弃  改为 网页授权登录 详细见  splash_view
 ///
 ///
 ///

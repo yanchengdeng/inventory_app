@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:inventory_app/app/widgets/button.dart';
 import '../controllers/login_controller.dart';
 
 ///
@@ -43,13 +44,10 @@ class LoginView extends GetView<LoginController> {
                     ),
                     obscureText: true,
                     maxLines: 1,
-                    // onChanged: (value) {
-                    //   loginParams.password = value;
-                    // },
                     controller: controller.passController,
                   ),
-                  TextButton(
-                    child: const Text('登录'),
+                  btnFlatButtonWidget(
+                    title: '登录',
                     onPressed: () async {
                       controller.handleSignIn();
                     },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:inventory_app/app/values/fontsize.dart';
 
 import '../values/values.dart';
 
@@ -96,10 +97,33 @@ Widget btnFlatButtonBorderOnlyWidget({
           borderRadius: Radii.k6pxRadius,
         )),
       ),
-      child: Image.asset(
-        "assets/images/icons-$iconFileName.png",
+      child: Image(
+        image: AssetImage('$iconFileName'),
+        width: 120,
+        height: 120,
       ),
       onPressed: onPressed,
+    ),
+  );
+}
+
+//首页 选项
+Widget homeItem({required String title, required String iconFileName}) {
+  return Container(
+    child: Column(
+      children: [
+        Image(
+          image: AssetImage('$iconFileName'),
+          width: 120,
+          height: 120,
+        ),
+        Text(
+          "$title",
+          style: TextStyle(
+              fontSize: AppFontSize.FONT_SIZE_TITLE.toDouble(),
+              fontWeight: FontWeight.w700),
+        )
+      ],
     ),
   );
 }

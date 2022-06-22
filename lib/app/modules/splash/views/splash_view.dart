@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:inventory_app/app/utils/http.dart';
 import 'package:inventory_app/app/utils/logger.dart';
-import 'package:logger/logger.dart';
-
 import 'package:webview_flutter/webview_flutter.dart';
-
+import '../../../routes/app_pages.dart';
 import '../controllers/splash_controller.dart';
 
+/**
+ * app 启动页
+ */
 class SplashView extends GetView<SplashController> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
@@ -45,6 +45,13 @@ class SplashView extends GetView<SplashController> {
         },
         onPageFinished: (String url) {
           Log.d('onPageFinished=$url');
+
+          Future.delayed(
+              const Duration(seconds: 3),
+              () => {
+                    Get.snackbar("提示", "已授权完成"),
+                    Get.offAndToNamed(Routes.MAIN)
+                  });
         },
         onProgress: (int progress) {
           Log.d('onProgress=$progress');

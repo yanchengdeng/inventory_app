@@ -4,10 +4,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/user.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
 import '../../../apis/user_api.dart';
-import '../../../store/store.dart';
 import '../../../utils/logger.dart';
-import '../../../values/values.dart';
-import '../../../widgets/toast.dart';
 
 class LoginController extends GetxController {
   // 手机号的控制器
@@ -33,16 +30,16 @@ class LoginController extends GetxController {
 
     LogSingleton.getInstance()?.d("${params.toJson()}");
 
-    EasyLoading.show(status :  "登陆中");
+    EasyLoading.show(status: "登陆中");
     UserLoginResponseEntity userProfile = await UserAPI.login(
       params: params,
     );
-    if (userProfile.code == SERVER_RESULT_OK) {
-      UserStore.to.saveProfile(userProfile);
-      Get.offAndToNamed(Routes.HOME);
-    } else {
-      toastInfo(msg: userProfile.msg!);
-    }
+    // if (userProfile.code == SERVER_RESULT_OK) {
+    //   UserStore.to.saveProfile(userProfile);
+    //   Get.offAndToNamed(Routes.HOME);
+    // } else {
+    //   toastInfo(msg: userProfile.msg!);
+    // }
 
     Get.offAndToNamed(Routes.MAIN);
   }

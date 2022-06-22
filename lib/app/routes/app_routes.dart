@@ -8,6 +8,8 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const MAIN = _Paths.MAIN;
   static const MINE = _Paths.MINE;
+  static const MOULD_BIND_TASKLIST = _Paths.MOULD_BIND_TASKLIST;
+  static const INVENTORY_TASKLIST = _Paths.INVENTORY_TASKLIST;
 }
 
 abstract class _Paths {
@@ -17,4 +19,6 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const MAIN = '/main';
   static const MINE = '/mine';
+  static const MOULD_BIND_TASKLIST = '/mould-bind-tasklist';
+  static const INVENTORY_TASKLIST = '/inventory-tasklist';
 }

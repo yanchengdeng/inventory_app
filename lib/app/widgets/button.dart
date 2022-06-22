@@ -114,14 +114,14 @@ Widget homeItem({required String title, required String iconFileName}) {
       children: [
         Image(
           image: AssetImage('$iconFileName'),
-          width: 120,
-          height: 120,
+          width: 80,
+          height: 80,
         ),
         Text(
           "$title",
           style: TextStyle(
               fontSize: AppFontSize.FONT_SIZE_TITLE.toDouble(),
-              fontWeight: FontWeight.w700),
+              fontWeight: FontWeight.w400),
         )
       ],
     ),

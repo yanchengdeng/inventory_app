@@ -125,6 +125,7 @@ class MouldList {
   String? assetNo;
   List<BindLabels>? bindLabels;
   int? bindStatus;
+  String? bindStatusText;
   int? labelReplaceTaskId;
   int? labelType;
   double? lat;
@@ -148,6 +149,7 @@ class MouldList {
       this.assetNo,
       this.bindLabels,
       this.bindStatus,
+      this.bindStatusText,
       this.labelReplaceTaskId,
       this.labelType,
       this.lat,
@@ -176,6 +178,7 @@ class MouldList {
       });
     }
     bindStatus = json['bindStatus'];
+    bindStatusText = json['bindStatusText'];
     labelReplaceTaskId = json['labelReplaceTaskId'];
     labelType = json['labelType'];
     lat = json['lat'];

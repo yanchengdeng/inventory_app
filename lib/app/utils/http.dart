@@ -44,7 +44,7 @@ class HttpUtil {
 
       /// 请求的Content-Type，默认值是"application/json; charset=utf-8".
       /// 如果您想以"application/x-www-form-urlencoded"格式编码请求数据,
-      /// 可以设置此选项为 `Headers.formUrlEncodedContentType`,  这样[Dio]
+      /// 可以设置此选项为 `Headers.formUrlEnstatedContentType`,  这样[Dio]
       /// 就会自动编码请求体.
       contentType: 'application/json; charset=utf-8',
 
@@ -112,11 +112,11 @@ class HttpUtil {
 
   // 错误处理
   void onError(ErrorEntity eInfo) {
-    print('error.code -> ' +
-        eInfo.code.toString() +
+    print('error.state -> ' +
+        eInfo.state.toString() +
         ', error.message -> ' +
         eInfo.message);
-    switch (eInfo.code) {
+    switch (eInfo.state) {
       case 401:
         UserStore.to.onLogout();
         EasyLoading.showError(eInfo.message);
@@ -131,46 +131,46 @@ class HttpUtil {
   ErrorEntity createErrorEntity(DioError error) {
     switch (error.type) {
       case DioErrorType.cancel:
-        return ErrorEntity(code: -1, message: "请求取消");
+        return ErrorEntity(state: -1, message: "请求取消");
       case DioErrorType.connectTimeout:
-        return ErrorEntity(code: -1, message: "连接超时");
+        return ErrorEntity(state: -1, message: "连接超时");
       case DioErrorType.sendTimeout:
-        return ErrorEntity(code: -1, message: "请求超时");
+        return ErrorEntity(state: -1, message: "请求超时");
       case DioErrorType.receiveTimeout:
-        return ErrorEntity(code: -1, message: "响应超时");
+        return ErrorEntity(state: -1, message: "响应超时");
       case DioErrorType.cancel:
-        return ErrorEntity(code: -1, message: "请求取消");
+        return ErrorEntity(state: -1, message: "请求取消");
       case DioErrorType.response:
         {
           try {
             int errCode =
                 error.response != null ? error.response!.statusCode! : -1;
             // String errMsg = error.response.statusMessage;
-            // return ErrorEntity(code: errCode, message: errMsg);
+            // return ErrorEntity(state: errCode, message: errMsg);
             switch (errCode) {
               case 400:
-                return ErrorEntity(code: errCode, message: "请求语法错误");
+                return ErrorEntity(state: errCode, message: "请求语法错误");
               case 401:
-                return ErrorEntity(code: errCode, message: "没有权限");
+                return ErrorEntity(state: errCode, message: "没有权限");
               case 403:
-                return ErrorEntity(code: errCode, message: "服务器拒绝执行");
+                return ErrorEntity(state: errCode, message: "服务器拒绝执行");
               case 404:
-                return ErrorEntity(code: errCode, message: "无法连接服务器");
+                return ErrorEntity(state: errCode, message: "无法连接服务器");
               case 405:
-                return ErrorEntity(code: errCode, message: "请求方法被禁止");
+                return ErrorEntity(state: errCode, message: "请求方法被禁止");
               case 500:
-                return ErrorEntity(code: errCode, message: "服务器内部错误");
+                return ErrorEntity(state: errCode, message: "服务器内部错误");
               case 502:
-                return ErrorEntity(code: errCode, message: "无效的请求");
+                return ErrorEntity(state: errCode, message: "无效的请求");
               case 503:
-                return ErrorEntity(code: errCode, message: "服务器挂了");
+                return ErrorEntity(state: errCode, message: "服务器挂了");
               case 505:
-                return ErrorEntity(code: errCode, message: "不支持HTTP协议请求");
+                return ErrorEntity(state: errCode, message: "不支持HTTP协议请求");
               default:
                 {
-                  // return ErrorEntity(code: errCode, message: "未知错误");
+                  // return ErrorEntity(state: errCode, message: "未知错误");
                   return ErrorEntity(
-                    code: errCode,
+                    state: errCode,
                     message: error.response != null
                         ? error.response!.statusMessage!
                         : "",
@@ -178,12 +178,12 @@ class HttpUtil {
                 }
             }
           } on Exception catch (_) {
-            return ErrorEntity(code: -1, message: "未知错误");
+            return ErrorEntity(state: -1, message: "未知错误");
           }
         }
       default:
         {
-          return ErrorEntity(code: -1, message: error.message);
+          return ErrorEntity(state: -1, message: error.message);
         }
     }
   }
@@ -394,12 +394,12 @@ class HttpUtil {
 
 // 异常处理
 class ErrorEntity implements Exception {
-  int code = -1;
+  int state = -1;
   String message = "";
-  ErrorEntity({required this.code, required this.message});
+  ErrorEntity({required this.state, required this.message});
 
   String toString() {
     if (message == "") return "Exception";
-    return "Exception: code $code, $message";
+    return "Exception: state $state, $message";
   }
 }

@@ -8,11 +8,12 @@ import '../controllers/inventory_tasklist_controller.dart';
  * 资产盘点列表
  */
 class InventoryTasklistView extends GetView<InventoryTasklistController> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('InventoryTasklistView'),
+        title: Text('资产盘点'),
         centerTitle: true,
       ),
       body: Center(

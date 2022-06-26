@@ -25,7 +25,7 @@ class AppPages {
   static final RouteObserver<Route> observer = RouteObservers();
   static List<String> history = [];
 
-  static const INITIAL = Routes.SPLASH;
+  static const INITIAL = Routes.MAIN;
 
   static final routes = [
     GetPage(
@@ -55,7 +55,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MOULD_BIND_TASKLIST,
-      page: () => MouldBindTasklistView(),
+      page: () => MouldBindTaskListView(),
       binding: MouldBindTasklistBinding(),
     ),
     GetPage(

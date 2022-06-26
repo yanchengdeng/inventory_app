@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inventory_app/app/values/fontsize.dart';
 
+import '../style/color.dart';
 import '../values/values.dart';
 
 /// 扁平圆角按钮
@@ -108,14 +109,25 @@ Widget btnFlatButtonBorderOnlyWidget({
 }
 
 //首页 选项
-Widget homeItem({required String title, required String iconFileName}) {
+Widget homeItem(
+    {required String title,
+    required String iconFileName,
+    required int unFinished}) {
   return Container(
     child: Column(
       children: [
-        Image(
-          image: AssetImage('$iconFileName'),
-          width: 80,
-          height: 80,
+        Stack(
+          alignment: AlignmentDirectional.topEnd,
+          children: [
+            Image(
+              image: AssetImage('$iconFileName'),
+              width: 80,
+              height: 80,
+            ),
+            unFinished > 0
+                ? unReadMsgBg(color: Colors.red, count: unFinished)
+                : Text('')
+          ],
         ),
         Text(
           "$title",
@@ -126,4 +138,89 @@ Widget homeItem({required String title, required String iconFileName}) {
       ],
     ),
   );
+}
+
+//红色圆形背景   适用于未读消息
+Widget unReadMsgBg({required Color color, required int count}) {
+  return Container(
+    width: 18.0,
+    height: 18.0,
+    alignment: AlignmentDirectional.center,
+    decoration:
+        BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
+    child: Text(
+      "${count}",
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: AppFontSize.FONT_SIZE_SUB_TITLE.toDouble(),
+      ),
+    ),
+  );
+}
+
+/// 两个tab 选中按钮
+Widget selectTabView(
+    {required String text,
+    required bool selected,
+    required bool isLeft,
+    required VoidCallback callback}) {
+  return selected
+      ? InkWell(
+          child: Container(
+            width: 100,
+            height: 40,
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              style: TextStyle(
+                  color: AppColor.accentColor,
+                  fontSize: AppFontSize.FONT_SIZE_SUB_TITLE.toDouble(),
+                  fontWeight: FontWeight.bold),
+            ),
+            decoration: isLeft
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        bottomLeft: Radius.circular(8)),
+                    color: Colors.white,
+                    border: Border.all(color: AppColor.accentColor, width: 1))
+                : BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(8),
+                        bottomRight: Radius.circular(8)),
+                    color: Colors.white,
+                    border:
+                        Border.all(color: AppColor.accentColor, width: 1)),
+          ),
+          onTap: callback,
+        )
+      : InkWell(
+          child: Container(
+            width: 100,
+            height: 40,
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              style: TextStyle(
+                  color: AppColor.secondaryText,
+                  fontSize: AppFontSize.FONT_SIZE_SUB_TITLE.toDouble(),
+                  fontWeight: FontWeight.bold),
+            ),
+            decoration: isLeft
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        bottomLeft: Radius.circular(8)),
+                    color: Colors.white,
+                    border: Border.all(color: AppColor.secondaryText, width: 1))
+                : BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(8),
+                        bottomRight: Radius.circular(8)),
+                    color: Colors.white,
+                    border:
+                        Border.all(color: AppColor.secondaryText, width: 1)),
+          ),
+          onTap: callback,
+        );
 }

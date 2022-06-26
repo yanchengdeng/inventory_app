@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' hide FormData;
+import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/utils/utils.dart';
-import 'package:cookie_jar/cookie_jar.dart';
+
 import '../apis/pretty_dio_logger.dart';
 import '../store/store.dart';
 import '../values/values.dart';
@@ -118,8 +120,7 @@ class HttpUtil {
         eInfo.message);
     switch (eInfo.state) {
       case 401:
-        UserStore.to.onLogout();
-        EasyLoading.showError(eInfo.message);
+        CommonUtils.logOut();
         break;
       default:
         EasyLoading.showError('未知错误');

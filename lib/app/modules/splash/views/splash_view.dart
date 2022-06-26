@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/logger.dart';
@@ -14,6 +15,7 @@ import '../controllers/splash_controller.dart';
 class SplashView extends GetView<SplashController> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,14 +44,15 @@ class SplashView extends GetView<SplashController> {
         },
         onPageStarted: (String url) {
           Log.d('onPageStarted=$url');
+          EasyLoading.show(status: "授权中...");
         },
         onPageFinished: (String url) {
           Log.d('onPageFinished=$url');
+          EasyLoading.showSuccess("授权完成");
 
           Future.delayed(
-              const Duration(seconds: 3),
+              const Duration(seconds: 2),
               () => {
-                    Get.snackbar("提示", "已授权完成"),
                     Get.offAndToNamed(Routes.MAIN)
                   });
         },

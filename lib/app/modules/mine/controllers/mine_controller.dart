@@ -1,7 +1,13 @@
 import 'package:get/get.dart';
+import 'package:inventory_app/app/utils/common.dart';
 
 class MineController extends GetxController {
-  final count = 0.obs;
+
+
+  void loginOut() {
+   CommonUtils.logOut();
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -14,5 +20,4 @@ class MineController extends GetxController {
 
   @override
   void onClose() {}
-  void increment() => count.value++;
 }

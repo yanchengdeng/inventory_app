@@ -60,7 +60,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.INVENTORY_TASKLIST,
-      page: () => InventoryTasklistView(),
+      page: () => InventoryTaskListView(),
       binding: InventoryTasklistBinding(),
     ),
   ];

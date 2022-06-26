@@ -22,6 +22,7 @@ class HomeView extends GetView<HomeController> {
     _refreshController.refreshCompleted();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

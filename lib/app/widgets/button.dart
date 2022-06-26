@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inventory_app/app/values/fontsize.dart';
 
 import '../style/color.dart';
+import '../style/text_style.dart';
 import '../values/values.dart';
 
 /// 扁平圆角按钮
@@ -189,8 +190,7 @@ Widget selectTabView(
                         topRight: Radius.circular(8),
                         bottomRight: Radius.circular(8)),
                     color: Colors.white,
-                    border:
-                        Border.all(color: AppColor.accentColor, width: 1)),
+                    border: Border.all(color: AppColor.accentColor, width: 1)),
           ),
           onTap: callback,
         )
@@ -224,3 +224,31 @@ Widget selectTabView(
           onTap: callback,
         );
 }
+
+
+
+
+///模具显示状态
+Widget buildMouldStatusItem(
+    {required String status,
+    required int count,
+    required VoidCallback callback}) {
+  return Center(
+    child: InkWell(
+      onTap: callback,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            children: [
+              Text(status, style: textNormalListTextStyle()),
+              Text(count.toString(), style: textBoldNumberStyle())
+            ],
+          )
+        ],
+      ),
+    ),
+  );
+}
+
+

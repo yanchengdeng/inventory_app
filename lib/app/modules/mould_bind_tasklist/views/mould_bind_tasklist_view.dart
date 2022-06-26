@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
 import 'package:inventory_app/app/style/style.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../../../style/text_style.dart';
 import '../../../values/fontsize.dart';
 import '../controllers/mould_bind_tasklist_controller.dart';
 
@@ -66,27 +68,113 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                           controller: _refreshBindTaskController,
                           enablePullDown: true,
                           enablePullUp: false,
+                          scrollDirection: Axis.vertical,
                           //接口无分页 禁止上拉加载更多
                           onRefresh: _onRefresh,
-                          child:homeController.state.selectedTab?
+                          child: homeController.state.selectedTab
+                              ? ListView.builder(
+                                  itemBuilder: ((context, index) => Card(
+                                        elevation: 10,
+                                        shadowColor: Colors.grey,
+                                        child: InkWell(
+                                          child: Container(
+                                            padding: EdgeInsets.all(12),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
 
-                          ListView.builder(
-                            itemBuilder: ((context, index) => Card(
-                                child: Center(
-                                    child: Text(
-                                        '未完成：${homeController.state.mouldBindTaskList?.data.unfinishedTaskList?[index].distributionTime}')))),
-                            itemCount: homeController.state.mouldBindTaskList
-                                ?.data?.unfinishedTaskList?.length,
-                            itemExtent: 100,
-                          ): ListView.builder(
-                            itemBuilder: ((context, index) => Card(
-                                child: Center(
-                                    child: Text(
-                                        '已完成：${homeController.state.mouldBindTaskList?.data.finishedTaskList?[index].distributionTime}')))),
-                            itemCount: homeController.state.mouldBindTaskList
-                                ?.data?.finishedTaskList?.length,
-                            itemExtent: 100,
-                          )))
+                                                    Text('支付任务编号：${homeController.state.mouldBindTaskList?.data?.unfinishedTaskList?[index]?.taskNo}',
+                                                        style:
+                                                            textBoldListTextStyle()),
+                                                    Text('PO编号：${homeController.state.mouldBindTaskList?.data?.unfinishedTaskList?[index]?.poNo}',
+                                                        style:
+                                                            textNormalListTextStyle()),
+                                                Text('工装模具总数：${homeController.state.mouldBindTaskList?.data?.unfinishedTaskList?[index]?.totalMoulds}',
+                                                    style:
+                                                    textNormalListTextStyle()),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 0.0,top:8,right:0,bottom: 8),
+                                                  child: Divider(color: Colors.grey,height: 1,),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(child: buildMouldStatusItem(status: '待绑定',count: 1,callback: (){
+                                                    toastInfo(msg: "待绑定");
+                                                  })),
+
+                                                    SizedBox(
+                                                        width: 1,
+                                                        height: 35,
+                                                        child: DecoratedBox(
+                                                          decoration: BoxDecoration(color: Colors.grey),
+                                                        )),
+                                                    Expanded(child: buildMouldStatusItem(status: '重新绑定',count: 5,callback: (){
+                                                      toastInfo(msg: "重新绑定");
+                                                    })),
+                                                    SizedBox(
+                                                        width: 1,
+                                                        height: 35,
+                                                        child: DecoratedBox(
+                                                          decoration: BoxDecoration(color: Colors.grey),
+                                                        )),
+                                                    Expanded(child: buildMouldStatusItem(status: '待上传',count: 1,callback: (){
+                                                      toastInfo(msg: "待上传");
+                                                    })),
+                                                    SizedBox(
+                                                        width: 1,
+                                                        height: 35,
+                                                        child: DecoratedBox(
+                                                          decoration: BoxDecoration(color: Colors.grey),
+                                                        )),
+                                                    Expanded(child: buildMouldStatusItem(status: '已上传',count: 6,callback: (){
+                                                      toastInfo(msg: "已上传");
+                                                    }))
+                                                  ],
+                                                )
+
+                                              ],
+                                            ),
+                                          ),
+                                          onTap: () => {toastInfo(msg: '全局跳转')},
+                                        ),
+                                      )),
+                                  itemCount: homeController
+                                      .state
+                                      .mouldBindTaskList
+                                      ?.data
+                                      ?.unfinishedTaskList
+                                      ?.length,
+                                )
+                              : ListView.builder(
+                                  itemBuilder: ((context, index) => Card(
+                                      elevation: 10,
+                                      shadowColor: Colors.grey,
+                                      child: Container(
+                                        padding: EdgeInsets.all(12),
+                                        child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children : [
+                                            Text('支付任务编号：${homeController.state.mouldBindTaskList?.data?.finishedTaskList?[index]?.taskNo}',
+                                                style:
+                                                textBoldListTextStyle()),
+                                            Text('PO编号：${homeController.state.mouldBindTaskList?.data?.finishedTaskList?[index]?.poNo}',
+                                                style:
+                                                textNormalListTextStyle()),
+                                            Text('工装模具总数：${homeController.state.mouldBindTaskList?.data?.finishedTaskList?[index]?.totalMoulds}',
+                                                style:
+                                                textNormalListTextStyle()),
+
+                                            ]),
+                                      ))),
+                                  itemCount: homeController
+                                      .state
+                                      .mouldBindTaskList
+                                      ?.data
+                                      ?.finishedTaskList
+                                      ?.length,
+                                )))
                 ],
               ),
             )));

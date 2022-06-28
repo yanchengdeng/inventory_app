@@ -28,3 +28,14 @@ samples, guidance on mobile development, and a full API reference.
 
 '0':'待绑定','1':'重新绑定','2':'已上传','？？？':'待上传'
 1. 模具绑定列表    待上传的status 是多少？
+
+
+待调试
+1. 设备  sdk 功能实现
+2. 本地数据库
+3. 水印图片
+4.  flutter 调用android 原生开发
+
+
+
+

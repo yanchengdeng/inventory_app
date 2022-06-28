@@ -4,13 +4,14 @@
 
 class InventoryList {
   InventoryList({
-      Data? data, 
-      String? message, 
-      int? state,}){
+    Data? data,
+    String? message,
+    int? state,
+  }) {
     _data = data;
     _message = message;
     _state = state;
-}
+  }
 
   InventoryList.fromJson(dynamic json) {
     _data = json['data'] != null ? Data.fromJson(json['data']) : null;
@@ -20,13 +21,16 @@ class InventoryList {
   Data? _data;
   String? _message;
   int? _state;
-InventoryList copyWith({  Data? data,
-  String? message,
-  int? state,
-}) => InventoryList(  data: data ?? _data,
-  message: message ?? _message,
-  state: state ?? _state,
-);
+  InventoryList copyWith({
+    Data? data,
+    String? message,
+    int? state,
+  }) =>
+      InventoryList(
+        data: data ?? _data,
+        message: message ?? _message,
+        state: state ?? _state,
+      );
   Data? get data => _data;
   String? get message => _message;
   int? get state => _state;
@@ -40,7 +44,6 @@ InventoryList copyWith({  Data? data,
     map['state'] = _state;
     return map;
   }
-
 }
 
 /// finished : 0
@@ -50,15 +53,16 @@ InventoryList copyWith({  Data? data,
 
 class Data {
   Data({
-      int? finished, 
-      List<FinishedList>? finishedList, 
-      int? unfinished, 
-      List<FinishedList>? unfinishedList,}){
+    int? finished,
+    List<FinishedList>? finishedList,
+    int? unfinished,
+    List<FinishedList>? unfinishedList,
+  }) {
     _finished = finished;
     _finishedList = finishedList;
     _unfinished = unfinished;
     _unfinishedList = unfinishedList;
-}
+  }
 
   Data.fromJson(dynamic json) {
     _finished = json['finished'];
@@ -80,15 +84,18 @@ class Data {
   List<FinishedList>? _finishedList;
   int? _unfinished;
   List<FinishedList>? _unfinishedList;
-Data copyWith({  int? finished,
-  List<FinishedList>? finishedList,
-  int? unfinished,
-  List<FinishedList>? unfinishedList,
-}) => Data(  finished: finished ?? _finished,
-  finishedList: finishedList ?? _finishedList,
-  unfinished: unfinished ?? _unfinished,
-  unfinishedList: unfinishedList ?? _unfinishedList,
-);
+  Data copyWith({
+    int? finished,
+    List<FinishedList>? finishedList,
+    int? unfinished,
+    List<FinishedList>? unfinishedList,
+  }) =>
+      Data(
+        finished: finished ?? _finished,
+        finishedList: finishedList ?? _finishedList,
+        unfinished: unfinished ?? _unfinished,
+        unfinishedList: unfinishedList ?? _unfinishedList,
+      );
   int? get finished => _finished;
   List<FinishedList>? get finishedList => _finishedList;
   int? get unfinished => _unfinished;
@@ -106,11 +113,7 @@ Data copyWith({  int? finished,
     }
     return map;
   }
-
 }
-
-
-
 
 /// distributionTime : "2022-06-11 12:17:46"
 /// endDate : "2021-05-04"
@@ -122,21 +125,24 @@ Data copyWith({  int? finished,
 
 class FinishedList {
   FinishedList({
-      String? distributionTime, 
-      String? endDate, 
-      String? finishedTime, 
-      int? inventoryTotal, 
-      int? inventoryType, 
-      List<ItemList>? list,
-      String? taskNo,}){
+    String? distributionTime,
+    String? endDate,
+    String? finishedTime,
+    int? inventoryTotal,
+    int? inventoryType,
+    String? inventoryTypeText,
+    List<ItemList>? list,
+    String? taskNo,
+  }) {
     _distributionTime = distributionTime;
     _endDate = endDate;
     _finishedTime = finishedTime;
     _inventoryTotal = inventoryTotal;
     _inventoryType = inventoryType;
+    _inventoryTypeText = inventoryTypeText;
     _list = list;
     _taskNo = taskNo;
-}
+  }
 
   FinishedList.fromJson(dynamic json) {
     _distributionTime = json['distributionTime'];
@@ -144,6 +150,7 @@ class FinishedList {
     _finishedTime = json['finishedTime'];
     _inventoryTotal = json['inventoryTotal'];
     _inventoryType = json['inventoryType'];
+    _inventoryTypeText = json['inventoryTypeText'];
     if (json['list'] != null) {
       _list = [];
       json['list'].forEach((v) {
@@ -157,28 +164,35 @@ class FinishedList {
   String? _finishedTime;
   int? _inventoryTotal;
   int? _inventoryType;
+  String? _inventoryTypeText;
   List<ItemList>? _list;
   String? _taskNo;
-FinishedList copyWith({  String? distributionTime,
-  String? endDate,
-  String? finishedTime,
-  int? inventoryTotal,
-  int? inventoryType,
-  List<ItemList>? list,
-  String? taskNo,
-}) => FinishedList(  distributionTime: distributionTime ?? _distributionTime,
-  endDate: endDate ?? _endDate,
-  finishedTime: finishedTime ?? _finishedTime,
-  inventoryTotal: inventoryTotal ?? _inventoryTotal,
-  inventoryType: inventoryType ?? _inventoryType,
-  list: list ?? _list,
-  taskNo: taskNo ?? _taskNo,
-);
+  FinishedList copyWith({
+    String? distributionTime,
+    String? endDate,
+    String? finishedTime,
+    int? inventoryTotal,
+    int? inventoryType,
+    String? inventoryTypeText,
+    List<ItemList>? list,
+    String? taskNo,
+  }) =>
+      FinishedList(
+        distributionTime: distributionTime ?? _distributionTime,
+        endDate: endDate ?? _endDate,
+        finishedTime: finishedTime ?? _finishedTime,
+        inventoryTotal: inventoryTotal ?? _inventoryTotal,
+        inventoryType: inventoryType ?? _inventoryType,
+        inventoryTypeText: inventoryTypeText ?? _inventoryTypeText,
+        list: list ?? _list,
+        taskNo: taskNo ?? _taskNo,
+      );
   String? get distributionTime => _distributionTime;
   String? get endDate => _endDate;
   String? get finishedTime => _finishedTime;
   int? get inventoryTotal => _inventoryTotal;
   int? get inventoryType => _inventoryType;
+  String? get inventoryTypeText => _inventoryTypeText;
   List<ItemList>? get list => _list;
   String? get taskNo => _taskNo;
 
@@ -189,13 +203,13 @@ FinishedList copyWith({  String? distributionTime,
     map['finishedTime'] = _finishedTime;
     map['inventoryTotal'] = _inventoryTotal;
     map['inventoryType'] = _inventoryType;
+    map['inventoryTypeText'] = _inventoryTypeText;
     if (_list != null) {
       map['list'] = _list?.map((v) => v.toJson()).toList();
     }
     map['taskNo'] = _taskNo;
     return map;
   }
-
 }
 
 /// assetInventoryDetailId : 1
@@ -216,7 +230,8 @@ class ItemList {
     int? inventoryTaskId,
     String? labelNo,
     String? toolingType,
-    String? usedArea,}){
+    String? usedArea,
+  }) {
     _assetInventoryDetailId = assetInventoryDetailId;
     _assetInventoryStatus = assetInventoryStatus;
     _assetName = assetName;
@@ -245,7 +260,8 @@ class ItemList {
   String? _labelNo;
   String? _toolingType;
   String? _usedArea;
-  ItemList copyWith({  int? assetInventoryDetailId,
+  ItemList copyWith({
+    int? assetInventoryDetailId,
     int? assetInventoryStatus,
     String? assetName,
     String? assetNo,
@@ -253,15 +269,18 @@ class ItemList {
     String? labelNo,
     String? toolingType,
     String? usedArea,
-  }) => ItemList(  assetInventoryDetailId: assetInventoryDetailId ?? _assetInventoryDetailId,
-    assetInventoryStatus: assetInventoryStatus ?? _assetInventoryStatus,
-    assetName: assetName ?? _assetName,
-    assetNo: assetNo ?? _assetNo,
-    inventoryTaskId: inventoryTaskId ?? _inventoryTaskId,
-    labelNo: labelNo ?? _labelNo,
-    toolingType: toolingType ?? _toolingType,
-    usedArea: usedArea ?? _usedArea,
-  );
+  }) =>
+      ItemList(
+        assetInventoryDetailId:
+            assetInventoryDetailId ?? _assetInventoryDetailId,
+        assetInventoryStatus: assetInventoryStatus ?? _assetInventoryStatus,
+        assetName: assetName ?? _assetName,
+        assetNo: assetNo ?? _assetNo,
+        inventoryTaskId: inventoryTaskId ?? _inventoryTaskId,
+        labelNo: labelNo ?? _labelNo,
+        toolingType: toolingType ?? _toolingType,
+        usedArea: usedArea ?? _usedArea,
+      );
   int? get assetInventoryDetailId => _assetInventoryDetailId;
   int? get assetInventoryStatus => _assetInventoryStatus;
   String? get assetName => _assetName;
@@ -283,6 +302,4 @@ class ItemList {
     map['usedArea'] = _usedArea;
     return map;
   }
-
 }
-

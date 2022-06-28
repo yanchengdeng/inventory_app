@@ -12,6 +12,8 @@ import '../modules/main/bindings/main_binding.dart';
 import '../modules/main/views/main_view.dart';
 import '../modules/mine/bindings/mine_binding.dart';
 import '../modules/mine/views/mine_view.dart';
+import '../modules/mould_bind_mouldlist/bindings/mould_bind_mouldlist_binding.dart';
+import '../modules/mould_bind_mouldlist/views/mould_bind_mouldlist_view.dart';
 import '../modules/mould_bind_tasklist/bindings/mould_bind_tasklist_binding.dart';
 import '../modules/mould_bind_tasklist/views/mould_bind_tasklist_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -62,6 +64,11 @@ class AppPages {
       name: _Paths.INVENTORY_TASKLIST,
       page: () => InventoryTaskListView(),
       binding: InventoryTasklistBinding(),
+    ),
+    GetPage(
+      name: _Paths.MOULD_BIND_MOULDLIST,
+      page: () => MouldBindMouldlistView(),
+      binding: MouldBindMouldlistBinding(),
     ),
   ];
 }

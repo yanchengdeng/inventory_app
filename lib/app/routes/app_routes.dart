@@ -10,6 +10,7 @@ abstract class Routes {
   static const MINE = _Paths.MINE;
   static const MOULD_BIND_TASKLIST = _Paths.MOULD_BIND_TASKLIST;
   static const INVENTORY_TASKLIST = _Paths.INVENTORY_TASKLIST;
+  static const MOULD_BIND_MOULDLIST = _Paths.MOULD_BIND_MOULDLIST;
 }
 
 abstract class _Paths {
@@ -21,4 +22,5 @@ abstract class _Paths {
   static const MINE = '/mine';
   static const MOULD_BIND_TASKLIST = '/mould-bind-tasklist';
   static const INVENTORY_TASKLIST = '/inventory-tasklist';
+  static const MOULD_BIND_MOULDLIST = '/mould-bind-mouldlist';
 }

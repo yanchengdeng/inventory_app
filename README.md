@@ -23,4 +23,8 @@ samples, guidance on mobile development, and a full API reference.
 (https://app.quicktype.io/)[https://app.quicktype.io/]
 
 ### 参考  UI  及 网络请求 参考  ：Flutter_duceecat_news_get
-()[]
+
+### 待确定
+
+'0':'待绑定','1':'重新绑定','2':'已上传','？？？':'待上传'
+1. 模具绑定列表    待上传的status 是多少？

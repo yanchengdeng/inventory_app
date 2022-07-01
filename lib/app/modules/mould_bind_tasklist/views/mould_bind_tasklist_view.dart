@@ -118,7 +118,6 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                                             buildMouldStatusItem(
                                                                 status: '待绑定',
                                                                 count: homeController
-                                                                    .state
                                                                     .mouldBindTaskListForWaitBind(
                                                                         index,
                                                                         BIND_STATUS_WAING)
@@ -142,7 +141,6 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                                             buildMouldStatusItem(
                                                                 status: '重新绑定',
                                                                 count: homeController
-                                                                    .state
                                                                     .mouldBindTaskListForWaitBind(
                                                                         index,
                                                                         BIND_STATUS_REBIND)
@@ -166,7 +164,6 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                                             buildMouldStatusItem(
                                                                 status: '待上传',
                                                                 count: homeController
-                                                                    .state
                                                                     .mouldBindTaskListForWaitBind(
                                                                         index,
                                                                         BIND_STATUS_WAITING_UPLOAD)
@@ -190,7 +187,6 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                                             buildMouldStatusItem(
                                                                 status: '已上传',
                                                                 count: homeController
-                                                                    .state
                                                                     .mouldBindTaskListForWaitBind(
                                                                         index,
                                                                         BIND_STATUS_UPLOADED)
@@ -207,7 +203,6 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                           ),
                                           onTap: () => {
                                             ///  绑定
-
                                             Get.toNamed(
                                                 Routes.MOULD_BIND_MOULDLIST,
                                                 arguments: {

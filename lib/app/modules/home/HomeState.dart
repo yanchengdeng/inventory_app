@@ -15,15 +15,6 @@ class HomeState {
 
   get mouldBindTaskList => _mouldBindTaskList.value;
 
-  ///根据模具任务状态 获取对应集合数据
-  List<MouldList> mouldBindTaskListForWaitBind(int position, int status) {
-    return _mouldBindTaskList
-            .value?.data?.unfinishedTaskList?[position]?.mouldList
-            ?.where((element) => element.bindStatus == status)
-            ?.toList() ??
-        List.empty();
-  }
-
   ///资产盘点信息
   var _inventoryList = Rx<InventoryList?>(null);
 
@@ -35,4 +26,21 @@ class HomeState {
   var _selectedTab = RxBool(true);
   set selectedTab(value) => _selectedTab.value = value;
   get selectedTab => _selectedTab.value;
+
+  /// 磨具绑定搜索关键字
+  var _mouldSearchKey = RxString("");
+  set mouldSearchKey(value) => _mouldSearchKey.value = value;
+  get mouldSearchKey => _mouldSearchKey.value;
+
+  ///模具绑定搜索列表
+  var _mouldBindTaskListSearch = Rx<FinishedTaskList?>(null);
+
+  set mouldBindTaskListSearch(value) => _mouldBindTaskListSearch.value = value;
+
+  get mouldBindTaskListSearch => _mouldBindTaskListSearch.value;
+
+  /// 盘点搜索关键字
+  var _inventroySearchKey = RxString("");
+  set inventroySearchKey(value) => _inventroySearchKey.value = value;
+  get inventroySearchKey => _inventroySearchKey.value;
 }

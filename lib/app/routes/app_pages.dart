@@ -67,7 +67,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MOULD_BIND_MOULDLIST,
-      page: () => MouldBindMouldlistView(),
+      page: () => MouldBindMouldListView(),
       binding: MouldBindMouldlistBinding(),
     ),
   ];

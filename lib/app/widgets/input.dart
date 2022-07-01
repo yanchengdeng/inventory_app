@@ -4,14 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../values/values.dart';
 
 /// 输入框
-Widget inputTextEdit({
-  TextEditingController? controller,
-  TextInputType keyboardType = TextInputType.text,
-  String? hintText,
-  bool isPassword = false,
-  double marginTop = 15,
-  bool autofocus = false,
-}) {
+Widget inputTextEdit(
+    {TextEditingController? controller,
+    TextInputType keyboardType = TextInputType.text,
+    String? hintText,
+    bool isPassword = false,
+    double marginTop = 15,
+    bool autofocus = false,
+    required ValueChanged<String> inputOnSubmit}) {
   return Container(
     height: 44.h,
     margin: EdgeInsets.only(top: marginTop.h),
@@ -23,11 +23,15 @@ Widget inputTextEdit({
       autofocus: autofocus,
       controller: controller,
       keyboardType: keyboardType,
+      textInputAction: TextInputAction.search,
       decoration: InputDecoration(
         hintText: hintText,
-        contentPadding: EdgeInsets.fromLTRB(20, 10, 0, 9),
+        contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 9),
         border: InputBorder.none,
       ),
+      onSubmitted: (value) {
+        inputOnSubmit(value);
+      },
       style: TextStyle(
         color: AppColors.primaryText,
         fontFamily: "Avenir",

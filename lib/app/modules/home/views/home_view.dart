@@ -16,12 +16,11 @@ class HomeView extends GetView<HomeController> {
 
   void _onRefresh() async {
     // monitor network fetch
+    _refreshController.refreshCompleted();
     await controller.getMouldTaskList();
     await controller.getInventoryList();
     // if failed,use refreshFailed()
-    _refreshController.refreshCompleted();
   }
-
 
   @override
   Widget build(BuildContext context) {

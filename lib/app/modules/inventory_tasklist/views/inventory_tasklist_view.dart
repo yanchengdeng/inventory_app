@@ -83,7 +83,8 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text('I23234234(待)',
+                                                Text(
+                                                    '${homeController.state.inventoryList?.data?.unfinishedList?[index]?.taskNo}',
                                                     style:
                                                         textBoldNumberStyle()),
                                                 Row(
@@ -107,7 +108,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topEnd,
                                                         child: Text(
-                                                            '盘点类型：年份(待)',
+                                                            '盘点类型：${homeController.state.inventoryList?.data?.unfinishedList?[index]?.inventoryTypeText}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),

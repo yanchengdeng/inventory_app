@@ -4,10 +4,17 @@ import 'package:inventory_app/app/modules/home/controllers/home_controller.dart'
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../style/text_style.dart';
+import 'package:inventory_app/app/routes/app_pages.dart';
+import 'package:inventory_app/app/style/style.dart';
+import 'package:inventory_app/app/widgets/widgets.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../../../style/text_style.dart';
+import '../../../values/constants.dart';
+import '../../../values/fontsize.dart';
 import '../controllers/mould_bind_tasklist_controller.dart';
 
 /**
- * 模具绑定列表
+ * 绑定任务列表
  */
 class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
   final RefreshController _refreshBindTaskController =
@@ -81,7 +88,7 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                    '支付任务编号：${homeController.state.mouldBindTaskList?.data?.unfinishedTaskList?[index]?.taskNo}',
+                                                    '${homeController.state.mouldBindTaskList?.data?.unfinishedTaskList?[index]?.taskType == MOULD_TASK_TYPE_PAY ? '支付任务编号' : '标签替换任务编号'}：${homeController.state.mouldBindTaskList?.data?.unfinishedTaskList?[index]?.taskNo}',
                                                     style:
                                                         textBoldListTextStyle()),
                                                 Text(
@@ -110,7 +117,12 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '待绑定',
-                                                                count: 1,
+                                                                count: homeController
+                                                                    .state
+                                                                    .mouldBindTaskListForWaitBind(
+                                                                        index,
+                                                                        BIND_STATUS_WAING)
+                                                                    .length,
                                                                 callback: () {
                                                                   toastInfo(
                                                                       msg:
@@ -129,7 +141,12 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '重新绑定',
-                                                                count: 5,
+                                                                count: homeController
+                                                                    .state
+                                                                    .mouldBindTaskListForWaitBind(
+                                                                        index,
+                                                                        BIND_STATUS_REBIND)
+                                                                    .length,
                                                                 callback: () {
                                                                   toastInfo(
                                                                       msg:
@@ -148,7 +165,12 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '待上传',
-                                                                count: 1,
+                                                                count: homeController
+                                                                    .state
+                                                                    .mouldBindTaskListForWaitBind(
+                                                                        index,
+                                                                        BIND_STATUS_WAITING_UPLOAD)
+                                                                    .length,
                                                                 callback: () {
                                                                   toastInfo(
                                                                       msg:
@@ -167,7 +189,12 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '已上传',
-                                                                count: 6,
+                                                                count: homeController
+                                                                    .state
+                                                                    .mouldBindTaskListForWaitBind(
+                                                                        index,
+                                                                        BIND_STATUS_UPLOADED)
+                                                                    .length,
                                                                 callback: () {
                                                                   toastInfo(
                                                                       msg:
@@ -178,7 +205,19 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                                               ],
                                             ),
                                           ),
-                                          onTap: () => {toastInfo(msg: '全局跳转')},
+                                          onTap: () => {
+                                            ///  绑定
+
+                                            Get.toNamed(
+                                                Routes.MOULD_BIND_MOULDLIST,
+                                                arguments: {
+                                                  'taskType':
+                                                      '${homeController.state.mouldBindTaskList?.data?.unfinishedTaskList?[index]?.taskType}',
+                                                  'taskNo':
+                                                      '${homeController.state.mouldBindTaskList?.data?.unfinishedTaskList?[index]?.taskNo}',
+                                                  'bindStatus': BIND_STATUS_ALL
+                                                })
+                                          },
                                         ),
                                       )),
                                   itemCount: homeController

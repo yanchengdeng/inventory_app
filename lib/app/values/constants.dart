@@ -28,3 +28,7 @@ const String TOOL_TYPE_M = 'M';
 ///任务类型   0为支付，1为标签替换
 const int MOULD_TASK_TYPE_PAY = 0;
 const int MOULD_TASK_TYPE_LABEL = 1;
+
+
+//card 阴影值 elevation
+const double CARD_ELEVATION = 5.0;

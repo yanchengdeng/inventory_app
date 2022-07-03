@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../style/text_style.dart';
+import '../../../values/constants.dart';
 import '../../../widgets/button.dart';
 import '../../../widgets/toast.dart';
 import '../../home/controllers/home_controller.dart';
@@ -74,7 +75,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                           child: homeController.state.selectedTab
                               ? ListView.builder(
                                   itemBuilder: ((context, index) => Card(
-                                        elevation: 10,
+                                        elevation: CARD_ELEVATION,
                                         shadowColor: Colors.grey,
                                         child: InkWell(
                                           child: Container(

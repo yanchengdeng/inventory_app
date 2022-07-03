@@ -4,7 +4,7 @@ import 'package:inventory_app/app/utils/logger.dart';
 /**
  * 模具绑定控制器  主要处理业务逻辑
  */
-class MouldBindTasklistController extends GetxController {
+class MouldBindTaskListController extends GetxController {
 
 
   @override

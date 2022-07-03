@@ -5,16 +5,13 @@ import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../style/text_style.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
-import 'package:inventory_app/app/style/style.dart';
-import 'package:inventory_app/app/widgets/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../values/constants.dart';
 import '../controllers/mould_bind_tasklist_controller.dart';
 
 /**
  * 绑定任务列表
  */
-class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
+class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
   final RefreshController _refreshBindTaskController =
       RefreshController(initialRefresh: false);
 
@@ -76,7 +73,7 @@ class MouldBindTaskListView extends GetView<MouldBindTasklistController> {
                           child: homeController.state.selectedTab
                               ? ListView.builder(
                                   itemBuilder: ((context, index) => Card(
-                                        elevation: 10,
+                                        elevation: CARD_ELEVATION,
                                         shadowColor: Colors.grey,
                                         child: InkWell(
                                           child: Container(

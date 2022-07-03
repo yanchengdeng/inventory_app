@@ -1,14 +1,11 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../../style/text_style.dart';
 import '../../../values/constants.dart';
-import '../../home/controllers/home_controller.dart';
 import '../controllers/mould_bind_mouldlist_controller.dart';
 
 ///  模具绑定任务信息列表
@@ -66,7 +63,7 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                         onRefresh: _onRefresh,
                         child: ListView.builder(
                           itemBuilder: ((context, index) => Card(
-                                elevation: 10,
+                                elevation: CARD_ELEVATION,
                                 shadowColor: Colors.grey,
                                 child: InkWell(
                                   child: Container(

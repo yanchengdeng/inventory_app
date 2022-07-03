@@ -8,9 +8,7 @@ import 'package:inventory_app/app/routes/app_pages.dart';
 import 'package:inventory_app/app/style/style.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../../../style/text_style.dart';
 import '../../../values/constants.dart';
-import '../../../values/fontsize.dart';
 import '../controllers/mould_bind_tasklist_controller.dart';
 
 /**

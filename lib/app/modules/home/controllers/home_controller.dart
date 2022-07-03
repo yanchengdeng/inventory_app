@@ -45,10 +45,11 @@ class HomeController extends GetxController {
    */
 
   getMouldTaskListByKeyOrStatus(String taskNo, String key, List<int> bindStatus,
-      List<String> toolingType) async {
-    state.mouldBindTaskListSearch = await state
-        .mouldBindTaskList.value?.data?.unfinishedTaskList
-        ?.where((element) => element.taskNo == taskNo);
+      List<String> toolingType) {
+    List<FinishedTaskList> unfinishedTaskList =
+        state.mouldBindTaskList.data.unfinishedTaskList;
+    state.mouldBindTaskListSearch =
+        unfinishedTaskList.where((element) => element.taskNo == taskNo).first;
   }
 
   @override

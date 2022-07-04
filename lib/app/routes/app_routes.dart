@@ -11,6 +11,7 @@ abstract class Routes {
   static const MOULD_BIND_TASKLIST = _Paths.MOULD_BIND_TASKLIST;
   static const INVENTORY_TASKLIST = _Paths.INVENTORY_TASKLIST;
   static const MOULD_BIND_MOULDLIST = _Paths.MOULD_BIND_MOULDLIST;
+  static const MOULD_READ_RESULT = _Paths.MOULD_READ_RESULT;
 }
 
 abstract class _Paths {
@@ -23,4 +24,5 @@ abstract class _Paths {
   static const MOULD_BIND_TASKLIST = '/mould-bind-tasklist';
   static const INVENTORY_TASKLIST = '/inventory-tasklist';
   static const MOULD_BIND_MOULDLIST = '/mould-bind-mouldlist';
+  static const MOULD_READ_RESULT = '/mould-read-result';
 }

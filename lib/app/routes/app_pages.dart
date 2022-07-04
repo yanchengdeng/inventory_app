@@ -16,6 +16,8 @@ import '../modules/mould_bind_mouldlist/bindings/mould_bind_mouldlist_binding.da
 import '../modules/mould_bind_mouldlist/views/mould_bind_mouldlist_view.dart';
 import '../modules/mould_bind_tasklist/bindings/mould_bind_tasklist_binding.dart';
 import '../modules/mould_bind_tasklist/views/mould_bind_tasklist_view.dart';
+import '../modules/mould_read_result/bindings/mould_read_result_binding.dart';
+import '../modules/mould_read_result/views/mould_read_result_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import 'observers.dart';
@@ -69,6 +71,11 @@ class AppPages {
       name: _Paths.MOULD_BIND_MOULDLIST,
       page: () => MouldBindMouldListView(),
       binding: MouldBindMouldlistBinding(),
+    ),
+    GetPage(
+      name: _Paths.MOULD_READ_RESULT,
+      page: () => MouldReadResultView(),
+      binding: MouldReadResultBinding(),
     ),
   ];
 }

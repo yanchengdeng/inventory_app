@@ -57,6 +57,12 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 flutter {
@@ -65,4 +71,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation(name: 'honeywell_rfid_sdk', ext: 'aar')
 }

@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/routes/app_pages.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../style/text_style.dart';
@@ -90,7 +91,9 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                           ),
                                           Spacer(flex: 1),
                                           ElevatedButton(
-                                              onPressed: () => {},
+                                              onPressed: () => {
+                                                Get.toNamed(Routes.MOULD_READ_RESULT)
+                                              },
                                               child: Text('绑定')),
                                         ]),
                                         Padding(

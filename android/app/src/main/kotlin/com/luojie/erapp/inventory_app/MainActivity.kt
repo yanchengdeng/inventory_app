@@ -3,7 +3,9 @@ package com.luojie.erapp.inventory_app
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.NonNull
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.honeywell.rfidservice.RfidManager
@@ -31,11 +33,11 @@ class MainActivity : FlutterActivity() {
     private val STOP_READ_RFID_DATA = "stopReadRfidSdk"
 
     ///rfidManager
-    private lateinit var rfidMgr: RfidManager
+    private  var rfidMgr: RfidManager? = null
 
     /// rfid读取类
     lateinit var mRfidReader: RfidReader
-    private lateinit var blueToothDialog: BlueToothDialog
+    private  var blueToothDialog: BlueToothDialog? = null
 
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
@@ -68,10 +70,14 @@ class MainActivity : FlutterActivity() {
 
         rfidMgr = RfidManager.getInstance(this)
         if (blueToothDialog == null) {
-            blueToothDialog = BlueToothDialog(rfidMgr)
-//            blueToothDialog.showNow(fragmentManager!!, "dialog")
-        } else if (blueToothDialog.isAdded) {
-//            blueToothDialog.showNow(fragmentManager!!, "dialog")
+            blueToothDialog = BlueToothDialog(MainActivity@this,rfidMgr!!)
+            val window = blueToothDialog?.window
+            val height = resources.displayMetrics.heightPixels
+            val width = resources.displayMetrics.widthPixels
+            window?.setLayout(width -100,height-150)
+            blueToothDialog?.show()
+        } else if (!blueToothDialog?.isShowing!!) {
+            blueToothDialog?.show()
         }
     }
 
@@ -96,6 +102,17 @@ class MainActivity : FlutterActivity() {
             }
         }
         return true
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        Log.w("yancheng","onResume------")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.w("yancheng","onPause------")
     }
 
 

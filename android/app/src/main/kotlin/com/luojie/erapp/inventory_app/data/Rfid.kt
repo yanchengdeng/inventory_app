@@ -9,12 +9,13 @@ import android.bluetooth.BluetoothDevice
  * @desc :
  */
 
- class BtDeviceInfo(dev: BluetoothDevice, rssi: Int) {
+ class BtDeviceInfo(dev: BluetoothDevice//, rssi: Int
+) {
     var dev: BluetoothDevice
-    var rssi: Int
+//    var rssi: Int
 
     init {
         this.dev = dev
-        this.rssi = rssi
+//        this.rssi = rssi
     }
 }

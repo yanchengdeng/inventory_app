@@ -74,9 +74,8 @@
         android:id="@+id/lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rlTop"
         android:layout_above="@+id/layout_btn"
-        />
+        android:layout_below="@+id/rlTop" />
 
 
 

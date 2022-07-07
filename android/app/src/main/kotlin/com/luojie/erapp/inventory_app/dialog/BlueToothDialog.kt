@@ -7,16 +7,21 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.app.ActivityCompat
 import com.honeywell.rfidservice.EventListener
 import com.honeywell.rfidservice.RfidManager
 import com.honeywell.rfidservice.TriggerMode
@@ -24,6 +29,8 @@ import com.honeywell.rfidservice.rfid.RfidReader
 import com.luojie.erapp.inventory_app.MainActivity
 import com.luojie.erapp.inventory_app.R
 import com.luojie.erapp.inventory_app.data.BtDeviceInfo
+import androidx.activity.result.ActivityResultLauncher
+
 
 /**
  * @author  : yanc
@@ -49,6 +56,36 @@ class BlueToothDialog(context: Activity,rfidMgr: RfidManager) : Dialog(context,R
     private var mDevices  = mutableListOf<BtDeviceInfo>()
     private var mSelectedIdx = -1
     private var mAdapter: MyAdapter? = null
+
+    private val mFindBluetoothReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                BluetoothAdapter.ACTION_DISCOVERY_STARTED ->{
+                    //开始扫描
+                    tvScan.text = "搜索中..."
+                }
+                BluetoothDevice.ACTION_FOUND -> {
+                    val device =
+                        intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+
+                    device?.let {
+                        mDevices.add(BtDeviceInfo(it))
+                        mContext.runOnUiThread {
+                            mAdapter?.notifyDataSetChanged()
+                        }
+
+                    }
+                    Log.i("yancheng---Bluetooth", "onReceive: ===============>${device}")
+                }
+
+                //扫描结束
+                BluetoothAdapter.ACTION_DISCOVERY_FINISHED->{
+
+                   tvScan.text = "搜索"
+                }
+            }
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,8 +115,21 @@ class BlueToothDialog(context: Activity,rfidMgr: RfidManager) : Dialog(context,R
             if (tvScan.text.contains("搜索中")){
                 return@setOnClickListener
             }
-            autoSearchBlueTooth()
+
+            if (mBluetoothAdapter?.enable()) {
+                autoSearchBlueTooth()
+            }else{
+                Toast.makeText(context,"请打开蓝牙",Toast.LENGTH_SHORT).show()
+            }
         }
+        initBlueBroadCast()
+    }
+
+
+    private fun initBlueBroadCast(){
+        mContext. registerReceiver(mFindBluetoothReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
+        mContext.registerReceiver(mFindBluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED))
+        mContext.registerReceiver(mFindBluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
     }
 
     private fun connect() {
@@ -121,17 +171,14 @@ class BlueToothDialog(context: Activity,rfidMgr: RfidManager) : Dialog(context,R
     private fun autoSearchBlueTooth() {
         mDevices = mutableListOf()
         mSelectedIdx = -1
-        mAdapter!!.notifyDataSetChanged()
-
-        mBluetoothAdapter.startLeScan(mLeScanCallback)
-        tvScan.text = "搜索中..."
+        mAdapter?.notifyDataSetChanged()
+        mBluetoothAdapter?.startDiscovery()
         mHandler.postDelayed({ stopScan() }, (5 * 1000).toLong())
     }
 
 
     private fun stopScan() {
-        mBluetoothAdapter.stopLeScan(mLeScanCallback)
-        tvScan.text="搜索"
+        mBluetoothAdapter?.cancelDiscovery()
     }
 
     private fun disconnect() {
@@ -139,38 +186,11 @@ class BlueToothDialog(context: Activity,rfidMgr: RfidManager) : Dialog(context,R
     }
 
 
-    private var mPrevListUpdateTime: Long = 0
-    @SuppressLint("MissingPermission")
-    private val mLeScanCallback =
-        BluetoothAdapter.LeScanCallback { device, rssi, _ ->
-            if (device.name != null && device.name.isNotEmpty()) {
-                synchronized(mDevices) {
-                    var newDevice = true
-                    for (info in mDevices) {
-                        if (device.address == info.dev.address) {
-                            newDevice = false
-                            info.rssi = rssi
-                        }
-                    }
-                    if (newDevice) {
-                        mDevices.add(BtDeviceInfo(device, rssi))
-                    }
-                    val cur = System.currentTimeMillis()
-                    if (newDevice || cur - mPrevListUpdateTime > 500) {
-                        mPrevListUpdateTime = cur
-                        mContext.runOnUiThread(Runnable { mAdapter!!.notifyDataSetChanged() })
-                    }
-                }
-            }
-        }
-
-
     private fun isConnected(): Boolean {
         return mRfidMgr.isConnected
     }
     inner class MyAdapter(private val ctx: Context, ls: List<BtDeviceInfo>?) :
         ArrayAdapter<BtDeviceInfo?>(ctx, 0, ls!!) {
-        @SuppressLint("MissingPermission")
         override fun getView(position: Int, v: View?, parent: ViewGroup): View {
             var v = v
             val vh: ViewHolder
@@ -188,7 +208,6 @@ class BlueToothDialog(context: Activity,rfidMgr: RfidManager) : Dialog(context,R
             val item: BtDeviceInfo = mDevices.get(position)
             vh.tvName!!.text = item.dev.name
             vh.tvAddr!!.text = item.dev.address
-            vh.tvRssi!!.text = item.rssi.toString()
             if (position == mSelectedIdx) {
                 v.setBackgroundColor(Color.rgb(220, 220, 220))
             } else {

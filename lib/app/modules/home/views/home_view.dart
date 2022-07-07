@@ -16,9 +16,10 @@ class HomeView extends GetView<HomeController> {
 
   void _onRefresh() async {
     // monitor network fetch
+    _refreshController.refreshCompleted();
     await controller.getMouldTaskList();
     await controller.getInventoryList();
-    _refreshController.refreshCompleted();
+
     // if failed,use refreshFailed()
   }
 

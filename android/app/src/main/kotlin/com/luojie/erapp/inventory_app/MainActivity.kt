@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.NonNull
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.honeywell.rfidservice.RfidManager
@@ -51,8 +50,6 @@ class MainActivity : FlutterActivity() {
                 INIT_RFID_SDK -> {
                     if (requestPermissions()) {
                         initBlueTooth()
-                    } else {
-                        requestPermissions()
                     }
                 }
                 START_READ_RFID_DATA -> {
@@ -81,6 +78,8 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+
+
     private fun requestPermissions(): Boolean {
         if (Build.VERSION.SDK_INT >= 23) {
             for (i in mPermissions.indices) {
@@ -101,6 +100,7 @@ class MainActivity : FlutterActivity() {
                 return false
             }
         }
+
         return true
     }
 

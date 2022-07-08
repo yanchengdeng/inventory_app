@@ -9,13 +9,6 @@ import android.bluetooth.BluetoothDevice
  * @desc :
  */
 
- class BtDeviceInfo(dev: BluetoothDevice//, rssi: Int
-) {
-    var dev: BluetoothDevice
-//    var rssi: Int
 
-    init {
-        this.dev = dev
-//        this.rssi = rssi
-    }
-}
+
+data class BtDeviceInfo(val macAddress : BluetoothDevice, val name: String, val rssi: Int,var  isSelected : Boolean )

@@ -23,16 +23,19 @@
             <Button
                 android:id="@+id/btn_connect"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
+                android:background="@color/gray_cccccc"
                 android:text="连接蓝牙"
                 />
 
             <Button
                 android:id="@+id/btn_create_reader"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
+                android:layout_marginLeft="30dp"
+                android:background="@color/gray_cccccc"
                 android:text="创建读写器" />
         </LinearLayout>
 
@@ -64,14 +67,14 @@
             android:layout_alignParentRight="true"
             android:padding="10dp"
             android:text="搜索"
-            android:textColor="@android:color/background_dark"
+            android:textColor="@color/green_2967FF"
             android:textSize="20sp"
             android:textStyle="bold" />
 
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/lv"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_btn"

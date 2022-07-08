@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.NonNull
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.honeywell.rfidservice.RfidManager
@@ -18,9 +20,8 @@ class MainActivity : FlutterActivity() {
     private val CHANNEL = "mould_read_result/blue_teeth"
 
     //授权返回
-    private val PERMISSION_REQUEST_CODE = 1
+    private val PERMISSION_REQUEST_CODE = 100
     private val mPermissions = listOf(Manifest.permission.ACCESS_COARSE_LOCATION)
-    private val mRequestPermissions = mutableListOf<String>()
 
     ///初始化rfid_sdk
     private val INIT_RFID_SDK = "initRfidSdk"
@@ -39,6 +40,7 @@ class MainActivity : FlutterActivity() {
     private  var blueToothDialog: BlueToothDialog? = null
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(
@@ -48,9 +50,7 @@ class MainActivity : FlutterActivity() {
 
             when (call.method) {
                 INIT_RFID_SDK -> {
-                    if (requestPermissions()) {
-                        initBlueTooth()
-                    }
+                    checkPermission()
                 }
                 START_READ_RFID_DATA -> {
 
@@ -79,29 +79,32 @@ class MainActivity : FlutterActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun checkPermission(){
+        if (PackageManager.PERMISSION_GRANTED != checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)){
+            //判断是否以授权相机权限，没有则授权
+            ActivityCompat.requestPermissions(
+                this,
+                mPermissions.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
+        }else{
+            initBlueTooth()
+        }
+    }
 
-    private fun requestPermissions(): Boolean {
-        if (Build.VERSION.SDK_INT >= 23) {
-            for (i in mPermissions.indices) {
-                if (ContextCompat.checkSelfPermission(
-                        this,
-                        mPermissions[i]
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    mRequestPermissions.add(mPermissions[i])
-                }
-            }
-            if (mRequestPermissions.isNotEmpty()) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    mPermissions.toTypedArray(),
-                    PERMISSION_REQUEST_CODE
-                )
-                return false
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == PERMISSION_REQUEST_CODE){
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                initBlueTooth()
+            }else{
+                Toast.makeText(MainActivity@this,"请授权",Toast.LENGTH_LONG).show()
             }
         }
-
-        return true
     }
 
 

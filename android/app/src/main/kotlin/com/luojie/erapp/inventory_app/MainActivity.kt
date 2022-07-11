@@ -53,10 +53,11 @@ class MainActivity : FlutterActivity() {
                     checkPermission()
                 }
                 START_READ_RFID_DATA -> {
+//                    mRfidReader?.read()
 
                 }
                 STOP_READ_RFID_DATA -> {
-
+//                    mRfidReader?.stopRead()
                 }
             }
         }

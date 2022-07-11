@@ -71,7 +71,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
                         intent.getStringExtra(BluetoothDevice.EXTRA_NAME) + ""
 
                     val rssi =
-                        intent.getIntExtra(BluetoothDevice.EXTRA_RSSI, 0)
+                        intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, 0)
 
                     device?.let {
                         mDevices.add(BtDeviceInfo(macAddress = device, rssi = rssi, name = name, isSelected = false))
@@ -127,12 +127,20 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
             }
         }
 
+        //创建读写
+        mBtnCreateReader.setOnClickListener {
+            mHandler.postDelayed({
+                mRfidMgr.createReader()
+            }, 1000)
+        }
+
+        //扫描
         tvScan.setOnClickListener {
             if (isSearchBlueTooth()) {
                 return@setOnClickListener
             }
 
-            if (mBluetoothAdapter?.enable()) {
+            if (mBluetoothAdapter.enable()) {
                 autoSearchBlueTooth()
             } else {
                 Toast.makeText(context, "请打开蓝牙", Toast.LENGTH_SHORT).show()
@@ -201,8 +209,9 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
     private fun autoSearchBlueTooth() {
         mDevices = mutableListOf()
         mAdapter.notifyDataSetChanged()
+        mBluetoothAdapter.cancelDiscovery()
         mBluetoothAdapter.startDiscovery()
-        mHandler.postDelayed({ stopScan() }, (8 * 1000).toLong())
+        mHandler.postDelayed({ stopScan() }, (5 * 1000).toLong())
     }
 
 
@@ -213,6 +222,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
 
     private fun disconnect() {
         mRfidMgr.disconnect()
+        mRfidMgr.removeEventListener(mEventListener)
     }
 
 

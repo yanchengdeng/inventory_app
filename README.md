@@ -34,7 +34,14 @@ samples, guidance on mobile development, and a full API reference.
 1. 设备  sdk 功能实现
 2. 本地数据库
 3. 水印图片
-4.  flutter 调用android 原生开发
+4. flutter 调用android 原生开发
+
+
+
+
+### 移植到安卓问题
+1.测试 读取 rfid数据的sdk 在普通的安卓手机上读取失败
+2.扫描sdk 在普通安卓手机上实现不了，目前看到设备上是有一个扫描按钮来触发的
 
 
 

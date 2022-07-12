@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 import '../controllers/mould_read_result_controller.dart';
@@ -15,27 +14,26 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
         title: Text('MouldReadResultView'),
         centerTitle: true,
       ),
-      body: Column(
-        children:[ 
-          ElevatedButton(
+      body: Column(children: [
+        ElevatedButton(
           child: Text('连接蓝牙'),
-          onPressed: ()=>{
-            controller.initRfidData()
-          },
+          onPressed: () => {controller.initRfidData()},
         ),
         Obx(() => Text('结果${controller.rfidData}')),
-
-          ElevatedButton(
-            child: Text('读取数据'),
-            onPressed: ()=>{
-              controller.startReadRfidData()
-            },
-          ),
-          Obx(() => Text('结果${controller.rfidData}')),
-
-
-        ]
-      ),
+        ElevatedButton(
+          child: Obx(() => getReadButton()),
+          onPressed: () => {controller.startReadRfidData()},
+        ),
+        Obx(() => Text('结果${controller.rfidData}')),
+      ]),
     );
+  }
+
+  Widget getReadButton() {
+    if (controller.isReadData.value) {
+      return Text('开始读取');
+    } else {
+      return Text("停止读取");
+    }
   }
 }

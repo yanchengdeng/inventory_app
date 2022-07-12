@@ -5,6 +5,8 @@ class MouldReadResultController extends GetxController {
 
   var rfidData = Rx<String>("no data");
   var rfidReadData = Rx<List<String>>(List.empty());
+  //读取rfid数据
+  var isReadData = Rx(true);
 
 ///RFID SDK 通信channel
   static const String READ_RFID_DATA_CHANNEL = 'mould_read_result/blue_teeth';
@@ -27,9 +29,22 @@ class MouldReadResultController extends GetxController {
 
 
   startReadRfidData() async{
-    var rfidDataFromAndroid = (await platform.invokeMethod(START_READ_RFID_DATA)) ;
-    rfidReadData.value = rfidDataFromAndroid;
+    if(isReadData.value) {
+      var rfidDataFromAndroid = (await platform.invokeMethod(
+          START_READ_RFID_DATA));
+      rfidReadData.value = rfidDataFromAndroid;
+      isReadData.value = false;
+    }else{
+      var rfidDataFromAndroid = (await platform.invokeMethod(STOP_READ_RFID_DATA)) ;
+      rfidReadData.value = rfidDataFromAndroid;
+      isReadData.value = true;
+    }
   }
+
+  // stopReadRfidData() async{
+  //   var rfidDataFromAndroid = (await platform.invokeMethod(STOP_READ_RFID_DATA)) ;
+  //   rfidReadData.value = rfidDataFromAndroid;
+  // }
 
   @override
   void onInit() {

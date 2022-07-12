@@ -8,9 +8,13 @@ import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import com.honeywell.rfidservice.EventListener
 import com.honeywell.rfidservice.RfidManager
+import com.honeywell.rfidservice.TriggerMode
+import com.honeywell.rfidservice.rfid.OnTagReadListener
 import com.honeywell.rfidservice.rfid.RfidReader
+import com.honeywell.rfidservice.rfid.TagAdditionData
+import com.honeywell.rfidservice.rfid.TagReadOption
 import com.luojie.erapp.inventory_app.dialog.BlueToothDialog
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -36,8 +40,11 @@ class MainActivity : FlutterActivity() {
     private  var rfidMgr: RfidManager? = null
 
     /// rfid读取类
-    lateinit var mRfidReader: RfidReader
+    lateinit var mReader: RfidReader
     private  var blueToothDialog: BlueToothDialog? = null
+    // 读写信息
+    private var mTagDataList = mutableListOf<String>()
+    private var mIsReadBtnClicked = false
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -51,17 +58,26 @@ class MainActivity : FlutterActivity() {
             when (call.method) {
                 INIT_RFID_SDK -> {
                     checkPermission()
+                    result.success("已连接：$")
                 }
                 START_READ_RFID_DATA -> {
-//                    mRfidReader?.read()
-
+                    rfidMgr?.addEventListener(mEventListener)
+                    mIsReadBtnClicked = true
+                    read()
+                    result.success(listOf("ok--reading"))
                 }
                 STOP_READ_RFID_DATA -> {
-//                    mRfidReader?.stopRead()
+                    rfidMgr?.removeEventListener(mEventListener)
+                    mIsReadBtnClicked = false
+                    stopRead()
+                    result.success(listOf("ok--stop reading"))
                 }
             }
         }
     }
+
+
+
 
     //初始化蓝牙
     private fun initBlueTooth() {
@@ -108,6 +124,54 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    private val mEventListener: EventListener = object : EventListener {
+        override fun onDeviceConnected(o: Any) {}
+        override fun onDeviceDisconnected(o: Any) {}
+        override fun onReaderCreated(b: Boolean, rfidReader: RfidReader) {}
+        override fun onRfidTriggered(trigger: Boolean) {
+            if (mIsReadBtnClicked || !trigger) {
+                mIsReadBtnClicked = false
+                stopRead()
+            } else {
+                read()
+            }
+        }
+
+        override fun onTriggerModeSwitched(triggerMode: TriggerMode) {}
+    }
+
+
+    private fun isReaderAvailable(): Boolean {
+        return mReader.available()
+    }
+
+    private fun read() {
+        if (isReaderAvailable()) {
+            mTagDataList.clear()
+            mReader.setOnTagReadListener(dataListener)
+            mReader.read(TagAdditionData.get("None"), TagReadOption())
+        }
+    }
+
+    private fun stopRead() {
+        if (isReaderAvailable()) {
+            mReader.stopRead()
+            mReader.removeOnTagReadListener(dataListener)
+        }
+    }
+
+    private val dataListener =
+        OnTagReadListener { t ->
+            synchronized(mTagDataList) {
+                for (trd in t) {
+                    val epc = trd.epcHexStr
+                    if (!mTagDataList.contains(epc)) {
+                        mTagDataList.add(epc)
+                    }
+                }
+                Log.w("yancheng","mTagDataList------$mTagDataList")
+            }
+        }
 
     override fun onResume() {
         super.onResume()

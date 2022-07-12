@@ -131,6 +131,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
         mBtnCreateReader.setOnClickListener {
             mHandler.postDelayed({
                 mRfidMgr.createReader()
+                dismiss()
             }, 1000)
         }
 
@@ -195,7 +196,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
         }
 
         override fun onReaderCreated(b: Boolean, rfidReader: RfidReader) {
-            (mContext as MainActivity).mRfidReader = rfidReader
+            (mContext as MainActivity).mReader = rfidReader
 
         }
 

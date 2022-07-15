@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class SplashController extends GetxController {
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -14,5 +14,4 @@ class SplashController extends GetxController {
 
   @override
   void onClose() {}
-  void increment() => count.value++;
 }

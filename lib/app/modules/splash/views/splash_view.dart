@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/store/user.dart';
+import 'package:inventory_app/app/utils/loading.dart';
 import '../../../routes/app_pages.dart';
 import '../../../values/constants.dart';
 import '../../../widgets/toast.dart';
@@ -55,17 +57,30 @@ class SplashView extends GetView<SplashController> {
             return ServerTrustAuthResponse(
                 action: ServerTrustAuthResponseAction.PROCEED);
           },
+          onLoadStart: (_controller, url){
+            print("地址onLoadStart：${url.toString()}");
+            // if(url.toString() == WEB_LOGIN_URL){
+            //   Loading.show('加载中...');
+            // }else{
+              Loading.show('登陆中...');
+            // }
+          },
           onLoadStop: (_controller, url) {
             print("地址onLoadStop：$url");
-            _controller.clearCache();
-            pageLoaded.complete();
+            Loading.dismiss();
             String loadUrl = "${url?.toString()}";
             if (loadUrl.contains('x-mid-token=')) {
               var listSplits = loadUrl.split(SPLIT_URL);
               if (listSplits.length == 2) {
-                listSplits[1];
+                ///保存token
+                UserStore.to.setToken(listSplits[1]);
                 Get.offAndToNamed(Routes.MAIN);
+                Loading.toast('登陆成功');
+                _controller.clearCache();
+                pageLoaded.complete();
               } else {
+                _controller.clearCache();
+                pageLoaded.complete();
                 toastInfo(msg: "页面异常");
                 _controller.reload();
                 _controller.loadUrl(

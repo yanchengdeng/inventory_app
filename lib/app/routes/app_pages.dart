@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:inventory_app/app/store/store.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
@@ -29,7 +30,7 @@ class AppPages {
   static final RouteObserver<Route> observer = RouteObservers();
   static List<String> history = [];
 
-  static const INITIAL = Routes.SPLASH;
+  // static const INITIAL =   Routes.SPLASH;
 
   static final routes = [
     GetPage(

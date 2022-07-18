@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 import 'app/langs/translation_service.dart';
 import 'app/routes/app_pages.dart';
 import 'app/store/config.dart';
+import 'app/store/user.dart';
 import 'app/style/style.dart';
 import 'app/utils/utils.dart';
 import 'global.dart';
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
           title: 'News',
           theme: AppTheme.light,
           debugShowCheckedModeBanner: false,
-          initialRoute: AppPages.INITIAL,
+          initialRoute: UserStore.to.hasToken ? Routes.MAIN : Routes.SPLASH,
           getPages: AppPages.routes,
           builder: EasyLoading.init(),
           translations: TranslationService(),

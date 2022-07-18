@@ -32,6 +32,8 @@ const int MOULD_TASK_TYPE_LABEL = 1;
 ///card 阴影值 elevation
 const double CARD_ELEVATION = 5.0;
 
+const String WEB_LOGIN_URL_HOST = 'https://sgm-stg.login.ap1.covapp.io/login.do?';
+
 ///网页登录地址  测试账号 寒武蚂蚁:
 /// REBE002/Test4444
 /// REBE002ADMIN/Test4444

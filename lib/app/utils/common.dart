@@ -17,9 +17,9 @@ class CommonUtils {
 
   //退出登录
   static void logOut() {
-    EasyLoading.showError('请重新登录');
     UserStore.to.onLogout();
     Get.offAllNamed(Routes.SPLASH);
+    EasyLoading.showError('请重新登录');
   }
 
   /**

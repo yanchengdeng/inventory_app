@@ -42,8 +42,10 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                               selected: homeController.state.selectedTab,
                               isLeft: true,
                               callback: () {
-                                homeController.state.selectedTab =
-                                    !homeController.state.selectedTab;
+                                if(!homeController.state.selectedTab){
+                                  homeController.state.selectedTab =
+                                  !homeController.state.selectedTab;
+                                }
                               }),
                           flex: 1,
                         ),
@@ -54,8 +56,10 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                               selected: !homeController.state.selectedTab,
                               isLeft: false,
                               callback: () {
-                                homeController.state.selectedTab =
-                                    !homeController.state.selectedTab;
+                                if(homeController.state.selectedTab) {
+                                  homeController.state.selectedTab =
+                                  !homeController.state.selectedTab;
+                                }
                               }),
                           flex: 1,
                         )
@@ -97,7 +101,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '盘点年份：2022（待）',
+                                                            '盘点年份：${homeController.state.inventoryList?.data?.finishedList?[index]?.distributionTime.substring(0,4)}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -226,7 +230,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text('I23234234(待)',
+                                              Text('${homeController.state.inventoryList?.data?.finishedList?[index]?.taskNo}',
                                                   style: textBoldNumberStyle()),
                                               Row(
                                                 children: [
@@ -237,7 +241,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                           AlignmentDirectional
                                                               .topStart,
                                                       child: Text(
-                                                          '盘点年份：2022（待）',
+                                                          '盘点年份：${homeController.state.inventoryList?.data?.finishedList?[index]?.distributionTime.substring(0,4)}',
                                                           style:
                                                               textNormalListTextStyle()),
                                                     ),
@@ -248,7 +252,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                       alignment:
                                                           AlignmentDirectional
                                                               .topEnd,
-                                                      child: Text('盘点类型：年份(待)',
+                                                      child: Text('盘点类型：${homeController.state.inventoryList?.data?.finishedList?[index]?.inventoryTypeText}',
                                                           style:
                                                               textNormalListTextStyle()),
                                                     ),
@@ -264,7 +268,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                           AlignmentDirectional
                                                               .topStart,
                                                       child: Text(
-                                                          '截止日期：${homeController.state.inventoryList?.data?.unfinishedList?[index]?.endDate}',
+                                                          '截止日期：${homeController.state.inventoryList?.data?.finishedList?[index]?.endDate}',
                                                           style:
                                                               textNormalListTextStyle()),
                                                     ),
@@ -276,7 +280,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                           AlignmentDirectional
                                                               .topEnd,
                                                       child: Text(
-                                                          '盘点总数：${homeController.state.inventoryList?.data?.unfinishedList?[index]?.inventoryTotal}',
+                                                          '盘点总数：${homeController.state.inventoryList?.data?.finishedList?[index]?.inventoryTotal}',
                                                           style:
                                                               textNormalListTextStyle()),
                                                     ),

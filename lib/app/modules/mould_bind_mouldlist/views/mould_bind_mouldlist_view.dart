@@ -19,7 +19,7 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
     final homeController = controller.homeController;
     return Scaffold(
         appBar: AppBar(
-          title: Text('模具绑定${Get.arguments['taskNo']}'),
+          title: Text('模具绑定'),
           centerTitle: true,
         ),
         body: Container(

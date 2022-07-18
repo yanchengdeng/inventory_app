@@ -55,8 +55,14 @@ dependencies:
    # 日期
   intl: ^0.17.0
 
-  # webview
-  webview_flutter: ^3.0.4
+#   webview
+  flutter_inappwebview: ^5.4.3
+#  webview_flutter: ^3.0.4
+  # webView使用本地插件，忽略ssl证书
+#  webview_flutter:
+#    git:
+#      url: https://github.com/Fitem/webview_flutter.git
+
 
 dev_dependencies: 
   flutter_test: 

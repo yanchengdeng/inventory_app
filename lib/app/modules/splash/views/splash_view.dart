@@ -57,12 +57,12 @@ class SplashView extends GetView<SplashController> {
             return ServerTrustAuthResponse(
                 action: ServerTrustAuthResponseAction.PROCEED);
           },
-          onLoadStart: (_controller, url){
+          onLoadStart: (_controller, url) {
             print("地址onLoadStart：${url.toString()}");
             // if(url.toString() == WEB_LOGIN_URL){
             //   Loading.show('加载中...');
             // }else{
-              Loading.show('登陆中...');
+            Loading.show('登陆中...');
             // }
           },
           onLoadStop: (_controller, url) {
@@ -75,7 +75,7 @@ class SplashView extends GetView<SplashController> {
                 ///保存token
                 UserStore.to.setToken(listSplits[1]);
                 Get.offAndToNamed(Routes.MAIN);
-                Loading.toast('登陆成功');
+                toastInfo(msg: '登陆成功');
                 _controller.clearCache();
                 pageLoaded.complete();
               } else {

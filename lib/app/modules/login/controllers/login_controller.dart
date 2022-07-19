@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/apis/apis.dart';
 import 'package:inventory_app/app/entity/user.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
 import '../../../apis/user_api.dart';
@@ -31,17 +32,28 @@ class LoginController extends GetxController {
     LogSingleton.getInstance()?.d("${params.toJson()}");
 
     EasyLoading.show(status: "登陆中");
-    UserLoginResponseEntity userProfile = await UserAPI.login(
+    await UserAPI.login(
       params: params,
     );
-    // if (userProfile.code == SERVER_RESULT_OK) {
-    //   UserStore.to.saveProfile(userProfile);
-    //   Get.offAndToNamed(Routes.HOME);
-    // } else {
-    //   toastInfo(msg: userProfile.msg!);
+  }
+
+  // 执行登录操作
+  handleSignIn1() async {
+    // if (!duIsEmail(_emailController.value.text)) {
+    //   toastInfo(msg: '请正确输入邮件');
+    //   return;
+    // }
+    // if (!duCheckStringLength(_passController.value.text, 6)) {
+    //   toastInfo(msg: '密码不能小于6位');
+    //   return;
     // }
 
-    Get.offAndToNamed(Routes.MAIN);
+    UserLoginParamsEntity params = UserLoginParamsEntity(
+        account: phoneController.value.text,
+        // password: duSHA256(passController.value.text),
+        password: passController.value.text);
+
+    await FileApi.getFileToken();
   }
 
   @override

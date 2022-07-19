@@ -119,7 +119,7 @@ class HttpUtil {
         ', error.message -> ' +
         eInfo.message);
     switch (eInfo.state) {
-      case 401:
+      case TOKEN_OUT_CODE:
         CommonUtils.logOut();
         break;
       default:
@@ -203,7 +203,7 @@ class HttpUtil {
   Map<String, dynamic>? getAuthorizationHeader() {
     var headers = <String, dynamic>{};
     if (Get.isRegistered<UserStore>() && UserStore.to.hasToken == true) {
-      headers['Authorization'] = 'Bearer ${UserStore.to.token}';
+      headers['x-mid-token'] = '${UserStore.to.token}';
     }
     return headers;
   }

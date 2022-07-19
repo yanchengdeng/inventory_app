@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.light,
           debugShowCheckedModeBanner: false,
           initialRoute: UserStore.to.hasToken ? Routes.MAIN : Routes.SPLASH,
+          // initialRoute: Routes.LOGIN,
           getPages: AppPages.routes,
           builder: EasyLoading.init(),
           translations: TranslationService(),

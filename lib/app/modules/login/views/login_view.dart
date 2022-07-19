@@ -53,6 +53,12 @@ class LoginView extends GetView<LoginController> {
                       controller.handleSignIn();
                     },
                   ),
+                  btnFlatButtonWidget(
+                    title: '文件',
+                    onPressed: () async {
+                      controller.handleSignIn1();
+                    },
+                  ),
                 ].expand(
                   (widget) => [
                     widget,

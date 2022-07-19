@@ -227,8 +227,6 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-
-                                              Text(homeController.state.mouldBindTaskList),
                                               Text(
                                                   '支付任务编号：${homeController.state.mouldBindTaskList?.data?.finishedTaskList?[index]?.taskNo}',
                                                   style:

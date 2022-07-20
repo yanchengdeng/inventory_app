@@ -1,7 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../apis/file_api.dart';
+
 class MouldReadResultController extends GetxController {
+
+  var isShowAllInfo = false.obs;
+
   var rfidData = Rx<String>("no data");
   var rfidReadData = Rx<List<String>>(List.empty());
 
@@ -49,11 +54,13 @@ class MouldReadResultController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    FileApi.getFileToken();
   }
 
   @override
   void onReady() {
     super.onReady();
+
   }
 
   @override

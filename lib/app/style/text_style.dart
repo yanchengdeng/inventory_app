@@ -31,6 +31,24 @@ TextStyle textBoldNumberStyle() {
   );
 }
 
+///加粗字体样式
+TextStyle textBoldNumberWhiteStyle() {
+  return TextStyle(
+    fontWeight: FontWeight.w700,
+    color: Colors.white,
+    fontSize: AppFontSize.FONT_SIZE_TITLE.toDouble(),
+  );
+}
+
+///常规字体样式
+TextStyle textLitleWhiteTextStyle() {
+  return TextStyle(
+    fontWeight: FontWeight.w400,
+    color: Colors.white,
+    fontSize: AppFontSize.FONT_SIZE_SUB_TITLE.toDouble(),
+  );
+}
+
 ///常规字体样式
 TextStyle textLitleBlackTextStyle() {
   return TextStyle(

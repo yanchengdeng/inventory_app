@@ -1,22 +1,26 @@
-/// 基础数据返回模板
-class BaseResponseEntity {
+/// 文件服务器返回数据
+/// {
+///       "data": "mzcxi2XdLYD",
+///        "state": 1
+///    }
+class FileTokenResponseEntity {
   int? state;
   String? message;
-  String? time;
+  String? data;
 
-  BaseResponseEntity({this.state, this.message, this.time});
+  FileTokenResponseEntity({this.state, this.message, this.data});
 
-  BaseResponseEntity.fromJson(Map<String, dynamic> json) {
+  FileTokenResponseEntity.fromJson(Map<String, dynamic> json) {
     state = json['state'];
     message = json['message'];
-    time = json['time'];
+    data = json['data'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['state'] = this.state;
     data['message'] = this.message;
-    data['time'] = this.time;
+    data['data'] = this.data;
     return data;
   }
 }

@@ -39,6 +39,11 @@ class HomeState {
 
   get mouldBindTaskListSearch => _mouldBindTaskListSearch.value;
 
+  ///模具资产信息
+  var _assertBindTaskInfo = Rx<MouldList?>(null);
+  set assertBindTaskInfo(value) => _assertBindTaskInfo.value = value;
+  get assertBindTaskInfo => _assertBindTaskInfo.value;
+
   /// 盘点搜索关键字
   var _inventroySearchKey = RxString("");
   set inventroySearchKey(value) => _inventroySearchKey.value = value;

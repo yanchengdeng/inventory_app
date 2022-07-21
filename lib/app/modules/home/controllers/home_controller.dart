@@ -52,6 +52,17 @@ class HomeController extends GetxController {
         unfinishedTaskList.where((element) => element.taskNo == taskNo).first;
   }
 
+  /**
+   * 根据传入的资产编号获取资产编号信息
+   */
+  getAssetBindTaskInfo(String taskNo, String assertNo) {
+    state.assertBindTaskInfo = state.mouldBindTaskList.data.finishedTaskList
+        ?.where((element) => element.taskNo == taskNo)
+        ?.mouldList
+        ?.where((element) => element.assertNo == assertNo)
+        ?.first;
+  }
+
   @override
   void onInit() {
     super.onInit();

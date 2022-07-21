@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:inventory_app/app/store/store.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
@@ -13,14 +12,17 @@ import '../modules/main/bindings/main_binding.dart';
 import '../modules/main/views/main_view.dart';
 import '../modules/mine/bindings/mine_binding.dart';
 import '../modules/mine/views/mine_view.dart';
-import '../modules/mould_bind_mouldlist/bindings/mould_bind_mouldlist_binding.dart';
-import '../modules/mould_bind_mouldlist/views/mould_bind_mouldlist_view.dart';
 import '../modules/mould_bind_tasklist/bindings/mould_bind_tasklist_binding.dart';
 import '../modules/mould_bind_tasklist/views/mould_bind_tasklist_view.dart';
+import '../modules/mould_bind_tasklist_sub_level/bindings/mould_bind_mouldlist_binding.dart';
+import '../modules/mould_bind_tasklist_sub_level/views/mould_bind_mouldlist_view.dart';
 import '../modules/mould_read_result/bindings/mould_read_result_binding.dart';
 import '../modules/mould_read_result/views/mould_read_result_view.dart';
+import '../modules/mould_result_only_view/bindings/mould_result_only_view_binding.dart';
+import '../modules/mould_result_only_view/views/mould_result_only_view_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../store/store.dart';
 import 'observers.dart';
 
 part 'app_routes.dart';
@@ -77,6 +79,11 @@ class AppPages {
       name: _Paths.MOULD_READ_RESULT,
       page: () => MouldReadResultView(),
       binding: MouldReadResultBinding(),
+    ),
+    GetPage(
+      name: _Paths.MOULD_RESULT_ONLY_VIEW,
+      page: () => MouldResultOnlyViewView(),
+      binding: MouldResultOnlyViewBinding(),
     ),
   ];
 }

@@ -18,8 +18,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
       ),
       body: Container(
         child: SingleChildScrollView(
-          child: Column(
-            children: [topInfoWidget(), bottomInfoWidget()],
+          child: Stack(
+            children: [bottomInfoWidget(), topInfoWidget()],
           ),
         ),
       ),
@@ -102,28 +102,52 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
   Widget bottomInfoWidget() {
     return Column(
       children: [
+        Container(
+          color: Colors.red,
+          height: 130,
+        ),
+        Row(
+          children: [
+            Icon(
+              Icons.star,
+              color: Colors.red,
+              size: 10,
+            ),
+            Text('标签编号', style: textBoldNumberBlueStyle()),
+            Text(
+              '(经纬度xxxx)',
+              style: textNormalListTextStyle(),
+            ),
+            ListView.builder(
+              itemCount: 3,
+              itemBuilder: (BuildContext context, int index) {
+                return Text('');
+              },
+            )
+          ],
+        ),
         Image(
-          image: AssetImage('images/icon_arrow_down.png'),
+          image: AssetImage('images/account_header.png'),
           width: 100,
           height: 100,
         ),
         Image(
-          image: AssetImage('images/icon_arrow_down.png'),
+          image: AssetImage('images/account_header.png'),
           width: 100,
           height: 100,
         ),
         Image(
-          image: AssetImage('images/icon_arrow_down.png'),
+          image: AssetImage('images/account_header.png'),
           width: 100,
           height: 100,
         ),
         Image(
-          image: AssetImage('images/icon_arrow_down.png'),
+          image: AssetImage('images/account_header.png'),
           width: 100,
           height: 100,
         ),
         Image(
-          image: AssetImage('images/icon_arrow_down.png'),
+          image: AssetImage('images/account_header.png'),
           width: 100,
           height: 100,
         )

@@ -15,8 +15,6 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-
-
 ###  在线使用json to  data 
 (https://javiercbk.github.io/json_to_dart/)[https://javiercbk.github.io/json_to_dart/]
 
@@ -25,21 +23,23 @@ samples, guidance on mobile development, and a full API reference.
 ### 参考  UI  及 网络请求 参考  ：Flutter_duceecat_news_get
 
 ### 待确定
-
 '0':'待绑定','1':'重新绑定','2':'已上传','？？？':'待上传'
 1. 模具绑定列表    待上传的status 是多少？
 
-
+```text
 待调试
 1. 设备  sdk 功能实现
 2. 本地数据库
 3. 水印图片
 4. flutter 调用android 原生开发
+```
 
-```text
+
+
+### 接口异常处理
 普通接口token 过期显示585
 文件服务  返回500
-```
+
 
 
 
@@ -49,5 +49,6 @@ samples, guidance on mobile development, and a full API reference.
 2.扫描sdk 在普通安卓手机上实现不了，目前看到设备上是有一个扫描按钮来触发的
 
 
+### 一个模具会和多个标签关联如果读到多个标签，只显示一条模具信息，随机一个标签就可以了
 
 

@@ -3,7 +3,7 @@ enum Environment { DEVELOPMENT, PRODUCTION }
 const SERVER_ENV = Environment.DEVELOPMENT;
 
 ///接口域名统一配置  token失效返回 585
-const SERVER_API_URL = 'http://42.192.146.138:39101/rfidapp';
+const SERVER_API_URL = 'http://47.102.199.31:59101/rfidapp';
 
 ///文件服务地址  异常返回 500
 const SERVER_FILE_API_URL =

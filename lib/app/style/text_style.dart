@@ -40,6 +40,15 @@ TextStyle textBoldNumberWhiteStyle() {
   );
 }
 
+///加粗字体样式
+TextStyle textBoldNumberBlueStyle() {
+  return TextStyle(
+    fontWeight: FontWeight.w700,
+    color: Colors.blue,
+    fontSize: AppFontSize.FONT_SIZE_TITLE.toDouble(),
+  );
+}
+
 ///常规字体样式
 TextStyle textLitleWhiteTextStyle() {
   return TextStyle(

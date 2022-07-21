@@ -12,6 +12,7 @@ abstract class Routes {
   static const INVENTORY_TASKLIST = _Paths.INVENTORY_TASKLIST;
   static const MOULD_BIND_MOULDLIST = _Paths.MOULD_BIND_MOULDLIST;
   static const MOULD_READ_RESULT = _Paths.MOULD_READ_RESULT;
+  static const MOULD_RESULT_ONLY_VIEW = _Paths.MOULD_RESULT_ONLY_VIEW;
 }
 
 abstract class _Paths {
@@ -25,4 +26,5 @@ abstract class _Paths {
   static const INVENTORY_TASKLIST = '/inventory-tasklist';
   static const MOULD_BIND_MOULDLIST = '/mould-bind-mouldlist';
   static const MOULD_READ_RESULT = '/mould-read-result';
+  static const MOULD_RESULT_ONLY_VIEW = '/mould-result-only-view';
 }

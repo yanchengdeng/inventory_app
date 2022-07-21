@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -92,8 +93,9 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                           Spacer(flex: 1),
                                           ElevatedButton(
                                               onPressed: () => {
-                                                Get.toNamed(Routes.MOULD_READ_RESULT)
-                                              },
+                                                    Get.toNamed(Routes
+                                                        .MOULD_READ_RESULT)
+                                                  },
                                               child: Text('绑定')),
                                         ]),
                                         Padding(
@@ -125,7 +127,34 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                       ],
                                     ),
                                   ),
-                                  onTap: () => {toastInfo(msg: '全局跳转')},
+                                  onTap: () => {
+                                    if (homeController
+                                            .state
+                                            .mouldBindTaskListSearch
+                                            ?.mouldList[index]
+                                            ?.bindStatus ==
+                                        BIND_STATUS_UPLOADED)
+                                      {
+                                        ///已上传
+                                        ///
+
+                                        Get.toNamed(
+                                            Routes.MOULD_RESULT_ONLY_VIEW,
+                                            arguments: {
+                                              "taskNo": Get.arguments['taskNo'],
+                                              "assetNo": homeController
+                                                  .state
+                                                  .mouldBindTaskListSearch
+                                                  ?.mouldList[index]
+                                                  .assetNo
+                                            })
+                                      }
+                                    else
+                                      {
+                                        ///其他状态直接打开编辑上传页
+                                        Get.toNamed(Routes.MOULD_READ_RESULT)
+                                      }
+                                  },
                                 ),
                               )),
                           itemCount: homeController

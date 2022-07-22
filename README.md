@@ -41,7 +41,37 @@ samples, guidance on mobile development, and a full API reference.
 文件服务  返回500
 
 
+```
+读取标签设置
+/**
+* 设置天线功率
+*绑定那边 是  500
+盘点3000
+* @param power 最大30，最小15
+*/
 
+public void setAntennaPower(int power) {
+
+if (rfid_Reader != null) {
+if (power > 30)
+power = 3000;
+else if (power < 5)
+power = 500;
+else
+power = power * 100;
+AntennaPower[] antennaPowers = new AntennaPower[1];
+AntennaPower antennaPower = new AntennaPower(1, power);
+antennaPowers[0] = antennaPower;
+try {
+rfid_Reader.setAntennaPower(antennaPowers);
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+}
+
+
+```
 
 
 ### 移植到安卓问题

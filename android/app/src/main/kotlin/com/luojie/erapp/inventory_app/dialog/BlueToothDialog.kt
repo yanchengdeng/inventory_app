@@ -197,7 +197,6 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
 
         override fun onReaderCreated(b: Boolean, rfidReader: RfidReader) {
             (mContext as MainActivity).mReader = rfidReader
-
         }
 
         override fun onRfidTriggered(b: Boolean) {}

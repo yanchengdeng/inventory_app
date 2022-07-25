@@ -10,7 +10,6 @@ class FileApi<T> {
   static Future<FileTokenResponseEntity> getFileToken<T>() async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'file_token_get';
-    fileTokenMaps['x-track-code'] = DateTime.now().microsecondsSinceEpoch;
     Options options = Options();
     options.headers = fileTokenMaps;
     var response = await HttpUtil().get(

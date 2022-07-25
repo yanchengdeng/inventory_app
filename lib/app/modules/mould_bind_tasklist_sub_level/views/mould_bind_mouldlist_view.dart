@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
+import 'package:inventory_app/app/utils/utils.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../style/text_style.dart';
@@ -18,6 +19,7 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
   @override
   Widget build(BuildContext context) {
     final homeController = controller.homeController;
+    Log.d("--taskNo-----" + Get.arguments['taskNo']);
     return Scaffold(
         appBar: AppBar(
           title: Text('模具绑定'),

@@ -7,12 +7,10 @@ import 'app/utils/utils.dart';
 
 /// 全局静态数据
 class Global {
-
   /// 初始化
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
     setSystemUi();
     Loading();
 

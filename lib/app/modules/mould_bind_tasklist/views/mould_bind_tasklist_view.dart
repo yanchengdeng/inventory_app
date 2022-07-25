@@ -221,25 +221,39 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                   itemBuilder: ((context, index) => Card(
                                       elevation: 10,
                                       shadowColor: Colors.grey,
-                                      child: Container(
-                                        padding: EdgeInsets.all(12),
-                                        child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  '支付任务编号：${homeController.state.mouldBindTaskList?.data?.finishedTaskList?[index]?.taskNo}',
-                                                  style:
-                                                      textBoldListTextStyle()),
-                                              Text(
-                                                  'PO编号：${homeController.state.mouldBindTaskList?.data?.finishedTaskList?[index]?.poNo}',
-                                                  style:
-                                                      textNormalListTextStyle()),
-                                              Text(
-                                                  '工装模具总数：${homeController.state.mouldBindTaskList?.data?.finishedTaskList?[index]?.totalMoulds}',
-                                                  style:
-                                                      textNormalListTextStyle()),
-                                            ]),
+                                      child: InkWell(
+                                        child: Container(
+                                          padding: EdgeInsets.all(12),
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                    '支付任务编号：${homeController.state.mouldBindTaskList?.data?.finishedTaskList?[index]?.taskNo}',
+                                                    style:
+                                                        textBoldListTextStyle()),
+                                                Text(
+                                                    'PO编号：${homeController.state.mouldBindTaskList?.data?.finishedTaskList?[index]?.poNo}',
+                                                    style:
+                                                        textNormalListTextStyle()),
+                                                Text(
+                                                    '工装模具总数：${homeController.state.mouldBindTaskList?.data?.finishedTaskList?[index]?.totalMoulds}',
+                                                    style:
+                                                        textNormalListTextStyle()),
+                                              ]),
+                                        ),
+                                        onTap: () => {
+                                          ///  绑定
+                                          Get.toNamed(
+                                              Routes.MOULD_BIND_MOULDLIST,
+                                              arguments: {
+                                                'taskType':
+                                                    '${homeController.state.mouldBindTaskList?.data?.unfinishedTaskList?[index]?.taskType}',
+                                                'taskNo':
+                                                    '${homeController.state.mouldBindTaskList?.data?.unfinishedTaskList?[index]?.taskNo}',
+                                                'bindStatus': BIND_STATUS_ALL
+                                              })
+                                        },
                                       ))),
                                   itemCount: homeController
                                       .state

@@ -15,8 +15,9 @@ class MouldResultOnlyViewController extends GetxController {
     String assertNo = Get.arguments['assetNo'];
     Log.d("taskNo=${taskNo},assetNo=${assertNo}");
 
+    ///todo 测试数据
     homeController.getAssetBindTaskInfo(
-        Get.arguments['taskNo'], Get.arguments['assetNo']);
+        'TA123456-1657644993', 'PO139170-1657645101-G');
   }
 
   @override

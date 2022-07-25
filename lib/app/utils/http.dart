@@ -205,6 +205,11 @@ class HttpUtil {
     if (Get.isRegistered<UserStore>() && UserStore.to.hasToken == true) {
       headers['x-mid-token'] = '${UserStore.to.token}';
     }
+    headers['x-track-code'] = DateTime.now().microsecondsSinceEpoch;
+    headers['x-app-code'] = 'RFIDAPP';
+
+    ///todo 后期切换为token
+    headers['x-user-code'] = 'spl01';
     return headers;
   }
 

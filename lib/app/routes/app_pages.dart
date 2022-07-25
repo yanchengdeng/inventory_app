@@ -22,6 +22,8 @@ import '../modules/mould_result_only_view/bindings/mould_result_only_view_bindin
 import '../modules/mould_result_only_view/views/mould_result_only_view_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/take_photo/bindings/take_photo_binding.dart';
+import '../modules/take_photo/views/take_photo_view.dart';
 import '../store/store.dart';
 import 'observers.dart';
 
@@ -84,6 +86,11 @@ class AppPages {
       name: _Paths.MOULD_RESULT_ONLY_VIEW,
       page: () => MouldResultOnlyViewView(),
       binding: MouldResultOnlyViewBinding(),
+    ),
+    GetPage(
+      name: _Paths.TAKE_PHOTO,
+      page: () => TakePhotoView(),
+      binding: TakePhotoBinding(),
     ),
   ];
 }

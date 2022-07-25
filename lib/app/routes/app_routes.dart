@@ -13,6 +13,7 @@ abstract class Routes {
   static const MOULD_BIND_MOULDLIST = _Paths.MOULD_BIND_MOULDLIST;
   static const MOULD_READ_RESULT = _Paths.MOULD_READ_RESULT;
   static const MOULD_RESULT_ONLY_VIEW = _Paths.MOULD_RESULT_ONLY_VIEW;
+  static const TAKE_PHOTO = _Paths.TAKE_PHOTO;
 }
 
 abstract class _Paths {
@@ -27,4 +28,5 @@ abstract class _Paths {
   static const MOULD_BIND_MOULDLIST = '/mould-bind-mouldlist';
   static const MOULD_READ_RESULT = '/mould-read-result';
   static const MOULD_RESULT_ONLY_VIEW = '/mould-result-only-view';
+  static const TAKE_PHOTO = '/take-photo';
 }

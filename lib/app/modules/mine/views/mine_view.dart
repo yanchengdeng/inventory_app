@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/values/fontsize.dart';
-
+import '../../../routes/app_pages.dart';
 import '../../../style/style.dart';
 import '../controllers/mine_controller.dart';
 
@@ -82,9 +82,12 @@ class MineView extends GetView<MineController> {
                       backgroundColor:
                           MaterialStateProperty.all(AppColor.accentColor)),
                   onPressed: () => {
-                        CommonUtils.showCommonDialog(
-                            content: '确定要退出登录吗?',
-                            callback: () => {CommonUtils.logOut()})
+                        // CommonUtils.showCommonDialog(
+                        //     content: '确定要退出登录吗?',
+                        //     callback: () => {CommonUtils.logOut()})
+
+
+                  Get.toNamed(Routes.TAKE_PHOTO)
                       }),
             ),
           ],

@@ -82,4 +82,5 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 //    implementation 'com.guolindev.permissionx:permissionx:1.6.4'
 //    implementation 'com.blankj:utilcodex:1.30.6'
+    implementation'com.github.dfqin:grantor:2.5'
 }

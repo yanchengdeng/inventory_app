@@ -53,10 +53,26 @@ class HomeController extends GetxController {
   }
 
   /**
+   * 已上传的
    * 根据传入的资产编号获取资产编号信息
    */
   getAssetBindTaskInfo(String taskNo, String assetNo) {
     var task = state.mouldBindTaskList.data.finishedTaskList
+        ?.where((element) => element.taskNo == taskNo)
+        ?.first;
+
+    var mouldList = task?.mouldList;
+
+    state.assertBindTaskInfo =
+        mouldList?.where((element) => element.assetNo == assetNo)?.first;
+  }
+
+  /**
+   * 未上传的
+   * 根据传入的资产编号获取资产编号信息
+   */
+  getUnLoadedAssetBindTaskInfo(String taskNo, String assetNo) {
+    var task = state.mouldBindTaskList.data.unfinishedTaskList
         ?.where((element) => element.taskNo == taskNo)
         ?.first;
 

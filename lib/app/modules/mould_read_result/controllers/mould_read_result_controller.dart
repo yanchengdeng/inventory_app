@@ -2,13 +2,18 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../apis/file_api.dart';
+import '../../../utils/logger.dart';
+import '../../home/controllers/home_controller.dart';
 
 class MouldReadResultController extends GetxController {
-
+  final homeController = Get.find<HomeController>();
   var isShowAllInfo = false.obs;
 
   var rfidData = Rx<String>("no data");
   var rfidReadData = Rx<List<String>>(List.empty());
+
+  //经纬度数据121.23312,1232.32
+  var gpsData = Rx<String?>('');
 
   ///读取rfid数据
   var isReadData = Rx(true);
@@ -24,6 +29,9 @@ class MouldReadResultController extends GetxController {
 
   ///rfid 停止通过蓝牙获取信息
   static const String STOP_READ_RFID_DATA = 'stopReadRfidSdk';
+
+  /// 获取gps经纬度
+  static const String GET_GPS_LAT_LNG = 'getGpsLatLng';
 
   static const platform = MethodChannel(READ_RFID_DATA_CHANNEL);
 
@@ -46,6 +54,11 @@ class MouldReadResultController extends GetxController {
     }
   }
 
+  getGpsLagLng() async {
+    var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
+    gpsData.value = latLng;
+  }
+
   // stopReadRfidData() async{
   //   var rfidDataFromAndroid = (await platform.invokeMethod(STOP_READ_RFID_DATA)) ;
   //   rfidReadData.value = rfidDataFromAndroid;
@@ -54,13 +67,21 @@ class MouldReadResultController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    FileApi.getFileToken();
+    // FileApi.getFileToken();
+
+    // String taskNo = Get.arguments['taskNo'];
+    // String assertNo = Get.arguments['assetNo'];
+    // Log.d("taskNo=${taskNo},assetNo=${assertNo}");
+    //
+    // ///todo 测试数据
+    // taskNo = 'TA123456-1657644990';
+    // assertNo = 'PO150150-1657645098-G';
+    // homeController.getUnLoadedAssetBindTaskInfo(taskNo, assertNo);
   }
 
   @override
   void onReady() {
     super.onReady();
-
   }
 
   @override

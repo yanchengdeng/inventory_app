@@ -154,7 +154,15 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                     else
                                       {
                                         ///其他状态直接打开编辑上传页
-                                        Get.toNamed(Routes.MOULD_READ_RESULT)
+                                        Get.toNamed(Routes.MOULD_READ_RESULT,
+                                            arguments: {
+                                              "taskNo": Get.arguments['taskNo'],
+                                              "assetNo": homeController
+                                                  .state
+                                                  .mouldBindTaskListSearch
+                                                  ?.mouldList[index]
+                                                  .assetNo
+                                            })
                                       }
                                   },
                                 ),

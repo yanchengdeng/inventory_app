@@ -82,12 +82,9 @@ class MineView extends GetView<MineController> {
                       backgroundColor:
                           MaterialStateProperty.all(AppColor.accentColor)),
                   onPressed: () => {
-                        // CommonUtils.showCommonDialog(
-                        //     content: '确定要退出登录吗?',
-                        //     callback: () => {CommonUtils.logOut()})
-
-
-                  Get.toNamed(Routes.TAKE_PHOTO)
+                        CommonUtils.showCommonDialog(
+                            content: '确定要退出登录吗?',
+                            callback: () => {CommonUtils.logOut()})
                       }),
             ),
           ],

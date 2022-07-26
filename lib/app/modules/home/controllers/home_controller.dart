@@ -87,6 +87,8 @@ class HomeController extends GetxController {
     super.onInit();
     EasyLoading.show(status: "获取中...");
     Log.d("HomeController--onInit()");
+    getMouldTaskList();
+    getInventoryList();
   }
 
   @override

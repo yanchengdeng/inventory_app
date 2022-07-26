@@ -3,14 +3,14 @@
 
 //模具绑定列表
 class MouldBindList {
-  Data? data;
+  MouldData? data;
   String? message;
   int? state;
 
   MouldBindList({this.data, this.message, this.state});
 
   MouldBindList.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new MouldData.fromJson(json['data']) : null;
     message = json['message'];
     state = json['state'];
   }
@@ -26,19 +26,19 @@ class MouldBindList {
   }
 }
 
-class Data {
+class MouldData {
   int? finished;
   List<FinishedTaskList>? finishedTaskList;
   int? unfinished;
   List<FinishedTaskList>? unfinishedTaskList;
 
-  Data(
+  MouldData(
       {this.finished,
       this.finishedTaskList,
       this.unfinished,
       this.unfinishedTaskList});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  MouldData.fromJson(Map<String, dynamic> json) {
     finished = json['finished'];
     if (json['finishedTaskList'] != null) {
       finishedTaskList = <FinishedTaskList>[];
@@ -77,6 +77,7 @@ class FinishedTaskList {
   List<MouldList>? mouldList;
   String? poNo;
   String? taskNo;
+  ///任务类型(0为支付，1为标签替换)
   int? taskType;
   int? totalMoulds;
 

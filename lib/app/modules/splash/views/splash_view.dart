@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/store/user.dart';
@@ -32,10 +33,10 @@ class SplashView extends GetView<SplashController> {
           return false;
         } else {
           ///TODO  退出app  清除webview 缓存 当h5 可以正常跳转 有限选择下面的pop方案
-          exit(0);
-          // await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-          // Get.offNamed(Routes.SPLASH);
-          // return true;
+          // exit(0);
+          await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+          Get.offNamed(Routes.SPLASH);
+          return true;
         }
       },
       child: Scaffold(

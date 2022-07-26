@@ -4,7 +4,7 @@
 
 class InventoryList {
   InventoryList({
-    Data? data,
+    InventroyData? data,
     String? message,
     int? state,
   }) {
@@ -14,15 +14,15 @@ class InventoryList {
   }
 
   InventoryList.fromJson(dynamic json) {
-    _data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    _data = json['data'] != null ? InventroyData.fromJson(json['data']) : null;
     _message = json['message'];
     _state = json['state'];
   }
-  Data? _data;
+  InventroyData? _data;
   String? _message;
   int? _state;
   InventoryList copyWith({
-    Data? data,
+    InventroyData? data,
     String? message,
     int? state,
   }) =>
@@ -31,7 +31,7 @@ class InventoryList {
         message: message ?? _message,
         state: state ?? _state,
       );
-  Data? get data => _data;
+  InventroyData? get data => _data;
   String? get message => _message;
   int? get state => _state;
 
@@ -51,8 +51,8 @@ class InventoryList {
 /// unfinished : 1
 /// unfinishedList : [{"distributionTime":"2022-06-11 12:17:46","endDate":"2021-05-04","finishedTime":"2022-06-18 12:17:46","inventoryTotal":1,"inventoryType":1,"list":[{"assetInventoryDetailId":1,"assetInventoryStatus":1,"assetName":"天窗边框模具","assetNo":"PO123456-001-M","inventoryTaskId":1,"labelNo":"XP000000001,XP000000002","toolingType":"F","usedArea":"上海金桥"}],"taskNo":"I20220317914"}]
 
-class Data {
-  Data({
+class InventroyData {
+  InventroyData({
     int? finished,
     List<FinishedList>? finishedList,
     int? unfinished,
@@ -64,7 +64,7 @@ class Data {
     _unfinishedList = unfinishedList;
   }
 
-  Data.fromJson(dynamic json) {
+  InventroyData.fromJson(dynamic json) {
     _finished = json['finished'];
     if (json['finishedList'] != null) {
       _finishedList = [];
@@ -84,13 +84,13 @@ class Data {
   List<FinishedList>? _finishedList;
   int? _unfinished;
   List<FinishedList>? _unfinishedList;
-  Data copyWith({
+  InventroyData copyWith({
     int? finished,
     List<FinishedList>? finishedList,
     int? unfinished,
     List<FinishedList>? unfinishedList,
   }) =>
-      Data(
+      InventroyData(
         finished: finished ?? _finished,
         finishedList: finishedList ?? _finishedList,
         unfinished: unfinished ?? _unfinished,

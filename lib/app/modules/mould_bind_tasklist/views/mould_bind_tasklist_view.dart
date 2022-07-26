@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
+import 'package:inventory_app/app/utils/cache.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../style/text_style.dart';
@@ -270,5 +271,8 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
   Future<void> _onRefresh() async {
     await homeController.getMouldTaskList();
     _refreshBindTaskController.refreshCompleted();
+    toastInfo(msg: "最新任务已更新");
+    CacheUtils.to.saveMouldTask(homeController.state.mouldBindTaskList.data);
+    CacheUtils.to.getMouldTask();
   }
 }

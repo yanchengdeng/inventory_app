@@ -8,6 +8,7 @@ import 'package:inventory_app/app/utils/utils.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../style/text_style.dart';
+import '../../../utils/cache.dart';
 import '../../../values/constants.dart';
 import '../controllers/mould_bind_mouldlist_controller.dart';
 
@@ -18,7 +19,6 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
 
   @override
   Widget build(BuildContext context) {
-    final homeController = controller.homeController;
     Log.d("--taskNo-----" + Get.arguments['taskNo']);
     return Scaffold(
         appBar: AppBar(
@@ -33,8 +33,8 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                   child: inputTextEdit(
                       hintText: '搜资产编号、名称',
                       inputOnSubmit: (value) {
-                        homeController.state.mouldSearchKey = value;
-                        homeController.getMouldTaskListByKeyOrStatus(
+                        CacheUtils.to.mouldSearchKey = value;
+                        CacheUtils.to.getMouldTaskListByKeyOrStatus(
                             Get.arguments['taskNo'], '', [-1], []);
                       })),
               Container(
@@ -81,13 +81,12 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              getTextByStatus(homeController
-                                                  .state
+                                              getTextByStatus(CacheUtils.to
                                                   .mouldBindTaskListSearch
                                                   ?.mouldList[index]
                                                   ?.bindStatus),
                                               Text(
-                                                  '${homeController.state.mouldBindTaskListSearch?.mouldList[index]?.assetNo}',
+                                                  '${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.assetNo}',
                                                   style:
                                                       textNormalListTextStyle())
                                             ],
@@ -112,26 +111,25 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                           ),
                                         ),
                                         Text(
-                                            '标签编号:${homeController.state.mouldBindTaskListSearch?.mouldList[index]?.bindStatusText}',
+                                            '标签编号:${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.bindStatusText}',
                                             style: textNormalListTextStyle()),
                                         Text(
-                                            '零件号:${homeController.state.mouldBindTaskListSearch?.mouldList[index]?.moldNo}',
+                                            '零件号:${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.moldNo}',
                                             style: textNormalListTextStyle()),
                                         Text(
-                                            '零件名称：${homeController.state.mouldBindTaskListSearch?.mouldList[index]?.moldName}',
+                                            '零件名称：${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.moldName}',
                                             style: textNormalListTextStyle()),
                                         Text(
-                                            'SGM车型:${homeController.state.mouldBindTaskListSearch?.mouldList[index]?.toolingName}',
+                                            'SGM车型:${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.toolingName}',
                                             style: textNormalListTextStyle()),
                                         Text(
-                                            '备注：${homeController.state.mouldBindTaskListSearch?.mouldList[index]?.remark}',
+                                            '备注：${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.remark}',
                                             style: textNormalListTextStyle())
                                       ],
                                     ),
                                   ),
                                   onTap: () => {
-                                    if (homeController
-                                            .state
+                                    if (CacheUtils.to
                                             .mouldBindTaskListSearch
                                             ?.mouldList[index]
                                             ?.bindStatus ==
@@ -144,8 +142,7 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                             Routes.MOULD_RESULT_ONLY_VIEW,
                                             arguments: {
                                               "taskNo": Get.arguments['taskNo'],
-                                              "assetNo": homeController
-                                                  .state
+                                              "assetNo": CacheUtils.to
                                                   .mouldBindTaskListSearch
                                                   ?.mouldList[index]
                                                   .assetNo
@@ -157,8 +154,7 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                         Get.toNamed(Routes.MOULD_READ_RESULT,
                                             arguments: {
                                               "taskNo": Get.arguments['taskNo'],
-                                              "assetNo": homeController
-                                                  .state
+                                              "assetNo": CacheUtils.to
                                                   .mouldBindTaskListSearch
                                                   ?.mouldList[index]
                                                   .assetNo
@@ -167,8 +163,7 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                   },
                                 ),
                               )),
-                          itemCount: homeController
-                              .state.mouldBindTaskListSearch.mouldList.length,
+                          itemCount: CacheUtils.to.mouldBindTaskListSearch.mouldList.length,
                         )),
                   )))
             ],

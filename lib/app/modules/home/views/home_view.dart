@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
+import 'package:inventory_app/app/utils/cache.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import '../controllers/home_controller.dart';
 
@@ -9,7 +10,9 @@ import '../controllers/home_controller.dart';
  */
 class HomeView extends GetView<HomeController> {
 
+
   final controller = Get.put(HomeController());
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class HomeView extends GetView<HomeController> {
       body:  Row(children: [
           Expanded(
               //使用InkWell 控件包裹可以增加点击事件
-              child: Obx(() => controller.state.mouldBindTaskList == null
+              child: Obx(() => CacheUtils.to.mouldBindTaskList == null
                   ? InkWell()
                   : InkWell(
                       onTap: () {
@@ -29,18 +32,17 @@ class HomeView extends GetView<HomeController> {
                       child: homeItem(
                           title: '模具绑定',
                           iconFileName: 'images/setting.png',
-                          unFinished: controller
-                              .state.mouldBindTaskList?.data?.unfinished)))),
+                          unFinished: CacheUtils.to
+                              .mouldBindTaskList.unfinished)))),
           Expanded(
-              child: Obx(() => controller.state.inventoryList == null
+              child: Obx(() => CacheUtils.to.inventoryList == null
                   ? InkWell()
                   : InkWell(
                       onTap: () => {Get.toNamed(Routes.INVENTORY_TASKLIST)},
                       child: homeItem(
                           title: '资产盘点',
                           iconFileName: 'images/invertory.png',
-                          unFinished: controller
-                              .state.inventoryList?.data?.unfinished))))
+                          unFinished: CacheUtils.to.inventoryList?.unfinished))))
         ]),
       );
   }

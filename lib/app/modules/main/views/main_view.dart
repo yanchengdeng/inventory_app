@@ -11,6 +11,8 @@ import '../controllers/main_controller.dart';
  * 主页 ：  首页 +  我的
  */
 class MainView extends GetView<MainController> {
+
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MainController>(builder: (controller) {

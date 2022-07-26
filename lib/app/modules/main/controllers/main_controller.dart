@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/apis/apis.dart';
 import 'package:inventory_app/app/store/store.dart';
 
+import '../../../utils/cache.dart';
 import '../../../utils/logger.dart';
 
 class MainController extends GetxController {

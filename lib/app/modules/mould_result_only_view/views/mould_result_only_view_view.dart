@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:inventory_app/app/utils/cache.dart';
 
 import '../../../style/text_style.dart';
 import '../controllers/mould_result_only_view_controller.dart';
@@ -41,16 +42,16 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          '固定资产编号：${controller.homeController.state.assertBindTaskInfo?.assetNo}',
+                          '固定资产编号：${CacheUtils.to.assertBindTaskInfo?.assetNo}',
                           style: textBoldNumberWhiteStyle()),
                       Text(
-                          'SGM车型：${controller.homeController.state.assertBindTaskInfo?.vehicle}',
+                          'SGM车型：${CacheUtils.to.assertBindTaskInfo?.vehicle}',
                           style: textLitleWhiteTextStyle()),
                       Text(
-                          '零件号：${controller.homeController.state.assertBindTaskInfo?.moldNo}',
+                          '零件号：${CacheUtils.to.assertBindTaskInfo?.moldNo}',
                           style: textLitleWhiteTextStyle()),
                       Text(
-                          '工装&模具名称：${controller.homeController.state.assertBindTaskInfo?.toolingName}',
+                          '工装&模具名称：${CacheUtils.to.assertBindTaskInfo?.toolingName}',
                           style: textLitleWhiteTextStyle()),
                       Obx(() => (Visibility(
                           visible: controller.isShowAllInfo.value,
@@ -58,22 +59,22 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '工装&模具尺寸(mm)：${controller.homeController.state.assertBindTaskInfo?.toolingSize}',
+                                  '工装&模具尺寸(mm)：${CacheUtils.to.assertBindTaskInfo?.toolingSize}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '工装&模具重量(kg)：${controller.homeController.state.assertBindTaskInfo?.toolingWeight}',
+                                  '工装&模具重量(kg)：${CacheUtils.to.assertBindTaskInfo?.toolingWeight}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '使用单位：${controller.homeController.state.assertBindTaskInfo?.usedUnits}',
+                                  '使用单位：${CacheUtils.to.assertBindTaskInfo?.usedUnits}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '制造单位：${controller.homeController.state.assertBindTaskInfo?.manufactureUnits}',
+                                  '制造单位：${CacheUtils.to.assertBindTaskInfo?.manufactureUnits}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '工装模具使用模次：${controller.homeController.state.assertBindTaskInfo?.assetNo}',
+                                  '工装模具使用模次：${CacheUtils.to.assertBindTaskInfo?.assetNo}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '工装模具寿命：${controller.homeController.state.assertBindTaskInfo?.assetLifespan}',
+                                  '工装模具寿命：${CacheUtils.to.assertBindTaskInfo?.assetLifespan}',
                                   style: textLitleWhiteTextStyle()),
                             ],
                           )))),
@@ -124,15 +125,15 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
               ),
               Text('标签编号', style: textBoldNumberBlueStyle()),
               Text(
-                '(${controller.homeController.state.assertBindTaskInfo?.lat}-${controller.homeController.state.assertBindTaskInfo?.lng})',
+                '(${CacheUtils.to.assertBindTaskInfo?.lat}-${CacheUtils.to.assertBindTaskInfo?.lng})',
                 style: textNormalListTextStyle(),
               ),
               ListView.builder(
-                itemCount: controller.homeController.state.assertBindTaskInfo
+                itemCount: CacheUtils.to.assertBindTaskInfo
                     ?.bindLabels?.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
-                      '${controller.homeController.state.assertBindTaskInfo?.bindLabels[index]}');
+                      '${CacheUtils.to.assertBindTaskInfo?.bindLabels[index]}');
                 },
               )
             ],

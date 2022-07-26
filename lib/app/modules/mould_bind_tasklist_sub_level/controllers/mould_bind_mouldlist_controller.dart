@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
 import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
 
+import '../../../utils/cache.dart';
+
 class MouldBindMouldlistController extends GetxController {
-  final homeController = Get.find<HomeController>();
   @override
   void onInit() {
     super.onInit();
 
-    homeController
+    CacheUtils.to
         .getMouldTaskListByKeyOrStatus(Get.arguments['taskNo'], '', [-1], []);
   }
 

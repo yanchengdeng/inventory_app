@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
+import 'package:inventory_app/app/utils/cache.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 
 import '../../home/controllers/home_controller.dart';
 
 class MouldResultOnlyViewController extends GetxController {
-  final homeController = Get.find<HomeController>();
 
   var isShowAllInfo = false.obs;
 
@@ -16,7 +16,7 @@ class MouldResultOnlyViewController extends GetxController {
     Log.d("taskNo=${taskNo},assetNo=${assertNo}");
 
     ///todo 测试数据
-    homeController.getAssetBindTaskInfo(
+    CacheUtils.to.getAssetBindTaskInfo(
         'TA123456-1657644993', 'PO139170-1657645101-G');
   }
 

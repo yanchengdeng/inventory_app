@@ -59,24 +59,9 @@ class MouldReadResultController extends GetxController {
     gpsData.value = latLng;
   }
 
-  // stopReadRfidData() async{
-  //   var rfidDataFromAndroid = (await platform.invokeMethod(STOP_READ_RFID_DATA)) ;
-  //   rfidReadData.value = rfidDataFromAndroid;
-  // }
-
   @override
   void onInit() {
     super.onInit();
-    // FileApi.getFileToken();
-
-    // String taskNo = Get.arguments['taskNo'];
-    // String assertNo = Get.arguments['assetNo'];
-    // Log.d("taskNo=${taskNo},assetNo=${assertNo}");
-    //
-    // ///todo 测试数据
-    // taskNo = 'TA123456-1657644990';
-    // assertNo = 'PO150150-1657645098-G';
-    // homeController.getUnLoadedAssetBindTaskInfo(taskNo, assertNo);
   }
 
   @override

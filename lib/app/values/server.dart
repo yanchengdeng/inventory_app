@@ -9,6 +9,9 @@ const SERVER_API_URL = 'http://47.102.199.31:59101/rfidapp/rest';
 const SERVER_FILE_API_URL =
     'https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest';
 
+///文件上传
+const SERVER_FILE_UPLOAD = 'https://dts.saic-gm.com/cs';
+
 ///返回结果为1 表示正确返回
 const SERVER_RESULT_OK = 1;
 

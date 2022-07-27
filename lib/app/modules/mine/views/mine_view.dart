@@ -27,16 +27,16 @@ class MineView extends GetView<MineController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: NetworkImage(
-                              'https://ts1.cn.mm.bing.net/th/id/R-C.cd2db2f6c8e5cc456ef0e62f2c871360?rik=dVxM55sEqkPztA&riu=http%3a%2f%2fsc.68design.net%2fphotofiles%2f201409%2fcxoVx6if1c.jpg&ehk=ya3IyE4KeapPkWVgYRGQVkifGvXz4cscxqjrpqTxAfw%3d&risl=&pid=ImgRaw&r=0'),
-                        ))),
+                // Container(
+                //     width: 80,
+                //     height: 80,
+                //     decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.circular(100),
+                //         image: DecorationImage(
+                //           fit: BoxFit.fill,
+                //           image: NetworkImage(
+                //               'https://ts1.cn.mm.bing.net/th/id/R-C.cd2db2f6c8e5cc456ef0e62f2c871360?rik=dVxM55sEqkPztA&riu=http%3a%2f%2fsc.68design.net%2fphotofiles%2f201409%2fcxoVx6if1c.jpg&ehk=ya3IyE4KeapPkWVgYRGQVkifGvXz4cscxqjrpqTxAfw%3d&risl=&pid=ImgRaw&r=0'),
+                //         ))),
                 Container(
                   padding: EdgeInsets.only(left: 16),
                   child: Column(

@@ -82,7 +82,7 @@ class CacheUtils extends GetxController {
     // }
   }
 
-  /// 获取下发的磨具绑定任务
+  /// 获取下发的模具绑定任务
   Future<void> getMouldTask() async {
     var cacheMould = await StorageService.to.getString(STORAGE_TASK_MOULD_DATA);
     if (cacheMould.isNotEmpty) {
@@ -97,9 +97,10 @@ class CacheUtils extends GetxController {
 
       _mouldBindTaskList.value = bindData.data!;
 
-      Log.d("解析成功：${cacheMouldBindData.length}---${bindData.data?.finished}");
+      Log.d(
+          "本地模具解析成功：${cacheMouldBindData.length}---${bindData.data?.finished}");
     } else {
-      Log.d("未找到数据，请检查网络数据");
+      Log.d("未找到模具数据，请检查网络数据");
     }
   }
 
@@ -123,7 +124,8 @@ class CacheUtils extends GetxController {
     await getMouldTask();
 
     mouldBindTaskListSearch = await mouldBindTaskList.unfinishedTaskList
-      .where((element) => element.taskNo == taskNo).first;
+        .where((element) => element.taskNo == taskNo)
+        .first;
   }
 
   /**
@@ -132,12 +134,12 @@ class CacheUtils extends GetxController {
    */
   Future<void> getAssetBindTaskInfo(String taskNo, String assetNo) async {
     await getMouldTask();
-    var task = mouldBindTaskList.finishedTaskList
+    var task = await mouldBindTaskList.finishedTaskList
         ?.where((element) => element.taskNo == taskNo)
         .first;
     var mouldList = task?.mouldList;
     assertBindTaskInfo =
-        mouldList?.where((element) => element.assetNo == assetNo).first;
+        await mouldList?.where((element) => element.assetNo == assetNo).first;
   }
 
   /**
@@ -190,9 +192,10 @@ class CacheUtils extends GetxController {
 
       _inventoryList.value = bindData.data!;
 
-      Log.d("解析成功：${cacheMouldBindData.length}---${bindData.data?.finished}");
+      Log.d(
+          "本地盘点任务 解析成功：${cacheMouldBindData.length}---${bindData.data?.finished}");
     } else {
-      Log.d("未找到数据，请检查网络数据");
+      Log.d("未找到盘点数据，请检查网络数据");
     }
   }
 }

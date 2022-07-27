@@ -1,12 +1,9 @@
-import 'dart:collection';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
-import 'package:inventory_app/app/utils/utils.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 import '../../../style/text_style.dart';
 import '../../../utils/cache.dart';
 import '../../../values/constants.dart';
@@ -19,7 +16,15 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
 
   @override
   Widget build(BuildContext context) {
-    Log.d("--taskNo-----" + Get.arguments['taskNo']);
+    var taskNo = Get.arguments['taskNo'];
+    var taskType = Get.arguments['taskType'];
+    var bindStatus = Get.arguments['bindStatus'];
+
+    CacheUtils.to.getMouldTaskListByKeyOrStatus(taskNo, '', [bindStatus], []);
+    //
+    // Log.d(
+    //     "传入二级模具菜单参数111111：taskNo = $taskNo,taskType = ${taskType},bindStatus = ${bindStatus}");
+
     return Scaffold(
         appBar: AppBar(
           title: Text('模具绑定'),
@@ -81,7 +86,8 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              getTextByStatus(CacheUtils.to
+                                              getTextByStatus(CacheUtils
+                                                  .to
                                                   .mouldBindTaskListSearch
                                                   ?.mouldList[index]
                                                   ?.bindStatus),
@@ -92,12 +98,38 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                             ],
                                           ),
                                           Spacer(flex: 1),
-                                          ElevatedButton(
-                                              onPressed: () => {
-                                                    Get.toNamed(Routes
-                                                        .MOULD_READ_RESULT)
-                                                  },
-                                              child: Text('绑定')),
+                                          Obx(
+                                            () => Visibility(
+                                              visible: CacheUtils
+                                                      .to
+                                                      .mouldBindTaskListSearch
+                                                      ?.mouldList[index]
+                                                      ?.bindStatus !=
+                                                  BIND_STATUS_UPLOADED,
+                                              child: ElevatedButton(
+                                                  onPressed: () => {
+                                                        ///其他状态直接打开编辑上传页
+                                                        Get.toNamed(
+                                                            Routes
+                                                                .MOULD_READ_RESULT,
+                                                            arguments: {
+                                                              "taskType": Get
+                                                                      .arguments[
+                                                                  'taskType'],
+                                                              "taskNo":
+                                                                  Get.arguments[
+                                                                      'taskNo'],
+                                                              "assetNo": CacheUtils
+                                                                  .to
+                                                                  .mouldBindTaskListSearch
+                                                                  ?.mouldList[
+                                                                      index]
+                                                                  .assetNo
+                                                            })
+                                                      },
+                                                  child: Text('绑定')),
+                                            ),
+                                          ),
                                         ]),
                                         Padding(
                                           padding: const EdgeInsets.only(
@@ -129,10 +161,8 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                     ),
                                   ),
                                   onTap: () => {
-                                    if (CacheUtils.to
-                                            .mouldBindTaskListSearch
-                                            ?.mouldList[index]
-                                            ?.bindStatus ==
+                                    if (CacheUtils.to.mouldBindTaskListSearch
+                                            ?.mouldList[index]?.bindStatus ==
                                         BIND_STATUS_UPLOADED)
                                       {
                                         ///已上传
@@ -141,8 +171,11 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                         Get.toNamed(
                                             Routes.MOULD_RESULT_ONLY_VIEW,
                                             arguments: {
+                                              "taskType":
+                                                  Get.arguments['taskType'],
                                               "taskNo": Get.arguments['taskNo'],
-                                              "assetNo": CacheUtils.to
+                                              "assetNo": CacheUtils
+                                                  .to
                                                   .mouldBindTaskListSearch
                                                   ?.mouldList[index]
                                                   .assetNo
@@ -153,8 +186,11 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                         ///其他状态直接打开编辑上传页
                                         Get.toNamed(Routes.MOULD_READ_RESULT,
                                             arguments: {
+                                              "taskType":
+                                                  Get.arguments['taskType'],
                                               "taskNo": Get.arguments['taskNo'],
-                                              "assetNo": CacheUtils.to
+                                              "assetNo": CacheUtils
+                                                  .to
                                                   .mouldBindTaskListSearch
                                                   ?.mouldList[index]
                                                   .assetNo
@@ -163,7 +199,8 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                   },
                                 ),
                               )),
-                          itemCount: CacheUtils.to.mouldBindTaskListSearch.mouldList.length,
+                          itemCount: CacheUtils
+                              .to.mouldBindTaskListSearch.mouldList.length,
                         )),
                   )))
             ],

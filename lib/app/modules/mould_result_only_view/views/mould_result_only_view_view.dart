@@ -10,6 +10,12 @@ import '../controllers/mould_result_only_view_controller.dart';
 class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
   @override
   Widget build(BuildContext context) {
+    var taskNo = Get.arguments['taskNo'];
+    var taskType = Get.arguments['taskType'];
+    var assetNo = Get.arguments['assetNo'];
+
+    CacheUtils.to.getAssetBindTaskInfo(taskNo, assetNo);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('读取结果'),
@@ -44,11 +50,9 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                       Text(
                           '固定资产编号：${CacheUtils.to.assertBindTaskInfo?.assetNo}',
                           style: textBoldNumberWhiteStyle()),
-                      Text(
-                          'SGM车型：${CacheUtils.to.assertBindTaskInfo?.vehicle}',
+                      Text('SGM车型：${CacheUtils.to.assertBindTaskInfo?.vehicle}',
                           style: textLitleWhiteTextStyle()),
-                      Text(
-                          '零件号：${CacheUtils.to.assertBindTaskInfo?.moldNo}',
+                      Text('零件号：${CacheUtils.to.assertBindTaskInfo?.moldNo}',
                           style: textLitleWhiteTextStyle()),
                       Text(
                           '工装&模具名称：${CacheUtils.to.assertBindTaskInfo?.toolingName}',
@@ -129,8 +133,7 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                 style: textNormalListTextStyle(),
               ),
               ListView.builder(
-                itemCount: CacheUtils.to.assertBindTaskInfo
-                    ?.bindLabels?.length,
+                itemCount: CacheUtils.to.assertBindTaskInfo?.bindLabels?.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
                       '${CacheUtils.to.assertBindTaskInfo?.bindLabels[index]}');

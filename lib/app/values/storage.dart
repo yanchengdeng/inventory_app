@@ -10,6 +10,8 @@ const String STORAGE_DEVICE_FIRST_OPEN_KEY = 'device_first_open';
 /// 多语言
 const String STORAGE_LANGUAGE_CODE = 'language_code';
 
+///文件服务token
+const String STORAGE_FILE_TOKEN = 'file_token';
 
 /// 任务绑定数据--本地缓存 所有用户数据
 const String STORAGE_TASK_MOULD_DATA = 'task_mould_data';

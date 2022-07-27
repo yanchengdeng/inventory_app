@@ -61,17 +61,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                     // ]
                     // });
 
-                    FileApi.uploadFile({
-                      'token': StorageService.to.getString(STORAGE_FILE_TOKEN),
-                      "files": [
-                        MultipartFile(
-                            '/data/user/0/com.luojie.erapp.inventory_app/cache/CAP518496658039260943.jpg',
-                            filename: 'CAP518496658039260943.jpg'),
-                        MultipartFile(
-                            '/data/user/0/com.luojie.erapp.inventory_app/cache/CAP8630163948010070952.jpg',
-                            filename: 'CAP8630163948010070952.jpg')
-                      ]
-                    })
+                    FileApi.uploadFile()
                   },
               child: Text('上传图片数据')),
         ],

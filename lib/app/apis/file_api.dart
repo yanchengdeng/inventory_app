@@ -31,16 +31,23 @@ class FileApi<T> {
   }
 
   ///获取文件服务token
-  static Future<FileTokenResponseEntity> uploadFile<T>(
-      Map<String, dynamic> map) async {
+  static Future<FileTokenResponseEntity> uploadFile<T>() async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'file_backend_upload';
     Options options = Options();
     options.headers = fileTokenMaps;
+
+    var formData = {
+      'token': StorageService.to.getString(STORAGE_FILE_TOKEN),
+      "file": await MultipartFile.fromFile(
+          '/data/user/0/com.luojie.erapp.inventory_app/cache/CAP518496658039260943.jpg',
+          filename: 'CAP518496658039260943.jpg')
+    };
+
     var response = await HttpUtil().postForm(
         '${SERVER_FILE_UPLOAD}/file/frontend/upload',
         options: options,
-        data: map);
+        data: formData);
     FileTokenResponseEntity fileTokenResponseEntity =
         FileTokenResponseEntity.fromJson(response);
 

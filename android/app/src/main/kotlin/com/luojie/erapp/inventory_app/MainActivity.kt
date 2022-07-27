@@ -1,16 +1,17 @@
 package com.luojie.erapp.inventory_app
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.location.Address
 import android.os.Build
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
 import com.github.dfqin.grantor.PermissionListener
 import com.github.dfqin.grantor.PermissionsUtil
+import com.honeywell.aidc.*
 import com.honeywell.rfidservice.EventListener
 import com.honeywell.rfidservice.RfidManager
 import com.honeywell.rfidservice.TriggerMode
@@ -28,8 +29,7 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "mould_read_result/blue_teeth"
 
-    //授权返回
-    private val PERMISSION_REQUEST_CODE = 100
+
     private val mPermissions = listOf(Manifest.permission.ACCESS_COARSE_LOCATION)
 
     ///初始化rfid_sdk
@@ -44,6 +44,13 @@ class MainActivity : FlutterActivity() {
     ///读取经纬度
     private val GET_GPS_LAT_LNG = "getGpsLatLng"
 
+
+    ///扫描标签
+    private val SCAN_LABEL = "scan_label"
+
+    private var barcodeReader: BarcodeReader? = null
+    private var manager: AidcManager? = null
+
     ///rfidManager
     private  var rfidMgr: RfidManager? = null
 
@@ -54,10 +61,16 @@ class MainActivity : FlutterActivity() {
     private var mTagDataList = mutableListOf<String>()
     private var mIsReadBtnClicked = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.w("yancheng","onCreate------")
+        initBarCodeReader()
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        Log.w("yancheng","configureFlutterEngine------")
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             CHANNEL
@@ -65,8 +78,25 @@ class MainActivity : FlutterActivity() {
 
             when (call.method) {
                 INIT_RFID_SDK -> {
-                    checkPermission()
-                    result.success("已连接：$")
+                    PermissionsUtil.requestPermission(this,object :PermissionListener{
+                        /**
+                         * 通过授权
+                         * @param permission
+                         */
+                        override fun permissionGranted(permission: Array<out String>) {
+                            initBlueTooth()
+                        }
+
+                        /**
+                         * 拒绝授权
+                         * @param permission
+                         */
+                        override fun permissionDenied(permission: Array<out String>) {
+                            Toast.makeText(this@MainActivity,"拒绝无法正常使用",Toast.LENGTH_LONG).show();
+                        }
+
+                    }, Manifest.permission.ACCESS_FINE_LOCATION)
+                    result.success(rfidMgr?.isConnected)
                 }
                 START_READ_RFID_DATA -> {
                     rfidMgr?.addEventListener(mEventListener)
@@ -128,10 +158,93 @@ class MainActivity : FlutterActivity() {
 
 
                 }
+
+                SCAN_LABEL ->{
+
+
+                }
             }
         }
     }
 
+
+    private fun initBarCodeReader(){
+        AidcManager.create(this) { aidcManager ->
+            manager = aidcManager
+            try {
+                barcodeReader = manager?.createBarcodeReader()
+            } catch (e: InvalidScannerNameException) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Invalid Scanner Name Exception: " + e.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Exception: " + e.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        if (barcodeReader != null) {
+            // register bar code event listener
+            barcodeReader!!.addBarcodeListener(object :BarcodeReader.BarcodeListener{
+                override fun onBarcodeEvent(event: BarcodeReadEvent) {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity,event.barcodeData,Toast.LENGTH_LONG).show()
+                    }
+
+                }
+
+                override fun onFailureEvent(p0: BarcodeFailureEvent) {
+                    Toast.makeText(this@MainActivity, "扫描失败，重新试试", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+            })
+
+            // set the trigger mode to client control
+            try {
+                barcodeReader!!.setProperty(
+                    BarcodeReader.PROPERTY_TRIGGER_CONTROL_MODE,
+                    BarcodeReader.TRIGGER_CONTROL_MODE_AUTO_CONTROL
+                )
+            } catch (e: UnsupportedPropertyException) {
+                Toast.makeText(this, "Failed to apply properties", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            // register trigger state change listener
+            barcodeReader!!.addTriggerListener {
+                Log.d("yancheng","${it.state}")
+
+            }
+            val properties: MutableMap<String, Any> = HashMap()
+            // Set Symbologies On/Off
+            properties[BarcodeReader.PROPERTY_CODE_128_ENABLED] = true
+            properties[BarcodeReader.PROPERTY_GS1_128_ENABLED] = true
+            properties[BarcodeReader.PROPERTY_QR_CODE_ENABLED] = true
+            properties[BarcodeReader.PROPERTY_CODE_39_ENABLED] = true
+            properties[BarcodeReader.PROPERTY_DATAMATRIX_ENABLED] = true
+            properties[BarcodeReader.PROPERTY_UPC_A_ENABLE] = true
+            properties[BarcodeReader.PROPERTY_EAN_13_ENABLED] = false
+            properties[BarcodeReader.PROPERTY_AZTEC_ENABLED] = false
+            properties[BarcodeReader.PROPERTY_CODABAR_ENABLED] = false
+            properties[BarcodeReader.PROPERTY_INTERLEAVED_25_ENABLED] = false
+            properties[BarcodeReader.PROPERTY_PDF_417_ENABLED] = false
+            // Set Max Code 39 barcode length
+            properties[BarcodeReader.PROPERTY_CODE_39_MAXIMUM_LENGTH] = 10
+            // Turn on center decoding
+            properties[BarcodeReader.PROPERTY_CENTER_DECODE] = true
+            // Enable bad read response
+            properties[BarcodeReader.PROPERTY_NOTIFICATION_BAD_READ_ENABLED] = true
+            // Sets time period for decoder timeout in any mode
+            properties[BarcodeReader.PROPERTY_DECODER_TIMEOUT] = 400
+            // Apply the settings
+            barcodeReader!!.setProperties(properties)
+        }
+    }
 
 
 
@@ -152,33 +265,6 @@ class MainActivity : FlutterActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun checkPermission(){
-        if (PackageManager.PERMISSION_GRANTED != checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)){
-            //判断是否以授权相机权限，没有则授权
-            ActivityCompat.requestPermissions(
-                this,
-                mPermissions.toTypedArray(),
-                PERMISSION_REQUEST_CODE
-            )
-        }else{
-            initBlueTooth()
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == PERMISSION_REQUEST_CODE){
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                initBlueTooth()
-            }else{
-                Toast.makeText(MainActivity@this,"请授权",Toast.LENGTH_LONG).show()
-            }
-        }
-    }
 
     private val mEventListener: EventListener = object : EventListener {
         override fun onDeviceConnected(o: Any) {}
@@ -232,12 +318,59 @@ class MainActivity : FlutterActivity() {
     override fun onResume() {
         super.onResume()
         Log.w("yancheng","onResume------")
+        if (barcodeReader != null) {
+            try {
+                barcodeReader!!.claim()
+            } catch (e: ScannerUnavailableException) {
+                e.printStackTrace()
+                Toast.makeText(this, "Scanner unavailable", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onPause() {
         super.onPause()
         Log.w("yancheng","onPause------")
+        if (barcodeReader != null) {
+            // release the scanner claim so we don't get any scanner
+            // notifications while paused.
+            barcodeReader!!.release()
+        }
     }
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        // create the AidcManager providing a Context and a
+        // CreatedCallback implementation.
+        Log.w("yancheng","onCreate------")
+        // create the AidcManager providing a Context and a
+        // CreatedCallback implementation.
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.w("yancheng","onStop------")
+
+        if (barcodeReader != null) {
+            // close BarcodeReader to clean up resources.
+            barcodeReader!!.close()
+            barcodeReader = null
+        }
+
+        if (manager != null) {
+            // close AidcManager to disconnect from the scanner service.
+            // once closed, the object can no longer be used.
+            manager!!.close()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.w("yancheng","onDestroy------")
+    }
+
+
 
 
 }

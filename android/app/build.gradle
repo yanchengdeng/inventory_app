@@ -73,6 +73,7 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation(name: 'honeywell_rfid_sdk', ext: 'aar')
+    implementation(name: 'DataCollection', ext: 'aar')
     implementation "androidx.localbroadcastmanager:localbroadcastmanager:1.1.0"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.4.0'

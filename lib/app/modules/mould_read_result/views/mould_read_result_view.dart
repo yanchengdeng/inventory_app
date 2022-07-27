@@ -1,12 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/app/apis/apis.dart';
-import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/utils/logger.dart';
-import 'package:inventory_app/app/values/values.dart';
 
 import '../../../routes/app_pages.dart';
 import '../controllers/mould_read_result_controller.dart';
@@ -33,37 +28,31 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
           child: Column(
         children: [
           ElevatedButton(
-
-              ///测试图片地址： /data/user/0/com.luojie.erapp.inventory_app/cache/CAP518496658039260943.jpg
               onPressed: () => {Get.toNamed(Routes.TAKE_PHOTO)},
-              child: Text('拍照')),
+              child: Text('拍照上传')),
           ElevatedButton(
               onPressed: () => {controller.getGpsLagLng()},
               child: Text('获取经纬度')),
           Obx(() => Text('经纬度：${controller.gpsData.value}')),
+          Obx(() => Column(
+                children: [
+                  Text('拍照结果：${controller.imageUrl.value?.uriUuid}'),
+                  Text('拍照路径：${controller.imageUrl.value?.filePath}'),
+                  Text('拍照名称：${controller.imageUrl.value?.fileName}'),
+                ],
+              )),
           ElevatedButton(
-              onPressed: () => {FileApi.getFileToken()},
-              child: Text('获取文件token')),
-          Image.file(
-            File(
-                '/data/user/0/com.luojie.erapp.inventory_app/cache/CAP518496658039260943.jpg'),
-            height: 100,
-            width: 100,
-          ),
-          ElevatedButton(
-              onPressed: () => {
-                    //     var formData = FormData.fromMap({
-                    // 'name': 'wendux',
-                    // 'age': 25,
-                    // 'files': [
-                    // await MultipartFile.fromFile('./text1.txt', filename: 'text1.txt'),
-                    // await MultipartFile.fromFile('./text2.txt', filename: 'text2.txt'),
-                    // ]
-                    // });
+              onPressed: () => {controller.initRfidData()},
+              child: Text('连接设备')),
 
-                    FileApi.uploadFile()
-                  },
-              child: Text('上传图片数据')),
+             ElevatedButton(
+                onPressed: () => {controller.startReadRfidData()},
+                child: Text(controller.isReadData.value ?'读取':'结束')),
+
+          ElevatedButton(
+              onPressed: () => {controller.getScanLabel()},
+              child: Text('扫描标签')),
+          Obx(() => Text('标签数据：${controller.scanLabelData.value}'))
         ],
       )),
     );

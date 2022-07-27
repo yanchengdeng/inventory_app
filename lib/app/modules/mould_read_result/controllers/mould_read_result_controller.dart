@@ -2,21 +2,29 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../apis/file_api.dart';
+import '../../../entity/cache_mould_bind_data.dart';
 import '../../../utils/logger.dart';
 import '../../home/controllers/home_controller.dart';
 
 class MouldReadResultController extends GetxController {
-  final homeController = Get.find<HomeController>();
   var isShowAllInfo = false.obs;
 
   var rfidData = Rx<String>("no data");
   var rfidReadData = Rx<List<String>>(List.empty());
 
-  //经纬度数据121.23312,1232.32
+
+  ///文件信息
+  var imageUrl = Rx<UploadImageInfo?>(null);
+
+  ///经纬度数据121.23312,1232.32
   var gpsData = Rx<String?>('');
 
+
+  ///扫描标签
+  var scanLabelData = Rx<String?>('');
+
   ///读取rfid数据
-  var isReadData = Rx(true);
+  var isReadData = Rx(false);
 
   ///RFID SDK 通信channel
   static const String READ_RFID_DATA_CHANNEL = 'mould_read_result/blue_teeth';
@@ -33,30 +41,44 @@ class MouldReadResultController extends GetxController {
   /// 获取gps经纬度
   static const String GET_GPS_LAT_LNG = 'getGpsLatLng';
 
+  /// 获取扫描标签
+  static const String GET_SCAN_LABEL = 'scan_label';
+
   static const platform = MethodChannel(READ_RFID_DATA_CHANNEL);
 
+  ///初始化rfid
   initRfidData() async {
     var rfidDataFromAndroid = (await platform.invokeMethod(INIT_RFID_SDK));
     rfidData.value = rfidDataFromAndroid;
   }
 
+  ///开始读 、停止读
   startReadRfidData() async {
     if (isReadData.value) {
       var rfidDataFromAndroid =
           (await platform.invokeMethod(START_READ_RFID_DATA));
-      rfidReadData.value = rfidDataFromAndroid;
+      // rfidReadData.value = rfidDataFromAndroid;
       isReadData.value = false;
     } else {
       var rfidDataFromAndroid =
           (await platform.invokeMethod(STOP_READ_RFID_DATA));
-      rfidReadData.value = rfidDataFromAndroid;
+      // rfidReadData.value = rfidDataFromAndroid;
       isReadData.value = true;
     }
   }
 
+
+  /// 获取经纬度
   getGpsLagLng() async {
     var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
     gpsData.value = latLng;
+  }
+
+
+  /// 获取扫描label
+  getScanLabel() async {
+    var latLng = await platform.invokeMethod(GET_SCAN_LABEL);
+    scanLabelData.value = latLng;
   }
 
   @override
@@ -71,4 +93,8 @@ class MouldReadResultController extends GetxController {
 
   @override
   void onClose() {}
+
+  void refreshImage(UploadImageInfo uploadImageInfo) {
+    imageUrl.value = uploadImageInfo;
+  }
 }

@@ -55,4 +55,28 @@ class CacheInventoryData{
 }
 
 
+///上传图片信息
+class UploadImageInfo {
+  String? fileName;
+  String? filePath;
+  String? uriUuid;
+
+  UploadImageInfo({this.fileName, this.filePath, this.uriUuid});
+
+  UploadImageInfo.fromJson(Map<String, dynamic> json) {
+    this.fileName = json["fileName"];
+    this.filePath = json["filePath"];
+    this.uriUuid = json["UriUUID"];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["fileName"] = this.fileName;
+    data["filePath"] = this.filePath;
+    data["UriUUID"] = this.uriUuid;
+    return data;
+  }
+}
+
+
 

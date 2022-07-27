@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+/**
+ * @author Administrator
+ */
 public class LocationUtils {
     private volatile static LocationUtils uniqueInstance;
     private LocationManager locationManager;
@@ -102,10 +105,6 @@ public class LocationUtils {
             //GPS 定位的精准度比较高，但是非常耗电。
             System.out.println("=====GPS_PROVIDER=====");
             locationProvider = LocationManager.GPS_PROVIDER;
-        } else if (providerList.contains(LocationManager.NETWORK_PROVIDER)) {//Google服务被墙不可用
-            //网络定位的精准度稍差，但耗电量比较少。
-            System.out.println("=====NETWORK_PROVIDER=====");
-            locationProvider = LocationManager.NETWORK_PROVIDER;
         } else {
             System.out.println("=====NO_PROVIDER=====");
             // 当没有可用的位置提供器时，弹出Toast提示用户

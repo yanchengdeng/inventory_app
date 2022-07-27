@@ -1,9 +1,14 @@
 import 'dart:collection';
-
 import 'package:dio/dio.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart' as get_multipart_file;///MultiPartFile 存在于  get  和dio 两个木块 此种方法避免
+import 'package:get/get_core/src/get_main.dart';
+// import 'package:get/get.dart';
 import 'package:inventory_app/app/services/services.dart';
-
+import 'package:inventory_app/app/utils/logger.dart';
 import '../entity/base_data.dart';
+import '../entity/cache_mould_bind_data.dart';
+import '../modules/mould_read_result/controllers/mould_read_result_controller.dart';
 import '../utils/http.dart';
 import '../values/server.dart';
 import '../values/storage.dart';
@@ -31,26 +36,33 @@ class FileApi<T> {
   }
 
   ///获取文件服务token
-  static Future<FileTokenResponseEntity> uploadFile<T>() async {
+  static void uploadFile<T>(String filePath ) async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'file_backend_upload';
     Options options = Options();
     options.headers = fileTokenMaps;
+    EasyLoading.show(status: "上传中...");
+    FileTokenResponseEntity fileTokenResponseEntity = await getFileToken();
+
+    String fileName =  filePath.substring(filePath.lastIndexOf('/')+1,filePath.length);
 
     var formData = {
-      'token': StorageService.to.getString(STORAGE_FILE_TOKEN),
+      'token': fileTokenResponseEntity.data,
       "file": await MultipartFile.fromFile(
-          '/data/user/0/com.luojie.erapp.inventory_app/cache/CAP518496658039260943.jpg',
-          filename: 'CAP518496658039260943.jpg')
+          filePath,
+          filename: fileName)
     };
 
     var response = await HttpUtil().postForm(
         '${SERVER_FILE_UPLOAD}/file/frontend/upload',
         options: options,
         data: formData);
-    FileTokenResponseEntity fileTokenResponseEntity =
-        FileTokenResponseEntity.fromJson(response);
 
-    return fileTokenResponseEntity;
+    Log.d("返回的图片URL/uuid=$response");
+
+    EasyLoading.dismiss();
+    final MouldReadResultController resultController = Get.find<MouldReadResultController>();
+    resultController.refreshImage(UploadImageInfo(fileName:fileName,filePath: filePath,uriUuid: response.toString()));
+    Get.back();
   }
 }

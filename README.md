@@ -95,3 +95,7 @@ e.printStackTrace();
 3. 首页绑定
 
 
+4. ## 接口：https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest/file/token/get   获取获取文件token 会报x-mid-token 过期，这
+## 应该不合理 ，正常用户在操作数据当中 提示过期  是否前面的数据都已经
+
+

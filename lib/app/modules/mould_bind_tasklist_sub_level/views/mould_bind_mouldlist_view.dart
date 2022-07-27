@@ -200,7 +200,7 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                 ),
                               )),
                           itemCount: CacheUtils
-                              .to.mouldBindTaskListSearch.mouldList.length,
+                              .to.mouldBindTaskListSearch?.mouldList?.length,
                         )),
                   )))
             ],

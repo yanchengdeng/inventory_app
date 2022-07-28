@@ -119,31 +119,29 @@ class MainActivity : FlutterActivity() {
                          * @param permission
                          */
                         override fun permissionGranted(permission: Array<out String>) {
-                            LocationUtils.getInstance(this@MainActivity).addressCallback = object : LocationUtils.AddressCallback{
-                                override fun onGetAddress(address: Address?) {
-                                    val countryName = address!!.countryName //国家
+                            LocationUtils.getInstance(this@MainActivity).addressCallback =
+                                LocationUtils.AddressCallback { lat, lng ->
 
-                                    val adminArea = address!!.adminArea //省
-
-                                    val locality = address!!.locality //市
-
-                                    val subLocality = address!!.subLocality //区
-
-                                    val featureName = address!!.featureName //街道
-
-                                    Log.d(
-                                        "定位地址",
-                                        countryName +","+adminArea+","+locality+","+subLocality+","+featureName
-                                    )
-                                }
-
-                                override fun onGetLocation(lat: Double, lng: Double) {
+                                    //                                override fun onGetAddress(address: Address?) {
+                                    //                                    val countryName = address!!.countryName //国家
+                                    //
+                                    //                                    val adminArea = address!!.adminArea //省
+                                    //
+                                    //                                    val locality = address!!.locality //市
+                                    //
+                                    //                                    val subLocality = address!!.subLocality //区
+                                    //
+                                    //                                    val featureName = address!!.featureName //街道
+                                    //
+                                    //                                    Log.d(
+                                    //                                        "定位地址",
+                                    //                                        countryName +","+adminArea+","+locality+","+subLocality+","+featureName
+                                    //                                    )
+                                    //                                }
                                     Log.d(
                                         "定位地址","${lat},${lng}")
                                     result.success("${lat},${lng}")
                                 }
-
-                            }
                         }
 
                         /**

@@ -13,6 +13,8 @@ const SERVER_FILE_API_URL =
 const SERVER_FILE_UPLOAD =
     'https://rol-web-supplier-qa.apps.saic-gm.com/openfile';
 
+// const SERVER_FILE_UPLOAD = 'https://dts.saic-gm.com/cs';
+
 ///返回结果为1 表示正确返回
 const SERVER_RESULT_OK = 1;
 

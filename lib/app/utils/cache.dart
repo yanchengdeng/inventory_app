@@ -119,11 +119,13 @@ class CacheUtils extends GetxController {
    * @param  toolingType  工业状态  支持多选查询
    */
 
-  Future<void> getMouldTaskListByKeyOrStatus(String taskNo, String key,
-      List<int> bindStatus, List<String> toolingType) async {
+  Future<void> getMouldTaskListByKeyOrStatus(bool isFinish, String taskNo,
+      String key, List<int> bindStatus, List<String> toolingType) async {
     await getMouldTask();
 
-    mouldBindTaskListSearch = await mouldBindTaskList.unfinishedTaskList
+    mouldBindTaskListSearch = await (isFinish
+            ? mouldBindTaskList.finishedTaskList
+            : mouldBindTaskList.unfinishedTaskList)
         .where((element) => element.taskNo == taskNo)
         .first;
   }
@@ -138,8 +140,11 @@ class CacheUtils extends GetxController {
         ?.where((element) => element.taskNo == taskNo)
         .first;
     var mouldList = task?.mouldList;
-    assertBindTaskInfo =
+
+    _assertBindTaskInfo.value =
         await mouldList?.where((element) => element.assetNo == assetNo).first;
+
+    Log.d("${_assertBindTaskInfo.value}");
   }
 
   /**

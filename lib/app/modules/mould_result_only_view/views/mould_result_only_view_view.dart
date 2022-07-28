@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/cache.dart';
 
 import '../../../style/text_style.dart';
+import '../../../utils/logger.dart';
 import '../controllers/mould_result_only_view_controller.dart';
 
 ///只查看模具信息
@@ -13,6 +14,9 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
     var taskNo = Get.arguments['taskNo'];
     var taskType = Get.arguments['taskType'];
     var assetNo = Get.arguments['assetNo'];
+
+    Log.d(
+        "传入只读显示页：taskNo = $taskNo,taskType = ${taskType},assetNo = ${assetNo}");
 
     CacheUtils.to.getAssetBindTaskInfo(taskNo, assetNo);
 

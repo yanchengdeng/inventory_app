@@ -88,11 +88,17 @@ e.printStackTrace();
    
 2. 本地已有数据  、再去网络下发任务 如何作对比取舍？
 
+本地有和服务端的相同的 assetBindTaskId\labelReplaceTaskId\assetInventoryDetailId 
+这些id 则用本地缓存的（缓存信息里包含用户操作数据，比服务端丰富），没有这些id 则视为新增的id任务
+
 本地没有 服务器有，  本地增加
 本地有   服务器没有， 本地删除
 服务器和本地都有的情况下比对下发时间DISTRIBUTION_DATE：下发时间一致，不动；下发时间不一致，清空对应模具信息再缓存
-
+因为替换和盘点的labelReplaceTaskId\assetInventoryDetailId  和绑定的assetBindTaskId不一样，相同模具重复下发时的ID是不变的，
+需要借助下发时间做进一步判断是否需要删除缓存
 3. 首页绑定
+
+
 
 
 4. ## 接口：https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest/file/token/get   获取获取文件token 会报x-mid-token 过期，这

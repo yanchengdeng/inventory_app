@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
@@ -106,11 +107,12 @@ public class LocationUtils {
             System.out.println("=====GPS_PROVIDER=====");
             locationProvider = LocationManager.GPS_PROVIDER;
         } else {
-            System.out.println("=====NO_PROVIDER=====");
-            // 当没有可用的位置提供器时，弹出Toast提示用户
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            mContext.startActivity(intent);
+            Toast.makeText(mContext,"当前无Gps信号",Toast.LENGTH_LONG).show();
+//            System.out.println("=====NO_PROVIDER=====");
+//            // 当没有可用的位置提供器时，弹出Toast提示用户
+//            Intent intent = new Intent();
+//            intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//            mContext.startActivity(intent);
             return;
         }
 
@@ -122,7 +124,8 @@ public class LocationUtils {
             showLocation();
         } else {//当GPS信号弱没获取到位置的时候可从网络获取
             System.out.println("==Google服务被墙的解决办法==");
-            getLngAndLatWithNetwork();//Google服务被墙的解决办法
+//            getLngAndLatWithNetwork();//Google服务被墙的解决办法
+            Toast.makeText(mContext,"当前Gps信号弱，稍后再试",Toast.LENGTH_LONG).show();
         }
         // 监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
         //LocationManager 每隔 5 秒钟会检测一下位置的变化情况，当移动距离超过 10 米的时候，
@@ -143,41 +146,41 @@ public class LocationUtils {
             if(addressCallback != null){
                 addressCallback.onGetLocation(latitude,longitude);
             }
-            getAddress(latitude, longitude);
+//            getAddress(latitude, longitude);
         }
     }
 
-    private void getAddress(double latitude, double longitude) {
-        //Geocoder通过经纬度获取具体信息
-        Geocoder gc = new Geocoder(mContext, Locale.getDefault());
-        try {
-            List<Address> locationList = gc.getFromLocation(latitude, longitude, 1);
-
-            if (locationList != null) {
-                Address address = locationList.get(0);
-                String countryName = address.getCountryName();//国家
-                String countryCode = address.getCountryCode();
-                String adminArea = address.getAdminArea();//省
-                String locality = address.getLocality();//市
-                String subLocality = address.getSubLocality();//区
-                String featureName = address.getFeatureName();//街道
-
-                for (int i = 0; address.getAddressLine(i) != null; i++) {
-                    String addressLine = address.getAddressLine(i);
-                    //街道名称:广东省深圳市罗湖区蔡屋围一街深圳瑞吉酒店
-                    System.out.println("addressLine=====" + addressLine);
-                }
-                if(addressCallback != null){
-                    addressCallback.onGetAddress(address);
-                }
-//                for(AddressCallback addressCallback:addressCallbacks){
+//    private void getAddress(double latitude, double longitude) {
+//        //Geocoder通过经纬度获取具体信息
+//        Geocoder gc = new Geocoder(mContext, Locale.getDefault());
+//        try {
+//            List<Address> locationList = gc.getFromLocation(latitude, longitude, 1);
+//
+//            if (locationList != null) {
+//                Address address = locationList.get(0);
+//                String countryName = address.getCountryName();//国家
+//                String countryCode = address.getCountryCode();
+//                String adminArea = address.getAdminArea();//省
+//                String locality = address.getLocality();//市
+//                String subLocality = address.getSubLocality();//区
+//                String featureName = address.getFeatureName();//街道
+//
+//                for (int i = 0; address.getAddressLine(i) != null; i++) {
+//                    String addressLine = address.getAddressLine(i);
+//                    //街道名称:广东省深圳市罗湖区蔡屋围一街深圳瑞吉酒店
+//                    System.out.println("addressLine=====" + addressLine);
+//                }
+//                if(addressCallback != null){
 //                    addressCallback.onGetAddress(address);
 //                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+////                for(AddressCallback addressCallback:addressCallbacks){
+////                    addressCallback.onGetAddress(address);
+////                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void removeLocationUpdatesListener() {
         if (locationManager != null) {
@@ -225,7 +228,7 @@ public class LocationUtils {
         showLocation();
     }
     public interface AddressCallback{
-        void onGetAddress(Address address);
+//        void onGetAddress(Address address);
         void onGetLocation(double lat,double lng);
     }
 }

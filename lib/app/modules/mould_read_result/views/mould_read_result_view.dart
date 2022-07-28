@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 
 import '../../../routes/app_pages.dart';
+import '../../../services/storage.dart';
+import '../../../values/server.dart';
+import '../../../values/storage.dart';
 import '../controllers/mould_read_result_controller.dart';
 /**
  * 模具读取结果
@@ -39,16 +44,27 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                   Text('拍照结果：${controller.imageUrl.value?.uriUuid}'),
                   Text('拍照路径：${controller.imageUrl.value?.filePath}'),
                   Text('拍照名称：${controller.imageUrl.value?.fileName}'),
+                  Text(
+                      '显示图片地址：${SERVER_FILE_UPLOAD}/file/backend/${Uri.encodeComponent(controller.imageUrl.value?.uriUuid ?? "")}?token=' +
+                          StorageService.to.getString(STORAGE_FILE_TOKEN)),
+                  Image.network(
+                    SERVER_FILE_UPLOAD +
+                        "/file/backend/" +
+                        Uri.encodeComponent(
+                            controller.imageUrl.value?.uriUuid ?? "") +
+                        '?token=' +
+                        StorageService.to.getString(STORAGE_FILE_TOKEN),
+                    height: 100,
+                    width: 100,
+                  )
                 ],
               )),
           ElevatedButton(
               onPressed: () => {controller.initRfidData()},
               child: Text('连接设备')),
-
-             ElevatedButton(
-                onPressed: () => {controller.startReadRfidData()},
-                child: Text(controller.isReadData.value ?'读取':'结束')),
-
+          ElevatedButton(
+              onPressed: () => {controller.startReadRfidData()},
+              child: Text(controller.isReadData.value ? '读取' : '结束')),
           ElevatedButton(
               onPressed: () => {controller.getScanLabel()},
               child: Text('扫描标签')),

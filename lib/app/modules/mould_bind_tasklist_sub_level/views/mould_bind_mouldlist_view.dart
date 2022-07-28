@@ -6,6 +6,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../style/text_style.dart';
 import '../../../utils/cache.dart';
+import '../../../utils/logger.dart';
 import '../../../values/constants.dart';
 import '../controllers/mould_bind_mouldlist_controller.dart';
 
@@ -19,11 +20,12 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
     var taskNo = Get.arguments['taskNo'];
     var taskType = Get.arguments['taskType'];
     var bindStatus = Get.arguments['bindStatus'];
-
-    CacheUtils.to.getMouldTaskListByKeyOrStatus(taskNo, '', [bindStatus], []);
+    var isFinish = Get.arguments['isFinish'];
+    Log.d(
+        "传入二级模具菜单参数：taskNo = $taskNo,taskType = ${taskType},bindStatus = ${bindStatus},isFinish = ${isFinish}");
+    CacheUtils.to
+        .getMouldTaskListByKeyOrStatus(isFinish, taskNo, '', [bindStatus], []);
     //
-    // Log.d(
-    //     "传入二级模具菜单参数111111：taskNo = $taskNo,taskType = ${taskType},bindStatus = ${bindStatus}");
 
     return Scaffold(
         appBar: AppBar(
@@ -40,7 +42,11 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                       inputOnSubmit: (value) {
                         CacheUtils.to.mouldSearchKey = value;
                         CacheUtils.to.getMouldTaskListByKeyOrStatus(
-                            Get.arguments['taskNo'], '', [-1], []);
+                            Get.arguments['isFinish'],
+                            Get.arguments['taskNo'],
+                            '',
+                            [-1],
+                            []);
                       })),
               Container(
                 width: 200,

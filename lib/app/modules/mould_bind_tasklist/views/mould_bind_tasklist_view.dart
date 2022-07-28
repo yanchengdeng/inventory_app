@@ -113,7 +113,8 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '待绑定',
-                                                                count: CacheUtils.to
+                                                                count: CacheUtils
+                                                                    .to
                                                                     .mouldBindTaskListForWaitBind(
                                                                         index,
                                                                         BIND_STATUS_WAING)
@@ -136,7 +137,8 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '重新绑定',
-                                                                count: CacheUtils.to
+                                                                count: CacheUtils
+                                                                    .to
                                                                     .mouldBindTaskListForWaitBind(
                                                                         index,
                                                                         BIND_STATUS_REBIND)
@@ -159,7 +161,8 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '待上传',
-                                                                count: CacheUtils.to
+                                                                count: CacheUtils
+                                                                    .to
                                                                     .mouldBindTaskListForWaitBind(
                                                                         index,
                                                                         BIND_STATUS_WAITING_UPLOAD)
@@ -182,7 +185,8 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '已上传',
-                                                                count: CacheUtils.to
+                                                                count: CacheUtils
+                                                                    .to
                                                                     .mouldBindTaskListForWaitBind(
                                                                         index,
                                                                         BIND_STATUS_UPLOADED)
@@ -198,7 +202,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                             ),
                                           ),
                                           onTap: () => {
-                                            ///  绑定
+                                            ///  未上传的 ==》绑定
                                             Get.toNamed(
                                                 Routes.MOULD_BIND_MOULDLIST,
                                                 arguments: {
@@ -206,15 +210,14 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                       '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskType}',
                                                   'taskNo':
                                                       '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskNo}',
-                                                  'bindStatus': BIND_STATUS_ALL
+                                                  'bindStatus': BIND_STATUS_ALL,
+                                                  "isFinish": false
                                                 })
                                           },
                                         ),
                                       )),
-                                  itemCount: CacheUtils.to
-                                      .mouldBindTaskList
-                                      ?.unfinishedTaskList
-                                      ?.length,
+                                  itemCount: CacheUtils.to.mouldBindTaskList
+                                      ?.unfinishedTaskList?.length,
                                 )
                               : ListView.builder(
                                   itemBuilder: ((context, index) => Card(
@@ -228,7 +231,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                    '支付任务编号：${CacheUtils.to.mouldBindTaskList?.finishedTaskList?[index]?.taskNo}',
+                                                    '${CacheUtils.to.mouldBindTaskList?.finishedTaskList?[index]?.taskType == MOULD_TASK_TYPE_PAY ? '支付任务编号' : '标签替换任务编号'}：${CacheUtils.to.mouldBindTaskList?.finishedTaskList?[index]?.taskNo}',
                                                     style:
                                                         textBoldListTextStyle()),
                                                 Text(
@@ -242,22 +245,21 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                               ]),
                                         ),
                                         onTap: () => {
-                                          ///  绑定
+                                          /// 已上传的
                                           Get.toNamed(
                                               Routes.MOULD_BIND_MOULDLIST,
                                               arguments: {
                                                 'taskType':
-                                                    '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskType}',
+                                                    '${CacheUtils.to.mouldBindTaskList?.finishedTaskList?[index]?.taskType}',
                                                 'taskNo':
-                                                    '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskNo}',
-                                                'bindStatus': BIND_STATUS_ALL
+                                                    '${CacheUtils.to.mouldBindTaskList?.finishedTaskList?[index]?.taskNo}',
+                                                'bindStatus': BIND_STATUS_ALL,
+                                                "isFinish": true
                                               })
                                         },
                                       ))),
-                                  itemCount: CacheUtils.to
-                                      .mouldBindTaskList
-                                      ?.finishedTaskList
-                                      ?.length,
+                                  itemCount: CacheUtils.to.mouldBindTaskList
+                                      ?.finishedTaskList?.length,
                                 )))
                 ],
               ),

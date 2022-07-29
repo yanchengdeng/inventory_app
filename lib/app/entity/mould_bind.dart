@@ -77,6 +77,7 @@ class FinishedTaskList {
   List<MouldList>? mouldList;
   String? poNo;
   String? taskNo;
+
   ///任务类型(0为支付，1为标签替换)
   int? taskType;
   int? totalMoulds;

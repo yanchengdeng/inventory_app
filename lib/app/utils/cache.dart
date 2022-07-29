@@ -158,8 +158,10 @@ class CacheUtils extends GetxController {
         ?.where((element) => element.taskNo == taskNo)
         ?.first;
     var mouldList = task?.mouldList;
-    assertBindTaskInfo =
+    _assertBindTaskInfo.value =
         mouldList?.where((element) => element.assetNo == assetNo)?.first;
+
+    Log.d("${_assertBindTaskInfo.value}");
   }
 
   ////////////////////////////////以下为资产盘点数据操作//////////////////////////////////////////////

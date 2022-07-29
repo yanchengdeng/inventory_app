@@ -171,12 +171,14 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                             ?.mouldList[index]?.bindStatus ==
                                         BIND_STATUS_UPLOADED)
                                       {
-                                        ///已上传
+                                        ///已上传（已上传和未上传模具中都有）
                                         ///
 
                                         Get.toNamed(
                                             Routes.MOULD_RESULT_ONLY_VIEW,
                                             arguments: {
+                                              'isFinish':
+                                                  Get.arguments['isFinish'],
                                               "taskType":
                                                   Get.arguments['taskType'],
                                               "taskNo": Get.arguments['taskNo'],

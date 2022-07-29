@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/cache.dart';
+import 'package:inventory_app/app/values/constants.dart';
+import 'package:inventory_app/app/values/size.dart';
 
+import '../../../entity/mould_bind.dart';
 import '../../../style/text_style.dart';
 import '../../../utils/logger.dart';
 import '../controllers/mould_result_only_view_controller.dart';
@@ -14,11 +17,14 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
     var taskNo = Get.arguments['taskNo'];
     var taskType = Get.arguments['taskType'];
     var assetNo = Get.arguments['assetNo'];
+    var isFinish = Get.arguments['isFinish'];
 
     Log.d(
-        "传入只读显示页：taskNo = $taskNo,taskType = ${taskType},assetNo = ${assetNo}");
+        "传入只读显示页：taskNo = $taskNo,taskType = ${taskType},assetNo = ${assetNo},taskType = ${taskType}");
 
-    CacheUtils.to.getAssetBindTaskInfo(taskNo, assetNo);
+    isFinish
+        ? CacheUtils.to.getAssetBindTaskInfo(taskNo, assetNo)
+        : CacheUtils.to.getUnLoadedAssetBindTaskInfo(taskNo, assetNo);
 
     return Scaffold(
       appBar: AppBar(
@@ -120,33 +126,131 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
     return Column(
       children: [
         Container(
-          color: Colors.red,
-          height: 130,
+          color: Colors.white,
+          height: 150,
         ),
         Obx(
-          () => Row(
-            children: [
-              Icon(
-                Icons.star,
-                color: Colors.red,
-                size: 10,
-              ),
-              Text('标签编号', style: textBoldNumberBlueStyle()),
-              Text(
-                '(${CacheUtils.to.assertBindTaskInfo?.lat}-${CacheUtils.to.assertBindTaskInfo?.lng})',
-                style: textNormalListTextStyle(),
-              ),
-              ListView.builder(
-                itemCount: CacheUtils.to.assertBindTaskInfo?.bindLabels?.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Text(
-                      '${CacheUtils.to.assertBindTaskInfo?.bindLabels[index]}');
-                },
-              )
-            ],
+          () => Container(
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star,
+                      color: Colors.red,
+                      size: 10,
+                    ),
+                    Text('标签编号', style: textBoldNumberBlueStyle()),
+                    Text(
+                      '(${CacheUtils.to.assertBindTaskInfo?.lat ?? "0.0"}-${CacheUtils.to.assertBindTaskInfo?.lng ?? "0.0"})',
+                      style: textNormalListTextStyle(),
+                    ),
+                  ],
+                ),
+                Container(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Divider(color: Colors.black26, height: 1)),
+                Container(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: Text(getLabels().toString(),
+                        style: textNormalListTextStyle()))
+              ],
+            ),
+          ),
+        ),
+        Divider(color: Colors.black12, thickness: 20.0),
+        Obx(
+          () => Container(
+            padding: EdgeInsets.only(left: 16, right: 16, top: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star,
+                      color: Colors.red,
+                      size: 10,
+                    ),
+                    Text('资产图片', style: textBoldNumberBlueStyle()),
+                  ],
+                ),
+                Container(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Divider(color: Colors.black26, height: 1)),
+                Container(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: ImageContain())
+              ],
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  ///获取标签
+  StringBuffer getLabels() {
+    List<BindLabels> labels = CacheUtils.to.assertBindTaskInfo?.bindLabels;
+    StringBuffer stringBuffer = StringBuffer();
+    labels.forEach((element) {
+      stringBuffer.writeln(element.labelNo);
+    });
+    return stringBuffer;
+  }
+
+  Widget ImageContain() {
+    ///todo  测试使用
+    const String testImage1 =
+        'https://tse1-mm.cn.bing.net/th/id/OET.0b6df5a84be84e00ac0af44d644eb044?w=272&h=272&c=7&rs=1&o=5&dpr=1.25&pid=1.9';
+    const String testImage2 =
+        'https://tse1-mm.cn.bing.net/th/id/OET.62d14dc593b346259a456c0dd83bd8b6?w=272&h=272&c=7&rs=1&o=5&dpr=1.25&pid=1.9';
+    const String testImage3 =
+        'https://tse1-mm.cn.bing.net/th/id/OET.2567873a1fd04be7852a03de23158a00?w=272&h=272&c=7&rs=1&o=5&dpr=1.25&pid=1.9';
+
+    List<BindLabels> labels = CacheUtils.to.assertBindTaskInfo?.bindLabels;
+
+    ///标签类型 只显示 铭牌
+    if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL.toString()) {
+      if (labels.isNotEmpty) {
+        return textImageWidget('铭牌照片', testImage1);
+      } else {
+        return Icon(Icons.hourglass_empty);
+      }
+    } else {
+      /// 支付类型的  /// 支付类型 整体照片、铭牌照片、型腔照片
+      return Column(
+        children: [
+          Row(
+            children: [
+              Expanded(flex: 1, child: textImageWidget('整体照片', testImage1)),
+              Expanded(flex: 1, child: textImageWidget('铭牌照片', testImage2)),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(flex: 1, child: textImageWidget('型腔照片', testImage3)),
+              Expanded(flex: 1, child: Text('')),
+            ],
+          ),
+        ],
+      );
+    }
+  }
+
+  ///文字 图片混合组件
+  Widget textImageWidget(String title, String imageUrl) {
+    return Container(
+      child: Column(
+        children: [
+          Text(title, style: textNormalListTextStyle()),
+          Image.network(imageUrl,
+              height: SizeConstant.IAMGE_SIZE_HEIGHT,
+              width: SizeConstant.IAMGE_SIZE_HEIGHT)
+        ],
+      ),
     );
   }
 }

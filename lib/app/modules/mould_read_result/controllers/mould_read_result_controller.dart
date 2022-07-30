@@ -1,10 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
-import '../../../apis/file_api.dart';
-import '../../../entity/cache_mould_bind_data.dart';
-import '../../../utils/logger.dart';
-import '../../home/controllers/home_controller.dart';
+import '../../../entity/cache_data.dart';
 
 class MouldReadResultController extends GetxController {
   var isShowAllInfo = false.obs;
@@ -12,13 +8,11 @@ class MouldReadResultController extends GetxController {
   var rfidData = Rx<String>("no data");
   var rfidReadData = Rx<List<String>>(List.empty());
 
-
   ///文件信息
   var imageUrl = Rx<UploadImageInfo?>(null);
 
   ///经纬度数据121.23312,1232.32
   var gpsData = Rx<String?>('');
-
 
   ///扫描标签
   var scanLabelData = Rx<String?>('');
@@ -67,13 +61,11 @@ class MouldReadResultController extends GetxController {
     }
   }
 
-
   /// 获取经纬度
   getGpsLagLng() async {
     var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
     gpsData.value = latLng;
   }
-
 
   /// 获取扫描label
   getScanLabel() async {

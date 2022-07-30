@@ -28,9 +28,9 @@ class MouldBindList {
 
 class MouldData {
   int? finished;
-  List<FinishedTaskList>? finishedTaskList;
+  List<MouldFinishedTaskList>? finishedTaskList;
   int? unfinished;
-  List<FinishedTaskList>? unfinishedTaskList;
+  List<MouldFinishedTaskList>? unfinishedTaskList;
 
   MouldData(
       {this.finished,
@@ -41,16 +41,16 @@ class MouldData {
   MouldData.fromJson(Map<String, dynamic> json) {
     finished = json['finished'];
     if (json['finishedTaskList'] != null) {
-      finishedTaskList = <FinishedTaskList>[];
+      finishedTaskList = <MouldFinishedTaskList>[];
       json['finishedTaskList'].forEach((v) {
-        finishedTaskList!.add(new FinishedTaskList.fromJson(v));
+        finishedTaskList!.add(new MouldFinishedTaskList.fromJson(v));
       });
     }
     unfinished = json['unfinished'];
     if (json['unfinishedTaskList'] != null) {
-      unfinishedTaskList = <FinishedTaskList>[];
+      unfinishedTaskList = <MouldFinishedTaskList>[];
       json['unfinishedTaskList'].forEach((v) {
-        unfinishedTaskList!.add(new FinishedTaskList.fromJson(v));
+        unfinishedTaskList!.add(new MouldFinishedTaskList.fromJson(v));
       });
     }
   }
@@ -71,7 +71,7 @@ class MouldData {
   }
 }
 
-class FinishedTaskList {
+class MouldFinishedTaskList {
   String? distributionTime;
   String? finishedTime;
   List<MouldList>? mouldList;
@@ -82,7 +82,7 @@ class FinishedTaskList {
   int? taskType;
   int? totalMoulds;
 
-  FinishedTaskList(
+  MouldFinishedTaskList(
       {this.distributionTime,
       this.finishedTime,
       this.mouldList,
@@ -91,7 +91,7 @@ class FinishedTaskList {
       this.taskType,
       this.totalMoulds});
 
-  FinishedTaskList.fromJson(Map<String, dynamic> json) {
+  MouldFinishedTaskList.fromJson(Map<String, dynamic> json) {
     distributionTime = json['distributionTime'];
     finishedTime = json['finishedTime'];
     if (json['mouldList'] != null) {

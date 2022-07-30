@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/cache.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../../routes/app_pages.dart';
 import '../../../style/text_style.dart';
 import '../../../values/constants.dart';
 import '../../../widgets/button.dart';
@@ -43,9 +44,9 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                               selected: homeController.state.selectedTab,
                               isLeft: true,
                               callback: () {
-                                if(!homeController.state.selectedTab){
+                                if (!homeController.state.selectedTab) {
                                   homeController.state.selectedTab =
-                                  !homeController.state.selectedTab;
+                                      !homeController.state.selectedTab;
                                 }
                               }),
                           flex: 1,
@@ -57,9 +58,9 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                               selected: !homeController.state.selectedTab,
                               isLeft: false,
                               callback: () {
-                                if(homeController.state.selectedTab) {
+                                if (homeController.state.selectedTab) {
                                   homeController.state.selectedTab =
-                                  !homeController.state.selectedTab;
+                                      !homeController.state.selectedTab;
                                 }
                               }),
                           flex: 1,
@@ -102,7 +103,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '盘点年份：${CacheUtils.to.inventoryList?.finishedList?[index]?.distributionTime.substring(0,4)}',
+                                                            '盘点年份：${CacheUtils.to.inventoryList?.finishedList?[index]?.distributionTime.substring(0, 4)}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -167,11 +168,25 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '未盘点',
-                                                                count: 1,
+                                                                count: CacheUtils
+                                                                    .to
+                                                                    .getInventoryListByStatus(
+                                                                        index,
+                                                                        INVENTORY_STATUS_NOT)
+                                                                    .length,
                                                                 callback: () {
-                                                                  toastInfo(
-                                                                      msg:
-                                                                          "未盘点");
+                                                                  Get.toNamed(
+                                                                      Routes
+                                                                          .INVENTORY_TASKLIST_SUB_LEVEL,
+                                                                      arguments: {
+                                                                        'taskNo':
+                                                                            '${CacheUtils.to.inventoryList?.unfinishedList?[index]?.taskNo}',
+                                                                        'bindStatus':
+                                                                            INVENTORY_STATUS_NOT,
+                                                                        "isFinish":
+                                                                            false
+                                                                      });
+                                                                  ;
                                                                 })),
                                                     SizedBox(
                                                         width: 1,
@@ -186,11 +201,25 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '待上传',
-                                                                count: 1,
+                                                                count: CacheUtils
+                                                                    .to
+                                                                    .getInventoryListByStatus(
+                                                                        index,
+                                                                        INVENTORY_WAITING_UPLOAD)
+                                                                    .length,
                                                                 callback: () {
-                                                                  toastInfo(
-                                                                      msg:
-                                                                          "待上传");
+                                                                  Get.toNamed(
+                                                                      Routes
+                                                                          .INVENTORY_TASKLIST_SUB_LEVEL,
+                                                                      arguments: {
+                                                                        'taskNo':
+                                                                            '${CacheUtils.to.inventoryList?.unfinishedList?[index]?.taskNo}',
+                                                                        'bindStatus':
+                                                                            INVENTORY_WAITING_UPLOAD,
+                                                                        "isFinish":
+                                                                            false
+                                                                      });
+                                                                  ;
                                                                 })),
                                                     SizedBox(
                                                         width: 1,
@@ -205,91 +234,134 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '已上传',
-                                                                count: 6,
+                                                                count: CacheUtils
+                                                                    .to
+                                                                    .getInventoryListByStatus(
+                                                                        index,
+                                                                        INVENTORY_HAVE_UPLOADED)
+                                                                    .length,
                                                                 callback: () {
-                                                                  toastInfo(
-                                                                      msg:
-                                                                          "已上传");
+                                                                  Get.toNamed(
+                                                                      Routes
+                                                                          .INVENTORY_TASKLIST_SUB_LEVEL,
+                                                                      arguments: {
+                                                                        'taskNo':
+                                                                            '${CacheUtils.to.inventoryList?.unfinishedList?[index]?.taskNo}',
+                                                                        'bindStatus':
+                                                                            INVENTORY_HAVE_UPLOADED,
+                                                                        "isFinish":
+                                                                            false
+                                                                      });
                                                                 }))
                                                   ],
                                                 )
                                               ],
                                             ),
                                           ),
-                                          onTap: () => {toastInfo(msg: '全局跳转')},
+                                          onTap: () => {
+                                            Get.toNamed(
+                                                Routes
+                                                    .INVENTORY_TASKLIST_SUB_LEVEL,
+                                                arguments: {
+                                                  'taskNo':
+                                                      '${CacheUtils.to.inventoryList?.unfinishedList?[index]?.taskNo}',
+                                                  'bindStatus':
+                                                      INVENTORY_STATUS_ALL,
+                                                  "isFinish": false
+                                                })
+                                          },
                                         ),
                                       )),
-                                  itemCount: CacheUtils.to.inventoryList?.unfinished)
+                                  itemCount:
+                                      CacheUtils.to.inventoryList?.unfinished)
                               : ListView.builder(
                                   itemBuilder: ((context, index) => Card(
                                       elevation: 10,
                                       shadowColor: Colors.grey,
-                                      child: Container(
-                                        padding: EdgeInsets.all(12),
-                                        child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text('${CacheUtils.to.inventoryList?.finishedList?[index]?.taskNo}',
-                                                  style: textBoldNumberStyle()),
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      alignment:
-                                                          AlignmentDirectional
-                                                              .topStart,
-                                                      child: Text(
-                                                          '盘点年份：${CacheUtils.to.inventoryList?.finishedList?[index]?.distributionTime.substring(0,4)}',
-                                                          style:
-                                                              textNormalListTextStyle()),
+                                      child: InkWell(
+                                        child: Container(
+                                          padding: EdgeInsets.all(12),
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                    '${CacheUtils.to.inventoryList?.finishedList?[index]?.taskNo}',
+                                                    style:
+                                                        textBoldNumberStyle()),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        alignment:
+                                                            AlignmentDirectional
+                                                                .topStart,
+                                                        child: Text(
+                                                            '盘点年份：${CacheUtils.to.inventoryList?.finishedList?[index]?.distributionTime.substring(0, 4)}',
+                                                            style:
+                                                                textNormalListTextStyle()),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      alignment:
-                                                          AlignmentDirectional
-                                                              .topEnd,
-                                                      child: Text('盘点类型：${CacheUtils.to.inventoryList?.finishedList?[index]?.inventoryTypeText}',
-                                                          style:
-                                                              textNormalListTextStyle()),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        alignment:
+                                                            AlignmentDirectional
+                                                                .topEnd,
+                                                        child: Text(
+                                                            '盘点类型：${CacheUtils.to.inventoryList?.finishedList?[index]?.inventoryTypeText}',
+                                                            style:
+                                                                textNormalListTextStyle()),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      alignment:
-                                                          AlignmentDirectional
-                                                              .topStart,
-                                                      child: Text(
-                                                          '截止日期：${CacheUtils.to.inventoryList?.finishedList?[index]?.endDate}',
-                                                          style:
-                                                              textNormalListTextStyle()),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        alignment:
+                                                            AlignmentDirectional
+                                                                .topStart,
+                                                        child: Text(
+                                                            '截止日期：${CacheUtils.to.inventoryList?.finishedList?[index]?.endDate}',
+                                                            style:
+                                                                textNormalListTextStyle()),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                      alignment:
-                                                          AlignmentDirectional
-                                                              .topEnd,
-                                                      child: Text(
-                                                          '盘点总数：${CacheUtils.to.inventoryList?.finishedList?[index]?.inventoryTotal}',
-                                                          style:
-                                                              textNormalListTextStyle()),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        alignment:
+                                                            AlignmentDirectional
+                                                                .topEnd,
+                                                        child: Text(
+                                                            '盘点总数：${CacheUtils.to.inventoryList?.finishedList?[index]?.inventoryTotal}',
+                                                            style:
+                                                                textNormalListTextStyle()),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ]),
+                                                  ],
+                                                ),
+                                              ]),
+                                        ),
+                                        onTap: () => {
+                                          Get.toNamed(
+                                              Routes
+                                                  .INVENTORY_TASKLIST_SUB_LEVEL,
+                                              arguments: {
+                                                'taskNo':
+                                                    '${CacheUtils.to.inventoryList?.finishedList?[index]?.taskNo}',
+                                                'bindStatus':
+                                                    INVENTORY_STATUS_ALL,
+                                                "isFinish": true
+                                              })
+                                        },
                                       ))),
-                                  itemCount: CacheUtils.to.inventoryList?.finished)))
+                                  itemCount:
+                                      CacheUtils.to.inventoryList?.finished)))
                 ],
               ),
             )));

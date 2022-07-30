@@ -54,9 +54,9 @@ class InventoryList {
 class InventroyData {
   InventroyData({
     int? finished,
-    List<FinishedList>? finishedList,
+    List<InventoryFinishedList>? finishedList,
     int? unfinished,
-    List<FinishedList>? unfinishedList,
+    List<InventoryFinishedList>? unfinishedList,
   }) {
     _finished = finished;
     _finishedList = finishedList;
@@ -69,26 +69,26 @@ class InventroyData {
     if (json['finishedList'] != null) {
       _finishedList = [];
       json['finishedList'].forEach((v) {
-        _finishedList?.add(FinishedList.fromJson(v));
+        _finishedList?.add(InventoryFinishedList.fromJson(v));
       });
     }
     _unfinished = json['unfinished'];
     if (json['unfinishedList'] != null) {
       _unfinishedList = [];
       json['unfinishedList'].forEach((v) {
-        _unfinishedList?.add(FinishedList.fromJson(v));
+        _unfinishedList?.add(InventoryFinishedList.fromJson(v));
       });
     }
   }
   int? _finished;
-  List<FinishedList>? _finishedList;
+  List<InventoryFinishedList>? _finishedList;
   int? _unfinished;
-  List<FinishedList>? _unfinishedList;
+  List<InventoryFinishedList>? _unfinishedList;
   InventroyData copyWith({
     int? finished,
-    List<FinishedList>? finishedList,
+    List<InventoryFinishedList>? finishedList,
     int? unfinished,
-    List<FinishedList>? unfinishedList,
+    List<InventoryFinishedList>? unfinishedList,
   }) =>
       InventroyData(
         finished: finished ?? _finished,
@@ -97,9 +97,9 @@ class InventroyData {
         unfinishedList: unfinishedList ?? _unfinishedList,
       );
   int? get finished => _finished;
-  List<FinishedList>? get finishedList => _finishedList;
+  List<InventoryFinishedList>? get finishedList => _finishedList;
   int? get unfinished => _unfinished;
-  List<FinishedList>? get unfinishedList => _unfinishedList;
+  List<InventoryFinishedList>? get unfinishedList => _unfinishedList;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -123,8 +123,8 @@ class InventroyData {
 /// list : [{"assetInventoryDetailId":1,"assetInventoryStatus":1,"assetName":"天窗边框模具","assetNo":"PO123456-001-M","inventoryTaskId":1,"labelNo":"XP000000001,XP000000002","toolingType":"F","usedArea":"上海金桥"}]
 /// taskNo : "I20220317914"
 
-class FinishedList {
-  FinishedList({
+class InventoryFinishedList {
+  InventoryFinishedList({
     String? distributionTime,
     String? endDate,
     String? finishedTime,
@@ -144,7 +144,7 @@ class FinishedList {
     _taskNo = taskNo;
   }
 
-  FinishedList.fromJson(dynamic json) {
+  InventoryFinishedList.fromJson(dynamic json) {
     _distributionTime = json['distributionTime'];
     _endDate = json['endDate'];
     _finishedTime = json['finishedTime'];
@@ -167,7 +167,7 @@ class FinishedList {
   String? _inventoryTypeText;
   List<ItemList>? _list;
   String? _taskNo;
-  FinishedList copyWith({
+  InventoryFinishedList copyWith({
     String? distributionTime,
     String? endDate,
     String? finishedTime,
@@ -177,7 +177,7 @@ class FinishedList {
     List<ItemList>? list,
     String? taskNo,
   }) =>
-      FinishedList(
+      InventoryFinishedList(
         distributionTime: distributionTime ?? _distributionTime,
         endDate: endDate ?? _endDate,
         finishedTime: finishedTime ?? _finishedTime,

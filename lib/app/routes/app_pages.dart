@@ -6,6 +6,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/inventory_tasklist/bindings/inventory_tasklist_binding.dart';
 import '../modules/inventory_tasklist/views/inventory_tasklist_view.dart';
+import '../modules/inventory_tasklist_sub_level/bindings/inventory_tasklist_sub_level_binding.dart';
+import '../modules/inventory_tasklist_sub_level/views/inventory_tasklist_sub_level_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/main/bindings/main_binding.dart';
@@ -91,6 +93,11 @@ class AppPages {
       name: _Paths.TAKE_PHOTO,
       page: () => TakePhotoView(),
       binding: TakePhotoBinding(),
+    ),
+    GetPage(
+      name: _Paths.INVENTORY_TASKLIST_SUB_LEVEL,
+      page: () => InventoryTasklistSubLevelView(),
+      binding: InventoryTasklistSubLevelBinding(),
     ),
   ];
 }

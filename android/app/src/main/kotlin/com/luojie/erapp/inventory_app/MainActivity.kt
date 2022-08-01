@@ -1,6 +1,7 @@
 package com.luojie.erapp.inventory_app
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -141,7 +142,9 @@ class MainActivity : FlutterActivity() {
                 }
 
                 SCAN_LABEL ->{
-                    doListenBarcodeReader(result)
+//                    doListenBarcodeReader(result)
+
+                    startActivity(Intent(context,ReadResultActivity::class.java))
 
                 }
             }

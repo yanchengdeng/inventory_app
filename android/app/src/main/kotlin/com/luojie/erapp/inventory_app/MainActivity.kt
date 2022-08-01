@@ -1,7 +1,6 @@
 package com.luojie.erapp.inventory_app
 
 import android.Manifest
-import android.location.Address
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -61,6 +60,8 @@ class MainActivity : FlutterActivity() {
     private var mTagDataList = mutableListOf<String>()
     private var mIsReadBtnClicked = false
 
+    private var readLabelResult: MethodChannel.Result? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.w("yancheng","onCreate------")
@@ -102,13 +103,12 @@ class MainActivity : FlutterActivity() {
                     rfidMgr?.addEventListener(mEventListener)
                     mIsReadBtnClicked = true
                     read()
-                    result.success(listOf("ok--reading"))
+                    this.readLabelResult = result
                 }
                 STOP_READ_RFID_DATA -> {
                     rfidMgr?.removeEventListener(mEventListener)
                     mIsReadBtnClicked = false
                     stopRead()
-                    result.success(listOf("ok--stop reading"))
                 }
 
                 GET_GPS_LAT_LNG ->{
@@ -121,23 +121,6 @@ class MainActivity : FlutterActivity() {
                         override fun permissionGranted(permission: Array<out String>) {
                             LocationUtils.getInstance(this@MainActivity).addressCallback =
                                 LocationUtils.AddressCallback { lat, lng ->
-
-                                    //                                override fun onGetAddress(address: Address?) {
-                                    //                                    val countryName = address!!.countryName //国家
-                                    //
-                                    //                                    val adminArea = address!!.adminArea //省
-                                    //
-                                    //                                    val locality = address!!.locality //市
-                                    //
-                                    //                                    val subLocality = address!!.subLocality //区
-                                    //
-                                    //                                    val featureName = address!!.featureName //街道
-                                    //
-                                    //                                    Log.d(
-                                    //                                        "定位地址",
-                                    //                                        countryName +","+adminArea+","+locality+","+subLocality+","+featureName
-                                    //                                    )
-                                    //                                }
                                     Log.d(
                                         "定位地址","${lat},${lng}")
                                     result.success("${lat},${lng}")
@@ -158,7 +141,7 @@ class MainActivity : FlutterActivity() {
                 }
 
                 SCAN_LABEL ->{
-
+                    doListenBarcodeReader(result)
 
                 }
             }
@@ -186,13 +169,16 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+
+    }
+
+    private fun doListenBarcodeReader(result: MethodChannel.Result) {
         if (barcodeReader != null) {
+            barcodeReader?.claim()
             // register bar code event listener
             barcodeReader!!.addBarcodeListener(object :BarcodeReader.BarcodeListener{
                 override fun onBarcodeEvent(event: BarcodeReadEvent) {
-                    runOnUiThread {
-                        Toast.makeText(this@MainActivity,event.barcodeData,Toast.LENGTH_LONG).show()
-                    }
+                        result.success(event.barcodeData)
 
                 }
 
@@ -241,6 +227,8 @@ class MainActivity : FlutterActivity() {
             properties[BarcodeReader.PROPERTY_DECODER_TIMEOUT] = 400
             // Apply the settings
             barcodeReader!!.setProperties(properties)
+        }else{
+            initBarCodeReader()
         }
     }
 
@@ -310,6 +298,7 @@ class MainActivity : FlutterActivity() {
                     }
                 }
                 Log.w("yancheng","mTagDataList------$mTagDataList")
+                readLabelResult?.success(mTagDataList);
             }
         }
 

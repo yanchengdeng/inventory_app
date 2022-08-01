@@ -47,16 +47,16 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                   Text(
                       '显示图片地址：${SERVER_FILE_UPLOAD}/file/backend/${Uri.encodeComponent(controller.imageUrl.value?.uriUuid ?? "")}?token=' +
                           StorageService.to.getString(STORAGE_FILE_TOKEN)),
-                  Image.network(
-                    SERVER_FILE_UPLOAD +
-                        "/file/backend/" +
-                        Uri.encodeComponent(
-                            controller.imageUrl.value?.uriUuid ?? "") +
-                        '?token=' +
-                        StorageService.to.getString(STORAGE_FILE_TOKEN),
-                    height: 100,
-                    width: 100,
-                  )
+                  // Image.network(
+                  //   SERVER_FILE_UPLOAD +
+                  //       "/file/backend/" +
+                  //       Uri.encodeComponent(
+                  //           controller.imageUrl.value?.uriUuid ?? "") +
+                  //       '?token=' +
+                  //       StorageService.to.getString(STORAGE_FILE_TOKEN),
+                  //   height: 100,
+                  //   width: 100,
+                  // )
                 ],
               )),
           ElevatedButton(
@@ -64,7 +64,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
               child: Text('连接设备')),
           ElevatedButton(
               onPressed: () => {controller.startReadRfidData()},
-              child: Text(controller.isReadData.value ? '读取' : '结束')),
+              child: Obx(() => Text(controller.isReadData.value ? '开始' : '结束'))),
+          Text('00000000000C11BB01000005,00000000000D11BB01000004'),
           ElevatedButton(
               onPressed: () => {controller.getScanLabel()},
               child: Text('扫描标签')),

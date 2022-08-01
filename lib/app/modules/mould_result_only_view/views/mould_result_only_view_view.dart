@@ -127,7 +127,7 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
       children: [
         Container(
           color: Colors.white,
-          height: 150,
+          height: 160,
         ),
         Obx(
           () => Container(

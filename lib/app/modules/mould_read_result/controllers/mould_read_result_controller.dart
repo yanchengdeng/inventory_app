@@ -18,7 +18,7 @@ class MouldReadResultController extends GetxController {
   var scanLabelData = Rx<String?>('');
 
   ///读取rfid数据
-  var isReadData = Rx(false);
+  var isReadData = Rx(true);
 
   ///RFID SDK 通信channel
   static const String READ_RFID_DATA_CHANNEL = 'mould_read_result/blue_teeth';
@@ -69,8 +69,8 @@ class MouldReadResultController extends GetxController {
 
   /// 获取扫描label
   getScanLabel() async {
-    var latLng = await platform.invokeMethod(GET_SCAN_LABEL);
-    scanLabelData.value = latLng;
+    var scanLabel = await platform.invokeMethod(GET_SCAN_LABEL);
+    scanLabelData.value = scanLabel;
   }
 
   @override

@@ -2,14 +2,12 @@ import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:inventory_app/app/apis/apis.dart';
 import 'package:inventory_app/app/apis/mould_task_api.dart';
 import 'package:inventory_app/app/modules/home/HomeState.dart';
 import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/utils/logger.dart';
-
 import '../../../entity/inventory_list.dart';
 import '../../../entity/mould_bind.dart';
 import '../../../utils/cache.dart';

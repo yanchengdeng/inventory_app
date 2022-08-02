@@ -21,6 +21,13 @@ class MouldTaskApi<T> {
 
     var response = await HttpUtil()
         .get('/mouldBindTask/list', queryParameters: params, options: options);
+
+    if (response is String) {
+      Log.d("模具列表类型：字符串");
+    } else if (response is Map) {
+      Log.d("模具列表类型：map");
+    }
+
     return MouldBindList.fromJson(response);
   }
 }

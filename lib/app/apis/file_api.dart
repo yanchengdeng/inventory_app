@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' as get_multipart_file;
@@ -23,11 +24,26 @@ class FileApi<T> {
     Options options = Options();
     options.headers = fileTokenMaps;
     var response = await HttpUtil().get(
-      '${SERVER_FILE_API_URL}/file/token/get',
+      '/file/token/get',
       options: options,
     );
+    Log.d("文件token：${response}");
+
+    if (response is String) {
+      Log.d("文件token类型：字符串");
+    } else if (response is Map) {
+      Log.d("文件token类型：map");
+    }
+
+// var json1 = jsonDecode(response);
+//     if (json1 is String) {
+//       Log.d("文件json1类型：字符串");
+//     } else if (json1 is Map) {
+//       Log.d("文件json1类型：map");
+//     }
+
     FileTokenResponseEntity fileTokenResponseEntity =
-        FileTokenResponseEntity.fromJson(response);
+        FileTokenResponseEntity.fromJson(jsonDecode(response));
     if (fileTokenResponseEntity.data != null) {
       //保存文件服务token
       StorageService.to
@@ -56,7 +72,7 @@ class FileApi<T> {
     };
 
     var response = await HttpUtil().postForm(
-        '${SERVER_FILE_UPLOAD}/file/frontend/upload',
+        '${SERVER_FILE_UPLOAD}/silkfile/frontend/upload',
         options: options,
         data: formData);
 

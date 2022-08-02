@@ -122,8 +122,12 @@ class HttpUtil {
       case TOKEN_OUT_CODE:
         CommonUtils.logOut();
         break;
+
+      case FILE_SERVER_TOKEN_OUT_CODE:
+        EasyLoading.showError('上传已超时,重新上传');
+        break;
       default:
-        EasyLoading.showError('未知错误');
+        EasyLoading.showError('${eInfo.message}');
         break;
     }
   }
@@ -207,6 +211,8 @@ class HttpUtil {
     }
     headers['x-track-code'] = DateTime.now().microsecondsSinceEpoch;
     headers['x-app-code'] = 'RFIDAPP';
+    headers['content-type'] = 'application/json; charset=utf-8';
+    headers['contentType'] = 'application/json; charset=utf-8';
 
     ///todo 后期切换为token
     headers['x-user-code'] = 'spl01';
@@ -230,16 +236,6 @@ class HttpUtil {
     bool cacheDisk = false,
   }) async {
     Options requestOptions = options ?? Options();
-    if (requestOptions.extra == null) {
-      requestOptions.extra = Map();
-    }
-    requestOptions.extra!.addAll({
-      "refresh": refresh,
-      "noCache": noCache,
-      "list": list,
-      "cacheKey": cacheKey,
-      "cacheDisk": cacheDisk,
-    });
     requestOptions.headers = requestOptions.headers ?? {};
     Map<String, dynamic>? authorization = getAuthorizationHeader();
     if (authorization != null) {

@@ -29,9 +29,6 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "mould_read_result/blue_teeth"
 
-
-    private val mPermissions = listOf(Manifest.permission.ACCESS_COARSE_LOCATION)
-
     ///初始化rfid_sdk
     private val INIT_RFID_SDK = "initRfidSdk"
 
@@ -80,31 +77,48 @@ class MainActivity : FlutterActivity() {
 
             when (call.method) {
                 INIT_RFID_SDK -> {
-                    PermissionsUtil.requestPermission(this,object :PermissionListener{
-                        /**
-                         * 通过授权
-                         * @param permission
-                         */
-                        override fun permissionGranted(permission: Array<out String>) {
-                            initBlueTooth()
-                        }
 
-                        /**
-                         * 拒绝授权
-                         * @param permission
-                         */
-                        override fun permissionDenied(permission: Array<out String>) {
-                            Toast.makeText(this@MainActivity,"拒绝无法正常使用",Toast.LENGTH_LONG).show();
-                        }
-
-                    }, Manifest.permission.ACCESS_FINE_LOCATION)
-                    result.success(rfidMgr?.isConnected)
                 }
                 START_READ_RFID_DATA -> {
                     rfidMgr?.addEventListener(mEventListener)
                     mIsReadBtnClicked = true
                     read()
                     this.readLabelResult = result
+
+
+
+                    rfidMgr?.apply {
+                        /// 判断蓝牙是否连接
+                        if (isConnected){
+                            /// 判断是否读取rfid
+                            if (isReaderAvailable()) {
+                                result.success()
+                            }else{
+
+                            }
+                        }else{
+                            ///是否连接定位
+                            PermissionsUtil.requestPermission(this@MainActivity,object :PermissionListener{
+                                /**
+                                 * 通过授权
+                                 * @param permission
+                                 */
+                                override fun permissionGranted(permission: Array<out String>) {
+                                    initBlueTooth()
+                                }
+
+                                /**
+                                 * 拒绝授权
+                                 * @param permission
+                                 */
+                                override fun permissionDenied(permission: Array<out String>) {
+                                    Toast.makeText(this@MainActivity,"拒绝无法正常使用",Toast.LENGTH_LONG).show();
+                                }
+
+                            }, Manifest.permission.ACCESS_FINE_LOCATION)
+                        }
+
+                    }
                 }
                 STOP_READ_RFID_DATA -> {
                     rfidMgr?.removeEventListener(mEventListener)

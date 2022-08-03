@@ -108,5 +108,6 @@ e.printStackTrace();
 
 #### 设计更改 ：
 1· 详情页的扫描 和读写 用android 原生处理
+2.上传图片地址为   ：上传的uuid  ed6baf02-ca1e-4e17-8751-566c872f8f66 
 
 

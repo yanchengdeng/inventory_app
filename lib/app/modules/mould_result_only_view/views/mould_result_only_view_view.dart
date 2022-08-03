@@ -11,6 +11,7 @@ import '../../../utils/logger.dart';
 import '../controllers/mould_result_only_view_controller.dart';
 
 ///只查看模具信息
+///每次查看图片 都需要再次获取token 来拼接图片地址
 class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
   @override
   Widget build(BuildContext context) {

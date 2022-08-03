@@ -69,6 +69,7 @@ class FileApi<T> {
     var formData = {
       'token': fileTokenResponseEntity.data,
       "file": await MultipartFile.fromFile(filePath, filename: fileName)
+      // 'downloadType':'file_id'
     };
 
     var response = await HttpUtil().postForm(

@@ -19,4 +19,11 @@ class MainController extends GetxController {
   void onInit() {
     super.onInit();
   }
+
+  @override
+  void onReady() {
+    // TODO: implement onReady
+    super.onReady();
+      
+  }
 }

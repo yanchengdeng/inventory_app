@@ -13,9 +13,7 @@ class UserStore extends GetxController {
   // 令牌 token
   String token = '';
   // 用户 profile
-  final _profile = UserLoginResponseEntity().obs;
-
-  UserLoginResponseEntity get profile => _profile.value;
+  UserLoginResponseEntity? userLoginResponseEntity = null;
   bool get hasToken => token.isNotEmpty;
 
   @override
@@ -24,7 +22,8 @@ class UserStore extends GetxController {
     token = StorageService.to.getString(STORAGE_USER_TOKEN_KEY);
     var profileOffline = StorageService.to.getString(STORAGE_USER_PROFILE_KEY);
     if (profileOffline.isNotEmpty) {
-      _profile(UserLoginResponseEntity.fromJson(jsonDecode(profileOffline)));
+      userLoginResponseEntity =
+          (UserLoginResponseEntity.fromJson(jsonDecode(profileOffline)));
     }
   }
 
@@ -35,11 +34,12 @@ class UserStore extends GetxController {
   }
 
   // 获取 profile
-  Future<void> getProfile() async {
-    if (token.isEmpty) return;
-    var result = await UserAPI.profile();
-    _profile(result);
-    StorageService.to.setString(STORAGE_USER_PROFILE_KEY, jsonEncode(result));
+  Future<UserLoginResponseEntity?> getProfile() async {
+    userLoginResponseEntity = await UserAPI.profile();
+    if (userLoginResponseEntity != null) {
+      saveProfile(userLoginResponseEntity!);
+    }
+    return userLoginResponseEntity;
   }
 
   // 保存 profile

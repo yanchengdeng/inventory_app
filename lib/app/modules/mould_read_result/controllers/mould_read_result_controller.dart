@@ -5,7 +5,7 @@ import '../../../entity/cache_data.dart';
 class MouldReadResultController extends GetxController {
   var isShowAllInfo = false.obs;
 
-  var rfidData = Rx<String>("no data");
+  // var rfidData = Rx<String>("no data");
   var rfidReadData = Rx<List<String>>(List.empty());
 
   ///文件信息
@@ -41,10 +41,10 @@ class MouldReadResultController extends GetxController {
   static const platform = MethodChannel(READ_RFID_DATA_CHANNEL);
 
   ///初始化rfid
-  initRfidData() async {
-    var rfidDataFromAndroid = (await platform.invokeMethod(INIT_RFID_SDK));
-    rfidData.value = rfidDataFromAndroid;
-  }
+  // initRfidData() async {
+  //   var rfidDataFromAndroid = (await platform.invokeMethod(INIT_RFID_SDK));
+  //   rfidData.value = rfidDataFromAndroid;
+  // }
 
   ///开始读 、停止读
   startReadRfidData() async {

@@ -1,31 +1,20 @@
+import 'dart:collection';
+
+import 'package:dio/dio.dart';
+
 import '../entity/user.dart';
 import '../utils/http.dart';
 
 /// 用户
 class UserAPI<T> {
-  /// 登录
-  static Future<UserLoginResponseEntity> login<T>({
-    UserLoginParamsEntity? params,
-  }) async {
-    var response = await HttpUtil().post(
-      '/user/login',
-      data: params?.toJson(),
-    );
-    return UserLoginResponseEntity.fromJson(response);
-  }
-
-  /// Profile
   static Future<UserLoginResponseEntity> profile() async {
-    var response = await HttpUtil().post(
-      '/user/profile',
-    );
+    Map<String, dynamic> userProfile = HashMap();
+    userProfile['x-resource-code'] = 'login_user';
+     userProfile['x-user-code'] = 'login_user';
+    Options options = Options();
+    options.headers = userProfile;
+    var response = await HttpUtil()
+        .post('/login/user', queryParameters: userProfile, options: options);
     return UserLoginResponseEntity.fromJson(response);
-  }
-
-  /// Logout
-  static Future logout() async {
-    return await HttpUtil().post(
-      '/user/logout',
-    );
   }
 }

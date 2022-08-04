@@ -31,10 +31,10 @@ class LoginController extends GetxController {
 
     LogSingleton.getInstance()?.d("${params.toJson()}");
 
-    EasyLoading.show(status: "登陆中");
-    await UserAPI.login(
-      params: params,
-    );
+    // EasyLoading.show(status: "登陆中");
+    // await UserAPI.login(
+    //   params: params,
+    // );
   }
 
   // 执行登录操作

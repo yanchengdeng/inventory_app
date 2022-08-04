@@ -30,7 +30,7 @@ class MainActivity : FlutterActivity() {
     private val CHANNEL = "mould_read_result/blue_teeth"
 
     ///初始化rfid_sdk
-    private val INIT_RFID_SDK = "initRfidSdk"
+//    private val INIT_RFID_SDK = "initRfidSdk"
 
     ///rfid 开始通过蓝牙获取信息
     private val START_READ_RFID_DATA = "startReadRfid"
@@ -76,9 +76,7 @@ class MainActivity : FlutterActivity() {
         ).setMethodCallHandler { call, result ->
 
             when (call.method) {
-                INIT_RFID_SDK -> {
 
-                }
                 START_READ_RFID_DATA -> {
                     rfidMgr?.addEventListener(mEventListener)
                     mIsReadBtnClicked = true
@@ -92,7 +90,7 @@ class MainActivity : FlutterActivity() {
                         if (isConnected){
                             /// 判断是否读取rfid
                             if (isReaderAvailable()) {
-                                result.success()
+//                                result.success()
                             }else{
 
                             }
@@ -156,9 +154,9 @@ class MainActivity : FlutterActivity() {
                 }
 
                 SCAN_LABEL ->{
-//                    doListenBarcodeReader(result)
+                    doListenBarcodeReader(result)
 
-                    startActivity(Intent(context,ReadResultActivity::class.java))
+//                    startActivity(Intent(context,ReadResultActivity::class.java))
 
                 }
             }

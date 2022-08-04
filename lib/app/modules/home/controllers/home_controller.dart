@@ -10,6 +10,7 @@ import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import '../../../entity/inventory_list.dart';
 import '../../../entity/mould_bind.dart';
+import '../../../store/user.dart';
 import '../../../utils/cache.dart';
 
 class HomeController extends GetxController {
@@ -26,23 +27,24 @@ class HomeController extends GetxController {
   /// 获取资产盘点列表
   getInventoryList() async {
     InventoryList inventoryList =
-    await InventoryApi.getInventoryList(CommonUtils.getCommonParams());
+        await InventoryApi.getInventoryList(CommonUtils.getCommonParams());
     await CacheUtils.to.saveInventoryTask(inventoryList.data);
   }
 
   @override
   void onInit() {
     super.onInit();
-    EasyLoading.show(status: "获取中...");
-    Log.d("HomeController--onInit()");
-    getMouldTaskList();
-    getInventoryList();
   }
 
   @override
-  void onReady() {
+  void onReady() async {
     super.onReady();
     Log.d("HomeController--onReady()");
+    EasyLoading.show(status: "获取中...");
+    Log.d("HomeController--onInit()");
+    state.userProfile = await UserStore.to.getProfile();
+    getMouldTaskList();
+    getInventoryList();
   }
 
   @override

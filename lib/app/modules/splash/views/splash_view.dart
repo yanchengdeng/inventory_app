@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/apis/apis.dart';
+import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/store/user.dart';
 import 'package:inventory_app/app/utils/loading.dart';
 import '../../../routes/app_pages.dart';
@@ -75,10 +77,10 @@ class SplashView extends GetView<SplashController> {
               if (listSplits.length == 2) {
                 ///保存token
                 UserStore.to.setToken(listSplits[1]);
-                Get.offAndToNamed(Routes.MAIN);
                 toastInfo(msg: '登陆成功');
                 _controller.clearCache();
                 pageLoaded.complete();
+                Get.offAndToNamed(Routes.MAIN);
               } else {
                 _controller.clearCache();
                 pageLoaded.complete();

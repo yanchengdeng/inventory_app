@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/store/store.dart';
 import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/values/fontsize.dart';
 import '../../../routes/app_pages.dart';
 import '../../../style/style.dart';
+import '../../home/controllers/home_controller.dart';
 import '../controllers/mine_controller.dart';
 
 /**
@@ -13,6 +15,8 @@ import '../controllers/mine_controller.dart';
  */
 class MineView extends GetView<MineController> {
   final mineController = Get.put(MineController());
+
+  final homeController = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,21 +48,27 @@ class MineView extends GetView<MineController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('上海通用集团分公司',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize:
-                                  AppFontSize.FONT_SIZE_SUB_TITLE.toDouble())),
+                      Obx(
+                        () => Text(
+                            homeController.state.userProfile?.data.name ?? "",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: AppFontSize.FONT_SIZE_SUB_TITLE
+                                    .toDouble())),
+                      ),
                       Container(
                         padding: const EdgeInsets.only(top: 10),
-                        child: Text(
-                          'anly',
-                          textAlign: TextAlign.left,
-                          textDirection: TextDirection.ltr,
-                          style: TextStyle(
-                              color: Colors.black45,
-                              fontSize:
-                                  AppFontSize.FONT_SIZE_SUB_TITLE.toDouble()),
+                        child: Obx(
+                          () => Text(
+                            homeController.state.userProfile?.data.userCode ??
+                                "",
+                            textAlign: TextAlign.left,
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                                color: Colors.black45,
+                                fontSize:
+                                    AppFontSize.FONT_SIZE_SUB_TITLE.toDouble()),
+                          ),
                         ),
                       ),
                     ],

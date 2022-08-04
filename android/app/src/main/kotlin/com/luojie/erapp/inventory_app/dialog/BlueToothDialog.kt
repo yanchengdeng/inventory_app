@@ -3,6 +3,7 @@ package com.luojie.erapp.inventory_app.dialog
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
@@ -50,6 +51,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
 
     private var mRfidMgr = rfidMgr
     private val mHandler = Handler()
+    private var mWaitDialog : ProgressDialog? = null
 
     ///蓝牙adapter
     private lateinit var mBluetoothAdapter: BluetoothAdapter
@@ -62,6 +64,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
                     //开始扫描
                     tvScan.text = "搜索中..."
+//                    mWaitDialog = ProgressDialog.show(mContext,"","搜索蓝牙设备中...")
                 }
                 BluetoothDevice.ACTION_FOUND -> {
                     val device =
@@ -86,9 +89,15 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
                 //扫描结束
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
                     tvScan.text = "搜索"
+                   closeWaitingDialog()
                 }
             }
         }
+    }
+
+    private fun closeWaitingDialog(){
+        mWaitDialog?.dismiss()
+        mWaitDialog = null
     }
 
 
@@ -129,10 +138,13 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
 
         //创建读写
         mBtnCreateReader.setOnClickListener {
+            mWaitDialog = ProgressDialog.show(mContext,"","创建读写器...")
             mHandler.postDelayed({
                 mRfidMgr.createReader()
+                closeWaitingDialog()
+                mBtnCreateReader.setTextColor(Color.rgb(0, 128, 0))
                 dismiss()
-            }, 1000)
+            }, 1500)
         }
 
         //扫描
@@ -244,6 +256,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
             mBtnConnect.isEnabled = true
             mBtnConnect.text = "连接"
             mBtnCreateReader.isEnabled = false
+            mTvInfo.setTextColor(Color.rgb(204, 204, 204))
         }
     }
 }

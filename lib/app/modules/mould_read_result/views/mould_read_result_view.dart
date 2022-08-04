@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/logger.dart';
-import 'package:inventory_app/app/widgets/widgets.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../../services/storage.dart';
@@ -63,12 +60,10 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                 ],
               )),
           ElevatedButton(
-              onPressed: () => {
-                    toastInfo(msg: "功能梳理中")
-                    // controller.startReadRfidData()
-                  },
+              onPressed: () => {controller.startReadRfidData()},
               child:
                   Obx(() => Text(controller.isReadData.value ? '开始' : '结束'))),
+          Obx(() => Text(controller.rfidReadData.value)),
           ElevatedButton(
               onPressed: () => {controller.getScanLabel()},
               child: Text('扫描标签')),

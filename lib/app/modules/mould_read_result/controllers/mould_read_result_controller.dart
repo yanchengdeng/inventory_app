@@ -1,12 +1,13 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 import '../../../entity/cache_data.dart';
 
 class MouldReadResultController extends GetxController {
   var isShowAllInfo = false.obs;
 
   // var rfidData = Rx<String>("no data");
-  var rfidReadData = Rx<List<String>>(List.empty());
+  var rfidReadData = Rx<String>('');
 
   ///文件信息
   var imageUrl = Rx<UploadImageInfo?>(null);
@@ -23,8 +24,6 @@ class MouldReadResultController extends GetxController {
   ///RFID SDK 通信channel
   static const String READ_RFID_DATA_CHANNEL = 'mould_read_result/blue_teeth';
 
-  // ///初始化rfid_sdk  绑定选择蓝牙
-  // static const String INIT_RFID_SDK = 'initRfidSdk';
 
   ///rfid 开始通过蓝牙获取信息
   static const String START_READ_RFID_DATA = 'startReadRfid';
@@ -40,24 +39,18 @@ class MouldReadResultController extends GetxController {
 
   static const platform = MethodChannel(READ_RFID_DATA_CHANNEL);
 
-  ///初始化rfid
-  // initRfidData() async {
-  //   var rfidDataFromAndroid = (await platform.invokeMethod(INIT_RFID_SDK));
-  //   rfidData.value = rfidDataFromAndroid;
-  // }
-
   ///开始读 、停止读
   startReadRfidData() async {
     if (isReadData.value) {
       var rfidDataFromAndroid =
           (await platform.invokeMethod(START_READ_RFID_DATA));
-      // rfidReadData.value = rfidDataFromAndroid;
+      rfidReadData.value = rfidDataFromAndroid;
       isReadData.value = false;
     } else {
+      isReadData.value = true;
       var rfidDataFromAndroid =
           (await platform.invokeMethod(STOP_READ_RFID_DATA));
-      // rfidReadData.value = rfidDataFromAndroid;
-      isReadData.value = true;
+      rfidReadData.value = rfidDataFromAndroid;
     }
   }
 

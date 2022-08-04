@@ -1,16 +1,17 @@
 package com.luojie.erapp.inventory_app
 
 import android.Manifest
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import com.github.dfqin.grantor.PermissionListener
 import com.github.dfqin.grantor.PermissionsUtil
+import com.google.gson.Gson
 import com.honeywell.aidc.*
 import com.honeywell.rfidservice.EventListener
 import com.honeywell.rfidservice.RfidManager
@@ -19,6 +20,8 @@ import com.honeywell.rfidservice.rfid.OnTagReadListener
 import com.honeywell.rfidservice.rfid.RfidReader
 import com.honeywell.rfidservice.rfid.TagAdditionData
 import com.honeywell.rfidservice.rfid.TagReadOption
+import com.luojie.erapp.inventory_app.data.READ_STATUS
+import com.luojie.erapp.inventory_app.data.RfidStatus
 import com.luojie.erapp.inventory_app.dialog.BlueToothDialog
 import com.luojie.erapp.inventory_app.utils.LocationUtils
 import io.flutter.embedding.android.FlutterActivity
@@ -29,9 +32,6 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "mould_read_result/blue_teeth"
 
-    ///初始化rfid_sdk
-//    private val INIT_RFID_SDK = "initRfidSdk"
-
     ///rfid 开始通过蓝牙获取信息
     private val START_READ_RFID_DATA = "startReadRfid"
 
@@ -41,7 +41,6 @@ class MainActivity : FlutterActivity() {
     ///读取经纬度
     private val GET_GPS_LAT_LNG = "getGpsLatLng"
 
-
     ///扫描标签
     private val SCAN_LABEL = "scan_label"
 
@@ -49,7 +48,7 @@ class MainActivity : FlutterActivity() {
     private var manager: AidcManager? = null
 
     ///rfidManager
-    private  var rfidMgr: RfidManager? = null
+    private lateinit var rfidMgr: RfidManager
 
     /// rfid读取类
     lateinit var mReader: RfidReader
@@ -59,13 +58,21 @@ class MainActivity : FlutterActivity() {
     private var mIsReadBtnClicked = false
 
     private var readLabelResult: MethodChannel.Result? = null
+    private var stopReadLabelResult: MethodChannel.Result? = null
 
+    private var handler: Handler? = null
+
+    ///只执行一次
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.w("yancheng","onCreate------")
+        Log.w("yancheng", "onCreate------")
         initBarCodeReader()
+        rfidMgr = RfidManager.getInstance(this)
+        rfidMgr.addEventListener(mEventListener)
+        handler = Handler(Looper.getMainLooper())
     }
 
+    ///只执行一次
     @RequiresApi(Build.VERSION_CODES.M)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -78,25 +85,15 @@ class MainActivity : FlutterActivity() {
             when (call.method) {
 
                 START_READ_RFID_DATA -> {
-                    rfidMgr?.addEventListener(mEventListener)
-                    mIsReadBtnClicked = true
-                    read()
-                    this.readLabelResult = result
-
-
-
-                    rfidMgr?.apply {
-                        /// 判断蓝牙是否连接
-                        if (isConnected){
-                            /// 判断是否读取rfid
-                            if (isReaderAvailable()) {
-//                                result.success()
-                            }else{
-
-                            }
-                        }else{
-                            ///是否连接定位
-                            PermissionsUtil.requestPermission(this@MainActivity,object :PermissionListener{
+                    if (rfidMgr.readerAvailable()) {
+                        mIsReadBtnClicked = true
+                        read()
+                        this.readLabelResult = result
+                    } else {
+                        ///是否连接定位
+                        PermissionsUtil.requestPermission(
+                            this@MainActivity,
+                            object : PermissionListener {
                                 /**
                                  * 通过授权
                                  * @param permission
@@ -110,54 +107,59 @@ class MainActivity : FlutterActivity() {
                                  * @param permission
                                  */
                                 override fun permissionDenied(permission: Array<out String>) {
-                                    Toast.makeText(this@MainActivity,"拒绝无法正常使用",Toast.LENGTH_LONG).show();
+
+                                    toast("拒绝无法正常使用")
                                 }
 
-                            }, Manifest.permission.ACCESS_FINE_LOCATION)
-                        }
-
+                            },
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        )
                     }
                 }
                 STOP_READ_RFID_DATA -> {
-                    rfidMgr?.removeEventListener(mEventListener)
                     mIsReadBtnClicked = false
+                    this.stopReadLabelResult = result
                     stopRead()
                 }
+                GET_GPS_LAT_LNG -> {
 
-                GET_GPS_LAT_LNG ->{
+                    PermissionsUtil.requestPermission(
+                        this,
+                        object : PermissionListener {
+                            /**
+                             * 通过授权
+                             * @param permission
+                             */
+                            override fun permissionGranted(permission: Array<out String>) {
+                                LocationUtils.getInstance(this@MainActivity).addressCallback =
+                                    LocationUtils.AddressCallback { lat, lng ->
+                                        Log.d(
+                                            "定位地址","${lat},${lng}")
+                                        result.success("${lat},${lng}")
+                                    }
+                            }
 
-                    PermissionsUtil.requestPermission(this,object :PermissionListener{
-                        /**
-                         * 通过授权
-                         * @param permission
-                         */
-                        override fun permissionGranted(permission: Array<out String>) {
-                            LocationUtils.getInstance(this@MainActivity).addressCallback =
-                                LocationUtils.AddressCallback { lat, lng ->
-                                    Log.d(
-                                        "定位地址","${lat},${lng}")
-                                    result.success("${lat},${lng}")
-                                }
-                        }
+                            /**
+                             * 拒绝授权
+                             * @param permission
+                             */
+                            override fun permissionDenied(permission: Array<out String>) {
 
-                        /**
-                         * 拒绝授权
-                         * @param permission
-                         */
-                        override fun permissionDenied(permission: Array<out String>) {
-                            Toast.makeText(this@MainActivity,"拒绝无法正常使用",Toast.LENGTH_LONG).show();
-                        }
+                                toast("拒绝无法正常使用")
+                            }
 
-                    }, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION)
+                        },
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
 
 
                 }
-
-                SCAN_LABEL ->{
+                SCAN_LABEL -> {
                     doListenBarcodeReader(result)
-
-//                    startActivity(Intent(context,ReadResultActivity::class.java))
-
+                }
+                else ->{
+                    result.notImplemented()
                 }
             }
         }
@@ -170,24 +172,16 @@ class MainActivity : FlutterActivity() {
             try {
                 barcodeReader = manager?.createBarcodeReader()
             } catch (e: InvalidScannerNameException) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Invalid Scanner Name Exception: " + e.message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                toast("扫描：Invalid Scanner Name Exception:${e.message}")
             } catch (e: Exception) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Exception: " + e.message,
-                    Toast.LENGTH_SHORT
-                ).show()
+
+                toast("扫描${e.message}")
             }
         }
-
-
     }
 
     private fun doListenBarcodeReader(result: MethodChannel.Result) {
+        stopRead()
         if (barcodeReader != null) {
             barcodeReader?.claim()
             // register bar code event listener
@@ -198,8 +192,7 @@ class MainActivity : FlutterActivity() {
                 }
 
                 override fun onFailureEvent(p0: BarcodeFailureEvent) {
-                    Toast.makeText(this@MainActivity, "扫描失败，重新试试", Toast.LENGTH_SHORT)
-                        .show()
+                    toast("扫描失败，重新试试")
                 }
 
             })
@@ -211,8 +204,7 @@ class MainActivity : FlutterActivity() {
                     BarcodeReader.TRIGGER_CONTROL_MODE_AUTO_CONTROL
                 )
             } catch (e: UnsupportedPropertyException) {
-                Toast.makeText(this, "Failed to apply properties", Toast.LENGTH_SHORT)
-                    .show()
+                toast("Failed to apply properties")
             }
             // register trigger state change listener
             barcodeReader!!.addTriggerListener {
@@ -252,7 +244,6 @@ class MainActivity : FlutterActivity() {
     //初始化蓝牙
     private fun initBlueTooth() {
 
-        rfidMgr = RfidManager.getInstance(this)
         if (blueToothDialog == null) {
             blueToothDialog = BlueToothDialog(MainActivity@this,rfidMgr!!)
             val window = blueToothDialog?.window
@@ -275,8 +266,10 @@ class MainActivity : FlutterActivity() {
             if (mIsReadBtnClicked || !trigger) {
                 mIsReadBtnClicked = false
                 stopRead()
+                Log.w("yancheng","mEventListener--stopRead----")
             } else {
                 read()
+                Log.w("yancheng","mEventListener--read----")
             }
         }
 
@@ -300,6 +293,8 @@ class MainActivity : FlutterActivity() {
         if (isReaderAvailable()) {
             mReader.stopRead()
             mReader.removeOnTagReadListener(dataListener)
+            val rfidStatus = RfidStatus(code = READ_STATUS.STOP_READING, mTagDataList)
+            stopReadLabelResult?.success(Gson().toJson(rfidStatus))
         }
     }
 
@@ -312,8 +307,9 @@ class MainActivity : FlutterActivity() {
                         mTagDataList.add(epc)
                     }
                 }
-                Log.w("yancheng","mTagDataList------$mTagDataList")
-                readLabelResult?.success(mTagDataList);
+                Log.w("yancheng", "mTagDataList------$mTagDataList")
+                val rfidStatus = RfidStatus(code = READ_STATUS.READING_DATA, mTagDataList)
+                readLabelResult?.success(Gson().toJson(rfidStatus))
             }
         }
 
@@ -325,7 +321,7 @@ class MainActivity : FlutterActivity() {
                 barcodeReader!!.claim()
             } catch (e: ScannerUnavailableException) {
                 e.printStackTrace()
-                Toast.makeText(this, "Scanner unavailable", Toast.LENGTH_SHORT).show()
+                toast("Scanner unavailable");
             }
         }
     }
@@ -340,15 +336,6 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        // create the AidcManager providing a Context and a
-        // CreatedCallback implementation.
-        Log.w("yancheng","onCreate------")
-        // create the AidcManager providing a Context and a
-        // CreatedCallback implementation.
-
-    }
 
     override fun onStop() {
         super.onStop()
@@ -365,14 +352,23 @@ class MainActivity : FlutterActivity() {
             // once closed, the object can no longer be used.
             manager!!.close()
         }
+        rfidMgr.removeEventListener(mEventListener)
+
+        blueToothDialog?.dismiss()
+        blueToothDialog = null
     }
 
+    ///只执行一次
     override fun onDestroy() {
         super.onDestroy()
         Log.w("yancheng","onDestroy------")
+
     }
 
-
-
+    private fun toast(msg : String){
+        handler?.post {
+            Toast.makeText(this,msg,Toast.LENGTH_LONG).show()
+        }
+    }
 
 }

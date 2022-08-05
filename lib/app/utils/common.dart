@@ -10,12 +10,6 @@ import '../style/color.dart';
  */
 
 class CommonUtils {
-  //todo 获取常用请求参数 后面会替换成 accessToken 形式
-  static Map<String, dynamic> getCommonParams() {
-    // return {"userCode": "spl01"};
-    return {};
-  }
-
   //退出登录
   static void logOut() {
     UserStore.to.onLogout();

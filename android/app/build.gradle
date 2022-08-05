@@ -54,10 +54,17 @@ android {
     }
 
     signingConfigs {
-        rfid_config {
+        debug {
             keyAlias 'rfid'
             keyPassword 'rfid123456'
-//            storeFile file('rfid.jks')
+            storeFile file('rfid.jks')
+            storePassword 'rfid123456'
+        }
+
+        release {
+            keyAlias 'rfid'
+            keyPassword 'rfid123456'
+            storeFile file('rfid.jks')
             storePassword 'rfid123456'
         }
     }
@@ -70,15 +77,14 @@ android {
 
     buildTypes {
 
-
         debug {
             minifyEnabled false
-//            signingConfig signingConfigs.rfid_config
+            signingConfig signingConfigs.debug
         }
 
         release  {
             minifyEnabled true
-//            signingConfig signingConfigs.rfid_config
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -110,5 +116,5 @@ dependencies {
     implementation 'com.github.dfqin:grantor:2.5'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.code.gson:gson:2.8.4'
+    implementation 'com.google.code.gson:gson:2.8.9'
 }

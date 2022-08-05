@@ -54,7 +54,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                         Expanded(
                           child: selectTabView(
                               text:
-                                  '已完成(${CacheUtils.to.inventoryList?.finished})',
+                                  '已完成(${homeController.inventoryFinishedList.finished})',
                               selected: !homeController.state.selectedTab,
                               isLeft: false,
                               callback: () {
@@ -74,7 +74,8 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                       child: SmartRefresher(
                           controller: _refreshBindTaskController,
                           enablePullDown: true,
-                          enablePullUp: false,
+                          enablePullUp:
+                              homeController.state.selectedTab ? false : true,
                           scrollDirection: Axis.vertical,
                           //接口无分页 禁止上拉加载更多
                           onRefresh: _onRefresh,
@@ -286,7 +287,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                    '${CacheUtils.to.inventoryList?.finishedList?[index]?.taskNo}',
+                                                    '${homeController.inventoryFinishedList.finishedList?[index]?.taskNo}',
                                                     style:
                                                         textBoldNumberStyle()),
                                                 Row(
@@ -298,7 +299,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '盘点年份：${CacheUtils.to.inventoryList?.finishedList?[index]?.distributionTime.substring(0, 4)}',
+                                                            '盘点年份：${homeController.inventoryFinishedList.finishedList?[index]?.distributionTime.substring(0, 4)}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -310,7 +311,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topEnd,
                                                         child: Text(
-                                                            '盘点类型：${CacheUtils.to.inventoryList?.finishedList?[index]?.inventoryTypeText}',
+                                                            '盘点类型：${homeController.inventoryFinishedList.finishedList?[index]?.inventoryTypeText}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -326,7 +327,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '截止日期：${CacheUtils.to.inventoryList?.finishedList?[index]?.endDate}',
+                                                            '截止日期：${homeController.inventoryFinishedList.finishedList?[index]?.endDate}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -338,7 +339,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topEnd,
                                                         child: Text(
-                                                            '盘点总数：${CacheUtils.to.inventoryList?.finishedList?[index]?.inventoryTotal}',
+                                                            '盘点总数：${homeController.inventoryFinishedList.finishedList?[index]?.inventoryTotal}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -353,23 +354,28 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                   .INVENTORY_TASKLIST_SUB_LEVEL,
                                               arguments: {
                                                 'taskNo':
-                                                    '${CacheUtils.to.inventoryList?.finishedList?[index]?.taskNo}',
+                                                    '${homeController.inventoryFinishedList.finishedList?[index]?.taskNo}',
                                                 'bindStatus':
                                                     INVENTORY_STATUS_ALL,
                                                 "isFinish": true
                                               })
                                         },
                                       ))),
-                                  itemCount:
-                                      CacheUtils.to.inventoryList?.finished)))
+                                  itemCount: homeController
+                                      .inventoryFinishedList.finished)))
                 ],
               ),
             )));
   }
 
   Future<void> _onRefresh() async {
-    await homeController.getInventoryList();
-    _refreshBindTaskController.refreshCompleted();
-    toastInfo(msg: "最新任务已更新");
+    if (homeController.state.selectedTab) {
+      await homeController.getInventoryList();
+      _refreshBindTaskController.refreshCompleted();
+      toastInfo(msg: "最新任务已更新");
+    } else {
+      await homeController
+          .getInventoryFinishedList(homeController.state.inventoryFinishedPage);
+    }
   }
 }

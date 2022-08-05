@@ -17,4 +17,7 @@ class HomeState {
   var _userProfile = Rx<UserLoginResponseEntity?>(null);
   set userProfile(value) => _userProfile.value = value;
   get userProfile => _userProfile.value;
+
+  ///已完成资产盘点页面
+  var inventoryFinishedPage = 1;
 }

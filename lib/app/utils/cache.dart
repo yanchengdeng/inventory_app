@@ -162,7 +162,7 @@ class CacheUtils extends GetxController {
 
   ////////////////////////////////以下为资产盘点数据操作//////////////////////////////////////////////
 
-  ///资产盘点信息
+  ///资产盘点未完成信息
   var _inventoryList = Rx<InventroyData?>(null);
 
   set inventoryList(value) => _inventoryList.value = value;

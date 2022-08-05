@@ -79,136 +79,25 @@
 -keepattributes *Annotation*
 
 
-# fastjson
--keepattributes Signature
--dontwarn com.alibaba.fastjson.**
--keep class com.alibaba.fastjson.**{*; }
-
-
-
-# fresco
-# Keep our interfaces so they can be used by other ProGuard rules.
-# See http://sourceforge.net/p/proguard/bugs/466/
--keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
-
-# Do not strip any method/class that is annotated with @DoNotStrip
--keep @com.facebook.common.internal.DoNotStrip class *
--keepclassmembers class * {
-    @com.facebook.common.internal.DoNotStrip *;
-}
-
-# Keep native methods
--keepclassmembers class * {
-    native <methods>;
-}
-
--dontwarn okio.**
--dontwarn com.squareup.okhttp.**
--dontwarn okhttp3.**
--dontwarn javax.annotation.**
--dontwarn com.android.volley.toolbox.**
--dontwarn com.facebook.infer.**
-
-#okhttputils
--dontwarn com.zhy.http.**
--keep class com.zhy.http.**{*;}
-
-
-#okhttp
--dontwarn okhttp3.**
--keep class okhttp3.**{*;}
-
-
-#okio
--dontwarn okio.**
--keep class okio.**{*;}
-
-
--keep class com.zhy.** {*;}
--dontwarn com.zhy.*
-
-
-# Retain generated class which implement Unbinder.
--keep public class * implements butterknife.Unbinder { public <init>(**, android.view.View); }
-
-# Prevent obfuscation of types which use ButterKnife annotations since the simple name
-# is used to reflectively look up the generated ViewBinding.
--keep class butterknife.*
--keepclasseswithmembernames class * { @butterknife.* <methods>; }
--keepclasseswithmembernames class * { @butterknife.* <fields>; }
-
-
--keepattributes *Annotation*
--keepclassmembers class ** {
-    @org.greenrobot.eventbus.Subscribe <methods>;
-}
--keep enum org.greenrobot.eventbus.ThreadMode { *; }
-
-# Only required if you use AsyncExecutor
--keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
-    <init>(java.lang.Throwable);
-}
-
-
-#-dontwarn jp.co.cyberagent.android.gpuimage.**
-
-
--dontwarn com.squareup.haha.guava.**
--dontwarn com.squareup.haha.perflib.**
--dontwarn com.squareup.haha.trove.**
--dontwarn com.squareup.leakcanary.**
--keep class com.squareup.haha.** { *; }
--keep class com.squareup.leakcanary.** { *; }
-
-# Marshmallow removed Notification.setLatestEventInfo()
--dontwarn android.app.Notification
-
-
--keep class com.umeng.commonsdk.** {*;}
-
-
--keepattributes Signature
--dontwarn com.jcraft.jzlib.**
--keep class com.jcraft.jzlib.**  { *;}
-
--dontwarn sun.misc.**
--keep class sun.misc.** { *;}
-
--dontwarn com.alibaba.fastjson.**
--keep class com.alibaba.fastjson.** { *;}
-
--dontwarn sun.security.**
--keep class sun.security.** { *; }
-
--dontwarn com.google.**
--keep class com.google.** { *;}
-
--dontwarn com.avos.**
--keep class com.avos.** { *;}
-
--keep public class android.net.http.SslError
--keep public class android.webkit.WebViewClient
-
--dontwarn android.webkit.WebView
--dontwarn android.net.http.SslError
--dontwarn android.webkit.WebViewClient
-
--dontwarn android.support.**
-
 -dontwarn org.apache.**
 -keep class org.apache.** { *;}
 
--dontwarn org.jivesoftware.smack.**
--keep class org.jivesoftware.smack.** { *;}
 
--dontwarn com.loopj.**
--keep class com.loopj.** { *;}
+-dontwarn androidx.recyclerview.**
+-keep class androidx.recyclerview.**{*;}
 
--dontwarn com.squareup.okhttp.**
--keep class com.squareup.okhttp.** { *;}
--keep interface com.squareup.okhttp.** { *; }
 
--dontwarn okio.**
+-dontwarn com.github.CymChad.**
+-keep class com.github.CymChad.**{*;}
 
--dontwarn org.xbill.**
--keep class org.xbill.** { *;}
+
+
+-dontwarn com.google.code.gson.**
+-keep class com.google.code.gson.**{*;}
+
+-dontwarn com.google.android.material.**
+-keep class androidx.recyclerview.**{*;}
+
+
+-dontwarn com.github.dfqin.**
+-keep class com.github.dfqin.**{*;}

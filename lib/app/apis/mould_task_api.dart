@@ -12,15 +12,14 @@ import '../utils/utils.dart';
  * */
 class MouldTaskApi<T> {
   //获取模具任务列表
-  static Future<MouldBindList> getMouldTaskList<T>(
-      Map<String, dynamic> params) async {
+  static Future<MouldBindList> getMouldTaskList<T>() async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'mouldBindTask_list';
     Options options = Options();
     options.headers = fileTokenMaps;
 
-    var response = await HttpUtil()
-        .get('/mouldBindTask/list', queryParameters: params, options: options);
+    var response =
+        await HttpUtil().get('/mouldBindTask/list', options: options);
 
     if (response is String) {
       Log.d("模具列表类型：字符串");

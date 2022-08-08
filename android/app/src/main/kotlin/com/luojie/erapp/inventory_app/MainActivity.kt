@@ -61,6 +61,7 @@ class MainActivity : FlutterActivity() {
 
     private var readLabelResult: MethodChannel.Result? = null
     private var stopReadLabelResult: MethodChannel.Result? = null
+    private var scanReadResult :   MethodChannel.Result? = null
 
     private var handler: Handler? = null
 
@@ -160,7 +161,8 @@ class MainActivity : FlutterActivity() {
                     )
                 }
                 GET_SCAN_LABEL -> {
-                    doListenBarcodeReader(result)
+                    this.scanReadResult = result
+                    doListenBarcodeReader()
                 }
                 else -> {
                     result.notImplemented()
@@ -192,7 +194,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    private fun doListenBarcodeReader(result: MethodChannel.Result) {
+    private fun doListenBarcodeReader() {
         // 可能扫描和 读取会有冲突 ，扫描时候 停止读取
         mReader?.stopRead()
         mReader?.removeOnTagReadListener(dataListener)
@@ -207,8 +209,8 @@ class MainActivity : FlutterActivity() {
 //                    var tag = StringBuilder()
 //                    mTagDataList.forEach { tag.append(it).append(",") }
 //                    tag.replace(tag.length-1,tag.length,"")
-                    result.success(event.barcodeData)
-//                    ignoreIllegalState { result.success(event.barcodeData) }
+//                    scanReadResult?.success(event.barcodeData)
+                    ignoreIllegalState { scanReadResult?.success(event.barcodeData) }
                     toast("扫描成功")
 
                 }

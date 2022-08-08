@@ -13,6 +13,8 @@ import '../controllers/take_photo_controller.dart';
 
 class TakePhotoView extends GetView<TakePhotoController> {
 
+  var photoType = Get.arguments['photoType'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +48,7 @@ class TakePhotoView extends GetView<TakePhotoController> {
             await controller.initializeControllerFuture;
             final image = await controller.cameraController.takePicture();
             Log.d("拍照成功${image.path}");
-            FileApi.uploadFile(image.path);
+            FileApi.uploadFile(image.path,photoType);
           }catch(e){
             Log.d("拍照异常${e}");
           }

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
-import '../../../routes/app_pages.dart';
 import '../../../style/text_style.dart';
 import '../../../utils/cache.dart';
 import '../../../utils/logger.dart';
@@ -19,8 +16,7 @@ class InventoryTasklistSubLevelView
     var isFinish = Get.arguments['isFinish'];
     Log.d(
         "传入二级盘点菜单参数：taskNo = $taskNo,bindStatus = ${bindStatus},isFinish = ${isFinish}");
-    CacheUtils.to.getInventoryTaskListByKeyOrStatus(
-        isFinish, taskNo, '', [bindStatus], []);
+    controller.findByParams(isFinish, taskNo, '', [bindStatus], []);
     //
 
     return Scaffold(
@@ -36,13 +32,8 @@ class InventoryTasklistSubLevelView
                   child: inputTextEdit(
                       hintText: '搜资产编号、名称',
                       inputOnSubmit: (value) {
-                        CacheUtils.to.mouldSearchKey = value;
-                        CacheUtils.to.getInventoryTaskListByKeyOrStatus(
-                            Get.arguments['isFinish'],
-                            Get.arguments['taskNo'],
-                            '',
-                            [-1],
-                            []);
+                        controller.findByParams(
+                            isFinish, taskNo, value, [bindStatus], []);
                       })),
               Container(
                 width: 200,
@@ -79,13 +70,11 @@ class InventoryTasklistSubLevelView
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        getTextByStatus(CacheUtils
-                                            .to
-                                            .inventoryTaskListSearch
-                                            ?.list[index]
+                                        getTextByStatus(controller
+                                            .inventoryTaskListSearch?[index]
                                             ?.assetInventoryStatus),
                                         Text(
-                                            '${CacheUtils.to.inventoryTaskListSearch?.list[index]?.assetNo}',
+                                            '${controller.inventoryTaskListSearch?[index]?.assetNo}',
                                             style: textNormalListTextStyle())
                                       ],
                                     ),
@@ -100,23 +89,22 @@ class InventoryTasklistSubLevelView
                                     ),
                                   ),
                                   Text(
-                                      '资产名称:${CacheUtils.to.inventoryTaskListSearch?.list[index]?.assetName}',
+                                      '资产名称:${controller.inventoryTaskListSearch?[index]?.assetName}',
                                       style: textNormalListTextStyle()),
                                   Text(
-                                      '标签编号:${CacheUtils.to.inventoryTaskListSearch?.list[index]?.labelNo}',
+                                      '标签编号:${controller.inventoryTaskListSearch?[index]?.labelNo}',
                                       style: textNormalListTextStyle()),
                                   Text(
-                                      'SGM车型：${CacheUtils.to.inventoryTaskListSearch?.list[index]?.toolingType}',
+                                      'SGM车型：${controller.inventoryTaskListSearch?[index]?.toolingType}',
                                       style: textNormalListTextStyle()),
                                   Text(
-                                      '工装模具存使用地:${CacheUtils.to.inventoryTaskListSearch?.list[index]?.usedArea}',
+                                      '工装模具存使用地:${controller.inventoryTaskListSearch?[index]?.usedArea}',
                                       style: textNormalListTextStyle())
                                 ],
                               ),
                             ),
                           )),
-                      itemCount:
-                          CacheUtils.to.inventoryTaskListSearch?.list?.length,
+                      itemCount: controller.inventoryTaskListSearch?.length,
                     ),
                   )))
             ],

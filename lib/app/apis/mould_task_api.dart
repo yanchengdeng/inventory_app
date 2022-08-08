@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 
 import '../entity/mould_bind.dart';
 import '../utils/utils.dart';
+import '../values/constants.dart';
 
 /**
  *
@@ -27,6 +28,29 @@ class MouldTaskApi<T> {
       Log.d("模具列表类型：map");
     }
 
+    return MouldBindList.fromJson(response);
+  }
+
+  //获取已完成资产盘点列表
+  static Future<MouldBindList> getMouldBindListFinishedList<T>(int page) async {
+    Map<String, dynamic> fileTokenMaps = HashMap();
+    fileTokenMaps['x-resource-code'] = '/mouldBindTask/finishedList';
+    Options options = Options();
+    options.headers = fileTokenMaps;
+
+    ///"orderField": "",
+    // 	"orderType": "",
+    // 	"pageNum": 0,
+    // 	"pageSize": 5
+    var data = {
+      'orderField': "",
+      'orderType': '',
+      'pageNum': page,
+      'pageSize': PAGE_SIZE
+    };
+
+    var response = await HttpUtil()
+        .post('/mouldBindTask/finishedList', data: data, options: options);
     return MouldBindList.fromJson(response);
   }
 }

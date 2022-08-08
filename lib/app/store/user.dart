@@ -50,6 +50,8 @@ class UserStore extends GetxController {
   // 注销
   Future<void> onLogout() async {
     await StorageService.to.remove(STORAGE_USER_TOKEN_KEY);
+    await StorageService.to.setString(STORAGE_USER_PROFILE_KEY, '');
+    userLoginResponseEntity = null;
     token = '';
   }
 }

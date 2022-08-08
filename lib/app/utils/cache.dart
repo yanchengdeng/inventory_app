@@ -4,11 +4,13 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:inventory_app/app/services/services.dart';
+import 'package:inventory_app/app/store/store.dart';
 import 'package:inventory_app/app/utils/utils.dart';
 
 import '../entity/cache_data.dart';
 import '../entity/inventory_list.dart';
 import '../entity/mould_bind.dart';
+import '../modules/home/controllers/home_controller.dart';
 import '../values/storage.dart';
 
 /**
@@ -26,29 +28,9 @@ class CacheUtils extends GetxController {
 
   get mouldBindTaskList => _mouldBindTaskList.value;
 
-  /// 磨具绑定搜索关键字
-  var _mouldSearchKey = RxString("");
-
-  set mouldSearchKey(value) => _mouldSearchKey.value = value;
-
-  get mouldSearchKey => _mouldSearchKey.value;
-
-  ///模具绑定搜索列表
-  var _mouldBindTaskListSearch = Rx<MouldFinishedTaskList?>(null);
-
-  set mouldBindTaskListSearch(value) => _mouldBindTaskListSearch.value = value;
-
-  get mouldBindTaskListSearch => _mouldBindTaskListSearch.value;
-
-  ///模具资产信息
-  var _assertBindTaskInfo = Rx<MouldList?>(null);
-
-  set assertBindTaskInfo(value) => _assertBindTaskInfo.value = value;
-
-  get assertBindTaskInfo => _assertBindTaskInfo.value;
-
-  /// todo  假设用户  001
-  static const String USER_CODE = '0001';
+  String getUserCode() {
+    return UserStore.to.userLoginResponseEntity?.data.userCode ?? '0001';
+  }
 
 /**
  * 
@@ -63,19 +45,37 @@ class CacheUtils extends GetxController {
  */
   Future<void> saveMouldTask(MouldData? data) async {
     var cacheMould = await StorageService.to.getString(STORAGE_TASK_MOULD_DATA);
-    _mouldBindTaskList.value = data;
     if (cacheMould.isEmpty) {
       List<CacheMouldBindData> list = [
-        CacheMouldBindData(userId: USER_CODE, data: data)
+        CacheMouldBindData(userId: getUserCode(), data: data)
       ];
-
-      ///首次保存
       await StorageService.to
           .setString(STORAGE_TASK_MOULD_DATA, json.encode(list));
     } else {
-      ///TODO  对比保存 待确定
+      ///TODO  对比保存 待确定  不同用户
+      List list = json.decode(cacheMould);
 
+      var itemList =
+          list.where((element) => element['userId'] == getUserCode()).first;
+
+      if (itemList != null) {
+        list.remove(itemList);
+      }
+      list.add(CacheMouldBindData(userId: getUserCode(), data: data));
+
+      // CacheMouldBindData? existData =
+      //     list?.where((element) => element.userId == getUserCode())?.first;
+      // if (existData == null) {
+      //   list.add(CacheMouldBindData(userId: getUserCode(), data: data));
+      // }
+
+      await StorageService.to
+          .setString(STORAGE_TASK_MOULD_DATA, json.encode(list));
+      Log.d("缓存信息${list.length}");
     }
+    final homeController = Get.find<HomeController>();
+    _mouldBindTaskList.value = data;
+    homeController.setMouldData(data);
   }
 
   /// 获取下发的模具绑定任务
@@ -85,7 +85,7 @@ class CacheUtils extends GetxController {
       final List<dynamic> cacheMouldBindData = jsonDecode(cacheMould);
 
       var _InternalLinkedHashMap = cacheMouldBindData
-          .where((element) => element['userId'] == USER_CODE)
+          .where((element) => element['userId'] == getUserCode())
           .first;
 
       CacheMouldBindData bindData =
@@ -115,49 +115,29 @@ class CacheUtils extends GetxController {
    * @param  toolingType  工业状态  支持多选查询
    */
 
-  Future<void> getMouldTaskListByKeyOrStatus(bool isFinish, String taskNo,
+  Future<List<MouldList?>> getMouldTaskListByKeyOrStatus(String taskNo,
       String key, List<int> bindStatus, List<String> toolingType) async {
     await getMouldTask();
-
-    mouldBindTaskListSearch = await (isFinish
-            ? mouldBindTaskList.finishedTaskList
-            : mouldBindTaskList.unfinishedTaskList)
+    var unfinisedtask = await mouldBindTaskList.unfinishedTaskList
         .where((element) => element.taskNo == taskNo)
-        .first;
-  }
+        ?.first;
 
-  /**
-   * 已上传的
-   * 根据传入的资产编号获取资产编号信息
-   */
-  Future<void> getAssetBindTaskInfo(String taskNo, String assetNo) async {
-    await getMouldTask();
-    var task = await mouldBindTaskList.finishedTaskList
-        ?.where((element) => element.taskNo == taskNo)
-        .first;
-    var mouldList = task?.mouldList;
-
-    _assertBindTaskInfo.value =
-        await mouldList?.where((element) => element.assetNo == assetNo).first;
-
-    Log.d("${_assertBindTaskInfo.value}");
+    var mouldList = unfinisedtask?.mouldList;
+    return mouldList;
   }
 
   /**
    * 其他未上传状态（可编辑）
    * 根据传入的资产编号获取资产编号信息
    */
-  Future<void> getUnLoadedAssetBindTaskInfo(
+  Future<MouldList> getUnLoadedAssetBindTaskInfo(
       String taskNo, String assetNo) async {
     await getMouldTask();
     var task = mouldBindTaskList.unfinishedTaskList
         ?.where((element) => element.taskNo == taskNo)
         ?.first;
     var mouldList = task?.mouldList;
-    _assertBindTaskInfo.value =
-        mouldList?.where((element) => element.assetNo == assetNo)?.first;
-
-    Log.d("${_assertBindTaskInfo.value}");
+    return mouldList?.where((element) => element.assetNo == assetNo)?.first;
   }
 
   ////////////////////////////////以下为资产盘点数据操作//////////////////////////////////////////////
@@ -168,20 +148,6 @@ class CacheUtils extends GetxController {
   set inventoryList(value) => _inventoryList.value = value;
 
   get inventoryList => _inventoryList.value;
-
-  /// 盘点搜索关键字
-  var _inventroySearchKey = RxString("");
-
-  set inventroySearchKey(value) => _inventroySearchKey.value = value;
-
-  get inventroySearchKey => _inventroySearchKey.value;
-
-  ///资产盘点搜索列表
-  var _inventoryTaskListSearch = Rx<InventoryFinishedList?>(null);
-
-  set inventoryTaskListSearch(value) => _inventoryTaskListSearch.value = value;
-
-  get inventoryTaskListSearch => _inventoryTaskListSearch.value;
 
 /**
  * 本地有和服务端的相同的 assetBindTaskId\labelReplaceTaskId\assetInventoryDetailId 
@@ -198,7 +164,7 @@ class CacheUtils extends GetxController {
     _inventoryList.value = data;
     if (cacheMould.isEmpty) {
       List<CacheInventoryData> list = [
-        CacheInventoryData(userId: USER_CODE, data: data)
+        CacheInventoryData(userId: getUserCode(), data: data)
       ];
 
       ///首次保存
@@ -206,7 +172,13 @@ class CacheUtils extends GetxController {
           .setString(STORAGE_INVENTORY_DATA, json.encode(list));
     } else {
       ///TODO  对比保存 待确定
+      List list = json.decode(cacheMould);
 
+      var itemList =
+          list.where((element) => element['userId'] == getUserCode()).first;
+      if (itemList == null) {
+        list.add(CacheInventoryData(userId: getUserCode(), data: data));
+      }
     }
   }
 
@@ -217,7 +189,7 @@ class CacheUtils extends GetxController {
       final List<dynamic> cacheMouldBindData = jsonDecode(cacheMould);
 
       var _InternalLinkedHashMap = cacheMouldBindData
-          .where((element) => element['userId'] == USER_CODE)
+          .where((element) => element['userId'] == getUserCode())
           .first;
 
       CacheInventoryData bindData =
@@ -247,13 +219,11 @@ class CacheUtils extends GetxController {
    * @param  toolingType  工业状态  支持多选查询
    */
 
-  Future<void> getInventoryTaskListByKeyOrStatus(bool isFinish, String taskNo,
+  Future<List<ItemList>> getInventoryTaskListByKeyOrStatus(String taskNo,
       String key, List<int> bindStatus, List<String> toolingType) async {
     await getInventoryTask();
 
-    inventoryTaskListSearch = await (isFinish
-            ? inventoryList.finishedList
-            : inventoryList.unfinishedList)
+    return await inventoryList.unfinishedList
         .where((element) => element.taskNo == taskNo)
         .first;
   }

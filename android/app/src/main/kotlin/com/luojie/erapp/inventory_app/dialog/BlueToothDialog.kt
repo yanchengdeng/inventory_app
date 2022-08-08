@@ -129,6 +129,15 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
         }
         //连接
         mBtnConnect.setOnClickListener {
+            if (mAdapter.data.isEmpty()){
+                Toast.makeText(context, "请点击右上角搜索", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (mAdapter.data.find { it.isSelected } == null){
+                Toast.makeText(context, "请选择需要连接的底座", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if (isConnected()) {
                 disconnect()
             } else {
@@ -138,6 +147,17 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
 
         //创建读写
         mBtnCreateReader.setOnClickListener {
+
+            if (mAdapter.data.isEmpty()){
+                Toast.makeText(context, "请点击右上角搜索", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (mAdapter.data.find { it.isSelected } == null){
+                Toast.makeText(context, "请选择需要连接的底座", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             mWaitDialog = ProgressDialog.show(mContext,"","创建读写器...")
             mHandler.postDelayed({
                 mRfidMgr.createReader()

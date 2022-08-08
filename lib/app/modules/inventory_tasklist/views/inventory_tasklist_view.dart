@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/cache.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../../entity/inventory_list.dart';
 import '../../../routes/app_pages.dart';
 import '../../../style/text_style.dart';
 import '../../../values/constants.dart';
@@ -23,6 +23,8 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
 
   @override
   Widget build(BuildContext context) {
+    homeController
+        .getInventoryFinishedList(homeController.state.inventoryFinishedPage);
     return Scaffold(
         appBar: AppBar(
           title: Text('资产盘点'),
@@ -41,26 +43,30 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                           child: selectTabView(
                               text:
                                   '未完成(${CacheUtils.to.inventoryList?.unfinished})',
-                              selected: homeController.state.selectedTab,
+                              selected:
+                                  homeController.state.selectedInventoryTab,
                               isLeft: true,
                               callback: () {
-                                if (!homeController.state.selectedTab) {
-                                  homeController.state.selectedTab =
-                                      !homeController.state.selectedTab;
+                                if (!homeController
+                                    .state.selectedInventoryTab) {
+                                  homeController.state.selectedInventoryTab =
+                                      !homeController
+                                          .state.selectedInventoryTab;
                                 }
                               }),
                           flex: 1,
                         ),
                         Expanded(
                           child: selectTabView(
-                              text:
-                                  '已完成(${homeController.inventoryFinishedList.finished})',
-                              selected: !homeController.state.selectedTab,
+                              text: '已完成',
+                              selected:
+                                  !homeController.state.selectedInventoryTab,
                               isLeft: false,
                               callback: () {
-                                if (homeController.state.selectedTab) {
-                                  homeController.state.selectedTab =
-                                      !homeController.state.selectedTab;
+                                if (homeController.state.selectedInventoryTab) {
+                                  homeController.state.selectedInventoryTab =
+                                      !homeController
+                                          .state.selectedInventoryTab;
                                 }
                               }),
                           flex: 1,
@@ -75,11 +81,14 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                           controller: _refreshBindTaskController,
                           enablePullDown: true,
                           enablePullUp:
-                              homeController.state.selectedTab ? false : true,
+                              homeController.state.selectedInventoryTab
+                                  ? false
+                                  : true,
                           scrollDirection: Axis.vertical,
                           //接口无分页 禁止上拉加载更多
                           onRefresh: _onRefresh,
-                          child: homeController.state.selectedTab
+                          onLoading: _onLoadMore,
+                          child: homeController.state.selectedInventoryTab
                               ? ListView.builder(
                                   itemBuilder: ((context, index) => Card(
                                         elevation: CARD_ELEVATION,
@@ -104,7 +113,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '盘点年份：${CacheUtils.to.inventoryList?.finishedList?[index]?.distributionTime.substring(0, 4)}',
+                                                            '盘点年份：${CacheUtils.to.inventoryList?.finishedList?[index]?.distributionTime?.substring(0, 4)}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -277,7 +286,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                       CacheUtils.to.inventoryList?.unfinished)
                               : ListView.builder(
                                   itemBuilder: ((context, index) => Card(
-                                      elevation: 10,
+                                      elevation: CARD_ELEVATION,
                                       shadowColor: Colors.grey,
                                       child: InkWell(
                                         child: Container(
@@ -287,7 +296,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                    '${homeController.inventoryFinishedList.finishedList?[index]?.taskNo}',
+                                                    '${homeController.inventoryFinishedList?[index]?.taskNo}',
                                                     style:
                                                         textBoldNumberStyle()),
                                                 Row(
@@ -299,7 +308,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '盘点年份：${homeController.inventoryFinishedList.finishedList?[index]?.distributionTime.substring(0, 4)}',
+                                                            '盘点年份：${homeController.inventoryFinishedList?[index]?.distributionTime?.substring(0, 4)}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -311,7 +320,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topEnd,
                                                         child: Text(
-                                                            '盘点类型：${homeController.inventoryFinishedList.finishedList?[index]?.inventoryTypeText}',
+                                                            '盘点类型：${homeController.inventoryFinishedList?[index]?.inventoryTypeText}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -327,7 +336,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '截止日期：${homeController.inventoryFinishedList.finishedList?[index]?.endDate}',
+                                                            '截止日期：${homeController.inventoryFinishedList?[index]?.endDate}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -339,7 +348,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topEnd,
                                                         child: Text(
-                                                            '盘点总数：${homeController.inventoryFinishedList.finishedList?[index]?.inventoryTotal}',
+                                                            '盘点总数：${homeController.inventoryFinishedList?[index]?.inventoryTotal}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -354,7 +363,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                   .INVENTORY_TASKLIST_SUB_LEVEL,
                                               arguments: {
                                                 'taskNo':
-                                                    '${homeController.inventoryFinishedList.finishedList?[index]?.taskNo}',
+                                                    '${homeController.inventoryFinishedList?[index]?.taskNo}',
                                                 'bindStatus':
                                                     INVENTORY_STATUS_ALL,
                                                 "isFinish": true
@@ -362,20 +371,37 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                         },
                                       ))),
                                   itemCount: homeController
-                                      .inventoryFinishedList.finished)))
+                                      .inventoryFinishedList.length)))
                 ],
               ),
             )));
   }
 
   Future<void> _onRefresh() async {
-    if (homeController.state.selectedTab) {
+    if (homeController.state.selectedInventoryTab) {
       await homeController.getInventoryList();
-      _refreshBindTaskController.refreshCompleted();
       toastInfo(msg: "最新任务已更新");
     } else {
+      homeController.state.inventoryFinishedPage = 1;
       await homeController
           .getInventoryFinishedList(homeController.state.inventoryFinishedPage);
+    }
+    _refreshBindTaskController.refreshCompleted();
+  }
+
+  Future<void> _onLoadMore() async {
+    if (!homeController.state.selectedInventoryTab) {
+      homeController.state.inventoryFinishedPage++;
+      InventoryList inventoryList = await homeController
+          .getInventoryFinishedList(homeController.state.inventoryFinishedPage);
+
+      if (inventoryList.data != null &&
+          inventoryList.data?.finishedList != null &&
+          inventoryList.data?.finishedList?.length == PAGE_SIZE) {
+        _refreshBindTaskController.loadComplete();
+      } else {
+        _refreshBindTaskController.loadNoData();
+      }
     }
   }
 }

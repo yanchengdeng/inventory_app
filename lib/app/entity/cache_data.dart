@@ -6,11 +6,11 @@ import 'package:inventory_app/app/entity/mould_bind.dart';
  * 存储方式   List(CacheMouldBindData())
  */
 
-class CacheMouldBindData{
+class CacheMouldBindData {
   String? userId;
   MouldData? data;
 
-  CacheMouldBindData({ this.userId,  this.data});
+  CacheMouldBindData({this.userId, this.data});
 
   CacheMouldBindData.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
@@ -27,21 +27,21 @@ class CacheMouldBindData{
   }
 }
 
-
 /**
  * 本地缓存资产盘点任务数据
  * 存储方式   List(CacheInventoryData())
  */
 
-class CacheInventoryData{
+class CacheInventoryData {
   String? userId;
   InventroyData? data;
 
-  CacheInventoryData({ this.userId,  this.data});
+  CacheInventoryData({this.userId, this.data});
 
   CacheInventoryData.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
-    data = json['data'] != null ? new InventroyData.fromJson(json['data']) : null;
+    data =
+        json['data'] != null ? new InventroyData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -54,19 +54,20 @@ class CacheInventoryData{
   }
 }
 
-
 ///上传图片信息
 class UploadImageInfo {
   String? fileName;
   String? filePath;
   String? uriUuid;
+  int? photoType; //拍照类型
 
-  UploadImageInfo({this.fileName, this.filePath, this.uriUuid});
+  UploadImageInfo({this.fileName, this.filePath, this.uriUuid, this.photoType});
 
   UploadImageInfo.fromJson(Map<String, dynamic> json) {
     this.fileName = json["fileName"];
     this.filePath = json["filePath"];
     this.uriUuid = json["UriUUID"];
+    this.photoType = json["photoType"];
   }
 
   Map<String, dynamic> toJson() {
@@ -74,9 +75,7 @@ class UploadImageInfo {
     data["fileName"] = this.fileName;
     data["filePath"] = this.filePath;
     data["UriUUID"] = this.uriUuid;
+    data["photoType"] = this.photoType;
     return data;
   }
 }
-
-
-

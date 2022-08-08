@@ -56,3 +56,15 @@ const String WEB_LOGIN_URL =
 
 ///分割去除 token
 const SPLIT_URL = 'x-mid-token=';
+
+///分页数量 默认  10
+const PAGE_SIZE = 10;
+
+
+///拍照类型
+///整体
+const PHOTO_TYPE_ALL = 10;
+///铭牌
+const PHOTO_TYPE_MP = 20;
+///型腔
+const PHOTO_TYPE_XQ = 30;

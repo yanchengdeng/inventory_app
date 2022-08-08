@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:inventory_app/app/values/constants.dart';
 
 import '../entity/inventory_list.dart';
 import '../utils/http.dart';
@@ -36,7 +37,7 @@ class InventoryApi<T> {
       'orderField': "",
       'orderType': '',
       'pageNum': page,
-      'pageSize': 10
+      'pageSize': PAGE_SIZE
     };
 
     var response = await HttpUtil()

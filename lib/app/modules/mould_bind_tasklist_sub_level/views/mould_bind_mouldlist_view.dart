@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/entity/mould_bind.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import '../../../style/text_style.dart';
-import '../../../utils/cache.dart';
 import '../../../utils/logger.dart';
 import '../../../values/constants.dart';
 import '../controllers/mould_bind_mouldlist_controller.dart';
@@ -18,9 +20,8 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
     var isFinish = Get.arguments['isFinish'];
     Log.d(
         "传入二级模具菜单参数：taskNo = $taskNo,taskType = ${taskType},bindStatus = ${bindStatus},isFinish = ${isFinish}");
-    CacheUtils.to
-        .getMouldTaskListByKeyOrStatus(isFinish, taskNo, '', [bindStatus], []);
-    //
+
+    controller.findByParams(isFinish, taskNo, '', [bindStatus], []);
 
     return Scaffold(
         appBar: AppBar(
@@ -35,29 +36,27 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                   child: inputTextEdit(
                       hintText: '搜资产编号、名称',
                       inputOnSubmit: (value) {
-                        CacheUtils.to.mouldSearchKey = value;
-                        CacheUtils.to.getMouldTaskListByKeyOrStatus(
-                            Get.arguments['isFinish'],
-                            Get.arguments['taskNo'],
-                            '',
-                            [-1],
-                            []);
+                        controller.findByParams(
+                            isFinish, taskNo, value, [bindStatus], []);
                       })),
-              Container(
-                width: 200,
-                height: 50,
-                alignment: Alignment.center,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text('全部'),
-                      flex: 1,
-                    ),
-                    Expanded(
-                      child: Text('工装类型'),
-                      flex: 1,
-                    )
-                  ],
+              Visibility(
+                visible: true,
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  alignment: Alignment.center,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text('全部'),
+                        flex: 1,
+                      ),
+                      Expanded(
+                        child: Text('工装类型'),
+                        flex: 1,
+                      )
+                    ],
+                  ),
                 ),
               ),
 
@@ -79,23 +78,20 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          getTextByStatus(CacheUtils
-                                              .to
-                                              .mouldBindTaskListSearch
-                                              ?.mouldList[index]
+                                          getTextByStatus(controller
+                                              .mouldBindTaskListSearch?[index]
                                               ?.bindStatus),
                                           Text(
-                                              '${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.assetNo}',
+                                              '${controller.mouldBindTaskListSearch?[index]?.assetNo}',
                                               style: textNormalListTextStyle())
                                         ],
                                       ),
                                       Spacer(flex: 1),
                                       Obx(
                                         () => Visibility(
-                                          visible: CacheUtils
-                                                  .to
-                                                  .mouldBindTaskListSearch
-                                                  ?.mouldList[index]
+                                          visible: controller
+                                                  .mouldBindTaskListSearch?[
+                                                      index]
                                                   ?.bindStatus !=
                                               BIND_STATUS_UPLOADED,
                                           child: ElevatedButton(
@@ -111,11 +107,10 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                                           "taskNo":
                                                               Get.arguments[
                                                                   'taskNo'],
-                                                          "assetNo": CacheUtils
-                                                              .to
-                                                              .mouldBindTaskListSearch
-                                                              ?.mouldList[index]
-                                                              .assetNo
+                                                          "assetNo": controller
+                                                              .mouldBindTaskListSearch?[
+                                                                  index]
+                                                              ?.assetNo
                                                         })
                                                   },
                                               child: Text('绑定')),
@@ -134,42 +129,34 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                       ),
                                     ),
                                     Text(
-                                        '标签编号:${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.bindStatusText}',
+                                        '标签编号:${controller.mouldBindTaskListSearch?[index]?.bindStatusText}',
                                         style: textNormalListTextStyle()),
                                     Text(
-                                        '零件号:${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.moldNo}',
+                                        '零件号:${controller.mouldBindTaskListSearch?[index]?.moldNo}',
                                         style: textNormalListTextStyle()),
                                     Text(
-                                        '零件名称：${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.moldName}',
+                                        '零件名称：${controller.mouldBindTaskListSearch?[index]?.moldName}',
                                         style: textNormalListTextStyle()),
                                     Text(
-                                        'SGM车型:${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.toolingName}',
+                                        'SGM车型:${controller.mouldBindTaskListSearch?[index]?.toolingName}',
                                         style: textNormalListTextStyle()),
                                     Text(
-                                        '备注：${CacheUtils.to.mouldBindTaskListSearch?.mouldList[index]?.remark}',
+                                        '备注：${controller.mouldBindTaskListSearch?[index]?.remark}',
                                         style: textNormalListTextStyle())
                                   ],
                                 ),
                               ),
                               onTap: () => {
-                                if (CacheUtils.to.mouldBindTaskListSearch
-                                        ?.mouldList[index]?.bindStatus ==
+                                if (controller.mouldBindTaskListSearch?[index]
+                                        ?.bindStatus ==
                                     BIND_STATUS_UPLOADED)
                                   {
-                                    ///已上传（已上传和未上传模具中都有）
-                                    ///
+                                    ///已上传（已完成和未完成模具中都有）
 
                                     Get.toNamed(Routes.MOULD_RESULT_ONLY_VIEW,
-                                        arguments: {
-                                          'isFinish': Get.arguments['isFinish'],
-                                          "taskType": Get.arguments['taskType'],
-                                          "taskNo": Get.arguments['taskNo'],
-                                          "assetNo": CacheUtils
-                                              .to
-                                              .mouldBindTaskListSearch
-                                              ?.mouldList[index]
-                                              .assetNo
-                                        })
+                                        arguments: controller
+                                            .mouldBindTaskListSearch?[index]
+                                            ?.toJson())
                                   }
                                 else
                                   {
@@ -178,18 +165,15 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                         arguments: {
                                           "taskType": Get.arguments['taskType'],
                                           "taskNo": Get.arguments['taskNo'],
-                                          "assetNo": CacheUtils
-                                              .to
-                                              .mouldBindTaskListSearch
-                                              ?.mouldList[index]
+                                          "assetNo": controller
+                                              .mouldBindTaskListSearch?[index]
                                               .assetNo
                                         })
                                   }
                               },
                             ),
                           )),
-                      itemCount: CacheUtils
-                          .to.mouldBindTaskListSearch?.mouldList?.length,
+                      itemCount: controller.mouldBindTaskListSearch?.length,
                     ),
                   )))
             ],

@@ -252,12 +252,17 @@ class BindLabels {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['cavityPhoto'] = this.cavityPhoto;
+    if (this.cavityPhoto != null) {
+      data['cavityPhoto'] = this.cavityPhoto!.toJson();
+    }
     data['labelNo'] = this.labelNo;
     if (this.nameplatePhoto != null) {
       data['nameplatePhoto'] = this.nameplatePhoto!.toJson();
     }
-    data['overallPhoto'] = this.overallPhoto;
+
+    if (this.overallPhoto != null) {
+      data['overallPhoto'] = this.overallPhoto!.toJson();
+    }
     return data;
   }
 }

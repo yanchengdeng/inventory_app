@@ -49,6 +49,24 @@ TextStyle textBoldNumberBlueStyle() {
   );
 }
 
+///字体样式
+TextStyle textNormalTextBlueStyle() {
+  return TextStyle(
+    fontWeight: FontWeight.w400,
+    color: Colors.blue,
+    fontSize: AppFontSize.FONT_SIZE_SUB_TITLE.toDouble(),
+  );
+}
+
+///字体样式
+TextStyle textSmallTextStyle() {
+  return TextStyle(
+    fontWeight: FontWeight.w200,
+    color: Colors.black,
+    fontSize: AppFontSize.FONT_SIZE_DESCRIBLE.toDouble(),
+  );
+}
+
 ///常规字体样式
 TextStyle textLitleWhiteTextStyle() {
   return TextStyle(

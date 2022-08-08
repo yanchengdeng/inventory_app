@@ -36,10 +36,10 @@ class HttpUtil {
 
       // baseUrl: storage.read(key: STORAGE_KEY_APIURL) ?? SERVICE_API_BASEURL,
       //连接服务器超时时间，单位是毫秒.
-      connectTimeout: 5000,
+      connectTimeout: 10000,
 
       // 响应流上前后两次接受到数据的间隔，单位为毫秒。
-      receiveTimeout: 5000,
+      receiveTimeout: 10000,
 
       // Http请求头.
       headers: {},
@@ -188,7 +188,12 @@ class HttpUtil {
         }
       default:
         {
-          return ErrorEntity(state: -1, message: error.message);
+          ///网络问题：SocketException: Connection failed (OS Error: Network is unreachable, errno = 101), address = 47.102.199.31, port = 59101
+          if(error.message.contains('Network')){
+            return ErrorEntity(state: -1,message: '请检查网络');
+          }else {
+            return ErrorEntity(state: -1, message: error.message);
+          }
         }
     }
   }

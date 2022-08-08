@@ -53,7 +53,7 @@ class FileApi<T> {
   }
 
   ///获取文件服务token
-  static void uploadFile<T>(String filePath) async {
+  static void uploadFile<T>(String filePath, int photoType) async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'file_backend_upload';
     Options options = Options();
@@ -83,7 +83,7 @@ class FileApi<T> {
     final MouldReadResultController resultController =
         Get.find<MouldReadResultController>();
     resultController.refreshImage(UploadImageInfo(
-        fileName: fileName, filePath: filePath, uriUuid: response.toString()));
+        fileName: fileName, filePath: filePath, uriUuid: response.toString(),photoType: photoType));
     Get.back();
   }
 }

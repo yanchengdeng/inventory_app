@@ -9,10 +9,15 @@ import '../../entity/user.dart';
   */
 
 class HomeState {
-  ///tab 两个tab  默认选中第一个
-  var _selectedTab = RxBool(true);
-  set selectedTab(value) => _selectedTab.value = value;
-  get selectedTab => _selectedTab.value;
+  ///tab 两个tab  模具任务 默认选中第一个
+  var _selectedMouldTab = RxBool(true);
+  set selectedMouldTab(value) => _selectedMouldTab.value = value;
+  get selectedMouldTab => _selectedMouldTab.value;
+
+  ///tab 两个tab  盘点任务默认选中第一个
+  var _selectedInventoryTab = RxBool(true);
+  set selectedInventoryTab(value) => _selectedInventoryTab.value = value;
+  get selectedInventoryTab => _selectedInventoryTab.value;
 
   var _userProfile = Rx<UserLoginResponseEntity?>(null);
   set userProfile(value) => _userProfile.value = value;
@@ -20,4 +25,8 @@ class HomeState {
 
   ///已完成资产盘点页面
   var inventoryFinishedPage = 1;
+
+
+  ///已完成模具任务页面
+  var mouldTaskFinishedPage = 1;
 }

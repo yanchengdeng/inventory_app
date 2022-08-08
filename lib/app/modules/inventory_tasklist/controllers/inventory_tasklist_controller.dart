@@ -1,20 +1,22 @@
 import 'package:get/get.dart';
 
-import '../../../apis/inventory_api.dart';
-import '../../../entity/inventory_list.dart';
-import '../../../utils/common.dart';
+import '../../../utils/logger.dart';
 
 class InventoryTasklistController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    Log.d("InventoryTasklistController--onReady()");
   }
 
   @override
   void onReady() {
     super.onReady();
+    Log.d("InventoryTasklistController--onReady()");
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    Log.d("InventoryTasklistController--onClose()");
+  }
 }

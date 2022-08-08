@@ -23,7 +23,9 @@ import com.honeywell.rfidservice.rfid.TagReadOption
 import com.luojie.erapp.inventory_app.data.READ_STATUS
 import com.luojie.erapp.inventory_app.data.RfidStatus
 import com.luojie.erapp.inventory_app.dialog.BlueToothDialog
-import com.luojie.erapp.inventory_app.utils.LocationUtils
+import com.luojie.erapp.inventory_app.utils.ICallback
+import com.luojie.erapp.inventory_app.utils.LocationBean
+import com.luojie.erapp.inventory_app.utils.LocationUtil
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -42,7 +44,7 @@ class MainActivity : FlutterActivity() {
     private val GET_GPS_LAT_LNG = "getGpsLatLng"
 
     ///扫描标签
-    private val SCAN_LABEL = "scan_label"
+    private val GET_SCAN_LABEL = "scan_label"
 
     private var barcodeReader: BarcodeReader? = null
     private var manager: AidcManager? = null
@@ -51,7 +53,7 @@ class MainActivity : FlutterActivity() {
     private lateinit var rfidMgr: RfidManager
 
     /// rfid读取类
-    lateinit var mReader: RfidReader
+    var mReader: RfidReader? = null
     private  var blueToothDialog: BlueToothDialog? = null
     // 读写信息
     private var mTagDataList = mutableListOf<String>()
@@ -85,6 +87,7 @@ class MainActivity : FlutterActivity() {
             when (call.method) {
 
                 START_READ_RFID_DATA -> {
+                    barcodeReader?.release()
                     if (rfidMgr.readerAvailable()) {
                         mIsReadBtnClicked = true
                         read()
@@ -122,7 +125,6 @@ class MainActivity : FlutterActivity() {
                     stopRead()
                 }
                 GET_GPS_LAT_LNG -> {
-
                     PermissionsUtil.requestPermission(
                         this,
                         object : PermissionListener {
@@ -131,12 +133,16 @@ class MainActivity : FlutterActivity() {
                              * @param permission
                              */
                             override fun permissionGranted(permission: Array<out String>) {
-                                LocationUtils.getInstance(this@MainActivity).addressCallback =
-                                    LocationUtils.AddressCallback { lat, lng ->
-                                        Log.d(
-                                            "定位地址","${lat},${lng}")
-                                        result.success("${lat},${lng}")
+                                LocationUtil.getLocation(this@MainActivity,object : ICallback<LocationBean>{
+                                    override fun onResult(location: LocationBean?) {
+                                        location?.apply {
+                                            ignoreIllegalState{ result.success("${location.latitude},${location.longitude}")}
+                                        }
                                     }
+                                    override fun onError(error: Throwable?) {
+                                        toast("GPS位置信号弱")
+                                    }
+                                })
                             }
 
                             /**
@@ -152,19 +158,25 @@ class MainActivity : FlutterActivity() {
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     )
-
-
                 }
-                SCAN_LABEL -> {
+                GET_SCAN_LABEL -> {
                     doListenBarcodeReader(result)
                 }
-                else ->{
+                else -> {
                     result.notImplemented()
                 }
             }
         }
     }
 
+    fun ignoreIllegalState(fn: () -> Unit) {
+        try {
+            fn()
+        }catch (e:IllegalStateException){
+            // ignore
+            e.message?.let { Log.e("scan-code", it) }
+        }
+    }
 
     private fun initBarCodeReader(){
         AidcManager.create(this) { aidcManager ->
@@ -181,13 +193,23 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun doListenBarcodeReader(result: MethodChannel.Result) {
-        stopRead()
+        // 可能扫描和 读取会有冲突 ，扫描时候 停止读取
+        mReader?.stopRead()
+        mReader?.removeOnTagReadListener(dataListener)
         if (barcodeReader != null) {
             barcodeReader?.claim()
             // register bar code event listener
-            barcodeReader!!.addBarcodeListener(object :BarcodeReader.BarcodeListener{
+            barcodeReader?.addBarcodeListener(object : BarcodeReader.BarcodeListener {
                 override fun onBarcodeEvent(event: BarcodeReadEvent) {
-                        result.success(event.barcodeData)
+                    val rfidStatus = RfidStatus(code = READ_STATUS.SCAN_READ, listOf(event.barcodeData))
+
+//                    mTagDataList.add(event.barcodeData)
+//                    var tag = StringBuilder()
+//                    mTagDataList.forEach { tag.append(it).append(",") }
+//                    tag.replace(tag.length-1,tag.length,"")
+                    result.success(event.barcodeData)
+//                    ignoreIllegalState { result.success(event.barcodeData) }
+                    toast("扫描成功")
 
                 }
 
@@ -199,7 +221,7 @@ class MainActivity : FlutterActivity() {
 
             // set the trigger mode to client control
             try {
-                barcodeReader!!.setProperty(
+                barcodeReader?.setProperty(
                     BarcodeReader.PROPERTY_TRIGGER_CONTROL_MODE,
                     BarcodeReader.TRIGGER_CONTROL_MODE_AUTO_CONTROL
                 )
@@ -207,8 +229,8 @@ class MainActivity : FlutterActivity() {
                 toast("Failed to apply properties")
             }
             // register trigger state change listener
-            barcodeReader!!.addTriggerListener {
-                Log.d("yancheng","${it.state}")
+            barcodeReader?.addTriggerListener {
+                Log.d("yancheng", "${it.state}")
 
             }
             val properties: MutableMap<String, Any> = HashMap()
@@ -278,23 +300,27 @@ class MainActivity : FlutterActivity() {
 
 
     private fun isReaderAvailable(): Boolean {
-        return mReader.available()
+        return mReader?.available()!!
     }
 
     private fun read() {
         if (isReaderAvailable()) {
-            mTagDataList.clear()
-            mReader.setOnTagReadListener(dataListener)
-            mReader.read(TagAdditionData.get("None"), TagReadOption())
+            mReader?.setOnTagReadListener(dataListener)
+            mReader?.read(TagAdditionData.get("None"), TagReadOption())
         }
     }
 
     private fun stopRead() {
         if (isReaderAvailable()) {
-            mReader.stopRead()
-            mReader.removeOnTagReadListener(dataListener)
+            mReader?.stopRead()
+            mReader?.removeOnTagReadListener(dataListener)
             val rfidStatus = RfidStatus(code = READ_STATUS.STOP_READING, mTagDataList)
-            stopReadLabelResult?.success(Gson().toJson(rfidStatus))
+
+            var tag = StringBuilder()
+            mTagDataList.forEach { tag.append(it).append(",") }
+            tag.replace(tag.length-1,tag.length,"")
+            ignoreIllegalState{ stopReadLabelResult?.success(tag.toString())}
+
         }
     }
 
@@ -309,7 +335,13 @@ class MainActivity : FlutterActivity() {
                 }
                 Log.w("yancheng", "mTagDataList------$mTagDataList")
                 val rfidStatus = RfidStatus(code = READ_STATUS.READING_DATA, mTagDataList)
-                readLabelResult?.success(Gson().toJson(rfidStatus))
+                var tag = StringBuilder()
+                mTagDataList.forEach { tag.append(it).append(",") }
+                tag.replace(tag.length-1,tag.length,"")
+                ignoreIllegalState{readLabelResult?.success(tag.toString())}
+
+
+
             }
         }
 

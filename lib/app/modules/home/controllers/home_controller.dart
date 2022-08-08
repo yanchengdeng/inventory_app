@@ -29,18 +29,52 @@ class HomeController extends GetxController {
     await CacheUtils.to.saveInventoryTask(inventoryList.data);
   }
 
-  ///已完成的判断任务
-  var _inventoryFinishedList = Rx<InventroyData?>(null);
+  ///已完成的盘点任务
+  var _inventoryFinishedList = RxList<InventoryFinishedList?>(List.empty());
 
   set inventoryFinishedList(value) => _inventoryFinishedList.value = value;
 
   get inventoryFinishedList => _inventoryFinishedList.value;
 
   /// 获取已完成的资产盘点列表
-  getInventoryFinishedList(int page) async {
+  Future<InventoryList> getInventoryFinishedList(int page) async {
     InventoryList inventoryList =
         await InventoryApi.getInventoryFinishedList(page);
-    _inventoryFinishedList.value = inventoryList.data;
+
+    if (inventoryList.data?.finishedList?.isNotEmpty ?? false) {
+      if (page == 1) {
+        _inventoryFinishedList.value = [];
+      }
+
+      inventoryFinishedList
+          .addAll(inventoryList.data?.finishedList ?? List.empty());
+      _inventoryFinishedList.value = inventoryFinishedList;
+    }
+    return inventoryList;
+  }
+
+  ///已完成的模具任务
+  var _mouldTaskFinishedList = RxList<MouldFinishedTaskList>(List.empty());
+
+  set mouldTaskFinishedList(value) => _mouldTaskFinishedList.value = value;
+
+  get mouldTaskFinishedList => _mouldTaskFinishedList.value;
+
+  /// 获取已完成的模具任务列表
+  Future<MouldBindList> getMouldTaskFinishedList(int page) async {
+    MouldBindList mouldBindList =
+        await MouldTaskApi.getMouldBindListFinishedList(page);
+
+    if (mouldBindList.data?.finishedTaskList?.isNotEmpty ?? false) {
+      if (page == 1) {
+        _mouldTaskFinishedList.value = [];
+      }
+
+      _mouldTaskFinishedList
+          .addAll(mouldBindList.data?.finishedTaskList ?? List.empty());
+      _mouldTaskFinishedList.value = mouldTaskFinishedList;
+    }
+    return mouldBindList;
   }
 
   @override
@@ -55,14 +89,18 @@ class HomeController extends GetxController {
     EasyLoading.show(status: "获取中...");
     Log.d("HomeController--onInit()");
     state.userProfile = await UserStore.to.getProfile();
-    // getMouldTaskList();
-    // getInventoryList();
-
-    getInventoryFinishedList(1);
+    getMouldTaskList();
+    getInventoryList();
   }
 
   @override
   void onClose() {
     Log.d("HomeController--onClose()");
+  }
+
+  void setMouldData(MouldData? mouldData) {
+    if (mouldData != null && mouldData.unfinishedTaskList != null) {
+      _mouldTaskFinishedList.value = mouldData.unfinishedTaskList!;
+    }
   }
 }

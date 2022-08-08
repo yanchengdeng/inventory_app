@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -10,22 +11,16 @@ import '../../../style/text_style.dart';
 import '../../../utils/logger.dart';
 import '../controllers/mould_result_only_view_controller.dart';
 
-///只查看模具信息
+///只查看模具信息  直接对象传入进来显示
 ///每次查看图片 都需要再次获取token 来拼接图片地址
 class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
   @override
   Widget build(BuildContext context) {
-    var taskNo = Get.arguments['taskNo'];
-    var taskType = Get.arguments['taskType'];
-    var assetNo = Get.arguments['assetNo'];
-    var isFinish = Get.arguments['isFinish'];
+    var info = Get.arguments;
+    MouldList? assertBindTaskInfo = MouldList.fromJson(info);
 
-    Log.d(
-        "传入只读显示页：taskNo = $taskNo,taskType = ${taskType},assetNo = ${assetNo},taskType = ${taskType}");
-
-    isFinish
-        ? CacheUtils.to.getAssetBindTaskInfo(taskNo, assetNo)
-        : CacheUtils.to.getUnLoadedAssetBindTaskInfo(taskNo, assetNo);
+    controller.setMouldBindData(assertBindTaskInfo);
+    Log.d("传入只读显示页：info =${info}");
 
     return Scaffold(
       appBar: AppBar(
@@ -59,14 +54,14 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          '固定资产编号：${CacheUtils.to.assertBindTaskInfo?.assetNo}',
+                          '固定资产编号：${controller.mouldBindTaskFinished?.assetNo}',
                           style: textBoldNumberWhiteStyle()),
-                      Text('SGM车型：${CacheUtils.to.assertBindTaskInfo?.vehicle}',
+                      Text('SGM车型：${controller.mouldBindTaskFinished?.vehicle}',
                           style: textLitleWhiteTextStyle()),
-                      Text('零件号：${CacheUtils.to.assertBindTaskInfo?.moldNo}',
+                      Text('零件号：${controller.mouldBindTaskFinished?.moldNo}',
                           style: textLitleWhiteTextStyle()),
                       Text(
-                          '工装&模具名称：${CacheUtils.to.assertBindTaskInfo?.toolingName}',
+                          '工装&模具名称：${controller.mouldBindTaskFinished?.toolingName}',
                           style: textLitleWhiteTextStyle()),
                       Obx(() => (Visibility(
                           visible: controller.isShowAllInfo.value,
@@ -74,22 +69,19 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '工装&模具尺寸(mm)：${CacheUtils.to.assertBindTaskInfo?.toolingSize}',
+                                  '工装&模具尺寸(mm)：${controller.mouldBindTaskFinished?.toolingSize}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '工装&模具重量(kg)：${CacheUtils.to.assertBindTaskInfo?.toolingWeight}',
+                                  '工装&模具重量(kg)：${controller.mouldBindTaskFinished?.toolingWeight}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '使用单位：${CacheUtils.to.assertBindTaskInfo?.usedUnits}',
+                                  '使用单位：${controller.mouldBindTaskFinished?.usedUnits}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '制造单位：${CacheUtils.to.assertBindTaskInfo?.manufactureUnits}',
+                                  '制造单位：${controller.mouldBindTaskFinished?.manufactureUnits}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '工装模具使用模次：${CacheUtils.to.assertBindTaskInfo?.assetNo}',
-                                  style: textLitleWhiteTextStyle()),
-                              Text(
-                                  '工装模具寿命：${CacheUtils.to.assertBindTaskInfo?.assetLifespan}',
+                                  '工装模具寿命：${controller.mouldBindTaskFinished?.assetLifespan}',
                                   style: textLitleWhiteTextStyle()),
                             ],
                           )))),
@@ -145,7 +137,7 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                     ),
                     Text('标签编号', style: textBoldNumberBlueStyle()),
                     Text(
-                      '(${CacheUtils.to.assertBindTaskInfo?.lat ?? "0.0"}-${CacheUtils.to.assertBindTaskInfo?.lng ?? "0.0"})',
+                      '(${controller.mouldBindTaskFinished?.lat ?? "0.0"}-${controller.mouldBindTaskFinished?.lng ?? "0.0"})',
                       style: textNormalListTextStyle(),
                     ),
                   ],
@@ -194,7 +186,8 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
 
   ///获取标签
   StringBuffer getLabels() {
-    List<BindLabels> labels = CacheUtils.to.assertBindTaskInfo?.bindLabels;
+    List<BindLabels> labels =
+        controller.mouldBindTaskFinished?.bindLabels ?? List.empty();
     StringBuffer stringBuffer = StringBuffer();
     labels.forEach((element) {
       stringBuffer.writeln(element.labelNo);
@@ -211,7 +204,8 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
     const String testImage3 =
         'https://tse1-mm.cn.bing.net/th/id/OET.2567873a1fd04be7852a03de23158a00?w=272&h=272&c=7&rs=1&o=5&dpr=1.25&pid=1.9';
 
-    List<BindLabels> labels = CacheUtils.to.assertBindTaskInfo?.bindLabels;
+    List<BindLabels> labels =
+        controller.mouldBindTaskFinished?.bindLabels ?? List.empty();
 
     ///标签类型 只显示 铭牌
     if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL.toString()) {
@@ -247,7 +241,8 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
       child: Column(
         children: [
           Text(title, style: textNormalListTextStyle()),
-          Image.network(imageUrl,
+          CachedNetworkImage(
+              imageUrl: imageUrl,
               height: SizeConstant.IAMGE_SIZE_HEIGHT,
               width: SizeConstant.IAMGE_SIZE_HEIGHT)
         ],

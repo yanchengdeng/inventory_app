@@ -44,7 +44,7 @@ android {
     defaultConfig {
         applicationId "com.luojie.erapp.inventory_app"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 
@@ -53,21 +53,26 @@ android {
         }
     }
 
-    signingConfigs {
-        debug {
-            keyAlias 'rfid'
-            keyPassword 'rfid123456'
-            storeFile file('rfid.jks')
-            storePassword 'rfid123456'
-        }
 
-        release {
-            keyAlias 'rfid'
-            keyPassword 'rfid123456'
-            storeFile file('rfid.jks')
-            storePassword 'rfid123456'
-        }
-    }
+//    flavorDimensions "flavor-type"
+//
+//    productFlavors {
+//        rfid {
+//            dimension "flavor-type"
+//            applicationId "com.luojie.erapp.inventory_app"
+//            resValue "string", "app_name", "rfid"
+//        }
+//
+//    }
+//
+//    signingConfigs {
+//        debug {
+//            keyAlias 'rfid'
+//            keyPassword 'rfid123456'
+//            storeFile file('rfid.jks')
+//            storePassword 'rfid123456'
+//        }
+//    }
 
     lintOptions {
         checkReleaseBuilds false
@@ -76,16 +81,10 @@ android {
 
 
     buildTypes {
-
-        debug {
-            minifyEnabled false
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
-        }
-
-        release  {
-            minifyEnabled true
-            signingConfig signingConfigs.release
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 

@@ -23,7 +23,7 @@ samples, guidance on mobile development, and a full API reference.
 ### 参考  UI  及 网络请求 参考  ：Flutter_duceecat_news_get
 
 ### 待确定
-'0':'待绑定','1':'重新绑定','2':'已上传','？？？':'待上传'
+'0':'待绑定','1':'重新绑定','2':'已上传','？？？':'待上传3'
 1. 模具绑定列表    待上传的status 是多少？
 
 ```text
@@ -109,5 +109,13 @@ e.printStackTrace();
 #### 设计更改 ：
 1· 详情页的扫描 和读写 用android 原生处理
 2.上传图片地址为   ：上传的uuid  ed6baf02-ca1e-4e17-8751-566c872f8f66 
+
+
+```text
+待处理：
+返回监听 或是 close页面监听 有些状态需要恢复初始值 ： tabselcted  、
+
+```
+
 
 

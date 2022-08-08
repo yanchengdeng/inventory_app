@@ -24,6 +24,8 @@ enum class READ_STATUS(status : Int){
     READING_DATA(3),
     //停止读写
     STOP_READING(4),
+    //扫描
+    SCAN_READ(5),
 
 }
 

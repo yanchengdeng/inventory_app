@@ -80,10 +80,5 @@ class FileApi<T> {
     Log.d("返回的图片URL/uuid=$response");
 
     EasyLoading.dismiss();
-    final MouldReadResultController resultController =
-        Get.find<MouldReadResultController>();
-    resultController.refreshImage(UploadImageInfo(
-        fileName: fileName, filePath: filePath, uriUuid: response.toString(),photoType: photoType));
-    Get.back();
   }
 }

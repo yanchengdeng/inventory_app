@@ -1,10 +1,9 @@
 import 'package:get/get.dart';
 import 'package:inventory_app/app/apis/apis.dart';
-import 'package:inventory_app/app/utils/cache.dart';
-import 'package:inventory_app/app/utils/logger.dart';
-
 import '../../../entity/mould_bind.dart';
-import '../../home/controllers/home_controller.dart';
+import '../../../services/storage.dart';
+import '../../../values/server.dart';
+import '../../../values/storage.dart';
 
 class MouldResultOnlyViewController extends GetxController {
   var isShowAllInfo = false.obs;
@@ -19,6 +18,16 @@ class MouldResultOnlyViewController extends GetxController {
   void setMouldBindData(MouldList? assertBindTaskInfo) async {
     await FileApi.getFileToken();
     _mouldBindTaskFinished.value = assertBindTaskInfo;
+  }
+
+  ///获取网络图片展示地址
+  String getNetImageUrl(String uriUuid) {
+    return SERVER_FILE_UPLOAD +
+        "/file/frontend/" +
+        Uri.encodeComponent(uriUuid) +
+        '?token=' +
+        StorageService.to.getString(STORAGE_FILE_TOKEN) +
+        "&mediaType=image";
   }
 
   @override

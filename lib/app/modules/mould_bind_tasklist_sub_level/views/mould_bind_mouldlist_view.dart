@@ -1,11 +1,9 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/mould_bind.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
+
 import '../../../style/text_style.dart';
 import '../../../utils/logger.dart';
 import '../../../values/constants.dart';
@@ -136,7 +134,7 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                       ),
                                     ),
                                     Text(
-                                        '标签编号:${controller.mouldBindTaskListSearch?[index]?.bindStatusText}',
+                                        '标签编号:${getLableInfo(controller.mouldBindTaskListSearch?[index])}',
                                         style: textNormalListTextStyle()),
                                     Text(
                                         '零件号:${controller.mouldBindTaskListSearch?[index]?.moldNo}',
@@ -202,5 +200,42 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
     }
 
     return Text('${MOULD_BIND_STATUS[status]}', style: style);
+  }
+
+  ///3.1.2若以下照片有一张缺少，在标签编号最后提示：（缺照片）；不缺少则不显示提示
+  /// 3.1.2.1支付任务类型+模具工装类型为M：整体照片、铭牌照片、型腔照片
+  /// 3.1.2.2支付任务类型+模具工装类型为F/G：整体照片、铭牌照片
+  /// 3.1.2.3标签替换任务类型：铭牌照片
+  String getLableInfo(MouldList? mouldList) {
+    if (mouldList != null && (mouldList.bindLabels?.isNotEmpty ?? false)) {
+      if (mouldList.labelType == MOULD_TASK_TYPE_PAY &&
+          mouldList.toolingType == TOOL_TYPE_M) {
+        if (mouldList.bindLabels?[0].cavityPhoto != null &&
+            mouldList.bindLabels?[0].nameplatePhoto != null &&
+            mouldList.bindLabels?[0].overallPhoto != null) {
+          return mouldList.bindLabels?[0].labelNo ?? "-";
+        } else {
+          return mouldList.bindLabels?[0].labelNo ?? "(缺照片)";
+        }
+      } else if (mouldList.labelType == MOULD_TASK_TYPE_PAY ||
+          mouldList.toolingType == TOOL_TYPE_G) {
+        if (mouldList.bindLabels?[0].nameplatePhoto != null &&
+            mouldList.bindLabels?[0].overallPhoto != null) {
+          return mouldList.bindLabels?[0].labelNo ?? "-";
+        } else {
+          return mouldList.bindLabels?[0].labelNo ?? "(缺照片)";
+        }
+      } else if (mouldList.labelType == MOULD_TASK_TYPE_LABEL) {
+        if (mouldList.bindLabels?[0].nameplatePhoto != null) {
+          return mouldList.bindLabels?[0].labelNo ?? "-";
+        } else {
+          return mouldList.bindLabels?[0].labelNo ?? "(缺照片)";
+        }
+      } else {
+        return mouldList.bindLabels?[0].labelNo ?? "-";
+      }
+    } else {
+      return " -(缺照片) ";
+    }
   }
 }

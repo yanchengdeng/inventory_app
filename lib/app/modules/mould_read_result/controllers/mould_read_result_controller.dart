@@ -69,11 +69,19 @@ class MouldReadResultController extends GetxController {
           (await platform.invokeMethod(START_READ_RFID_DATA));
       readDataContent.value = rfidDataFromAndroid;
       isReadData.value = false;
+      if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
+        _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
+      }
+      _assertBindTaskInfo.value?.bindLabels?[0].labelNo = readDataContent.value;
     } else {
       isReadData.value = true;
       var rfidDataFromAndroid =
           (await platform.invokeMethod(STOP_READ_RFID_DATA));
       readDataContent.value = rfidDataFromAndroid;
+      if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
+        _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
+      }
+      _assertBindTaskInfo.value?.bindLabels?[0].labelNo = readDataContent.value;
     }
   }
 
@@ -81,12 +89,21 @@ class MouldReadResultController extends GetxController {
   getGpsLagLng() async {
     var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
     gpsData.value = latLng;
+    if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
+      _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
+    }
+    _assertBindTaskInfo.value?.lat = double.parse(gpsData.value.split(',')[0]);
+    _assertBindTaskInfo.value?.lng = double.parse(gpsData.value.split(',')[1]);
   }
 
   /// 获取扫描label
   getScanLabel() async {
     var scanLabel = await platform.invokeMethod(GET_SCAN_LABEL) as String;
     readDataContent.value = scanLabel;
+    if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
+      _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
+    }
+    _assertBindTaskInfo.value?.bindLabels?[0].labelNo = readDataContent.value;
   }
 
   @override
@@ -104,26 +121,45 @@ class MouldReadResultController extends GetxController {
   @override
   void onClose() {
     Log.d("MouldReadResultController--------onClose--");
-  }
 
-  void refreshImage(UploadImageInfo uploadImageInfo) {
-    if (uploadImageInfo.photoType == PHOTO_TYPE_ALL) {
-      imageUrlAll.value = uploadImageInfo;
-    } else if (uploadImageInfo.photoType == PHOTO_TYPE_MP) {
-      imageUrlMp.value = uploadImageInfo;
-    } else if (uploadImageInfo.photoType == PHOTO_TYPE_XQ) {
-      imageUrlXq.value = uploadImageInfo;
+    ///需要做处理 关闭读取rfid
+    if (!isReadData.value) {
+      //正在读 则需要关闭
+      platform.invokeMethod(STOP_READ_RFID_DATA);
     }
   }
 
-  ///获取网络图片展示地址
-  String getNetImageUrl(String uriUuid) {
-    return SERVER_FILE_UPLOAD +
-        "/file/frontend/" +
-        Uri.encodeComponent(uriUuid) +
-        '?token=' +
-        StorageService.to.getString(STORAGE_FILE_TOKEN) +
-        "&mediaType=image";
+  void refreshImage(UploadImageInfo uploadImageInfo) {
+    MouldList? mouldList = _assertBindTaskInfo.value;
+    if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
+      _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
+    }
+    if (uploadImageInfo.photoType == PHOTO_TYPE_ALL) {
+      if (_assertBindTaskInfo.value?.bindLabels?[0].overallPhoto == null) {
+        _assertBindTaskInfo.value?.bindLabels?[0].overallPhoto =
+            NameplatePhoto();
+      }
+      imageUrlAll.value = uploadImageInfo;
+      mouldList?.bindLabels?[0].overallPhoto?.fullPath =
+          uploadImageInfo.filePath;
+    } else if (uploadImageInfo.photoType == PHOTO_TYPE_MP) {
+      if (_assertBindTaskInfo.value?.bindLabels?[0].nameplatePhoto == null) {
+        _assertBindTaskInfo.value?.bindLabels?[0].nameplatePhoto =
+            NameplatePhoto();
+      }
+      imageUrlMp.value = uploadImageInfo;
+      mouldList?.bindLabels?[0].nameplatePhoto?.fullPath =
+          uploadImageInfo.filePath;
+    } else if (uploadImageInfo.photoType == PHOTO_TYPE_XQ) {
+      if (_assertBindTaskInfo.value?.bindLabels?[0].cavityPhoto == null) {
+        _assertBindTaskInfo.value?.bindLabels?[0].cavityPhoto =
+            NameplatePhoto();
+      }
+      imageUrlXq.value = uploadImageInfo;
+      mouldList?.bindLabels?[0].cavityPhoto?.fullPath =
+          uploadImageInfo.filePath;
+    }
+    _assertBindTaskInfo.value = mouldList;
   }
 
   ///清除页面信息  图片  标签
@@ -133,20 +169,36 @@ class MouldReadResultController extends GetxController {
 
     ///扫描标签
     readDataContent.value = '';
-
-    ///图片信息  全部照片
-    imageUrlAll.value = null;
-
-    ///铭牌照片
-    imageUrlMp.value = null;
-
-    ///型腔照片
-    imageUrlXq.value = null;
   }
 
   void getTaskInfo(taskNo, assetNo) async {
     _assertBindTaskInfo.value =
         await CacheUtils.to.getUnLoadedAssetBindTaskInfo(taskNo, assetNo);
+    if (_assertBindTaskInfo.value?.bindLabels != null) {
+      if (_assertBindTaskInfo.value?.bindLabels?[0].nameplatePhoto != null) {
+        imageUrlMp.value = UploadImageInfo(
+            filePath: _assertBindTaskInfo
+                .value?.bindLabels?[0].nameplatePhoto?.fullPath);
+      }
+
+      if (_assertBindTaskInfo.value?.bindLabels?[0].cavityPhoto != null) {
+        imageUrlXq.value = UploadImageInfo(
+            filePath: _assertBindTaskInfo
+                .value?.bindLabels?[0].cavityPhoto?.fullPath);
+      }
+
+      if (_assertBindTaskInfo.value?.bindLabels?[0].overallPhoto != null) {
+        imageUrlAll.value = UploadImageInfo(
+            filePath: _assertBindTaskInfo
+                .value?.bindLabels?[0].overallPhoto?.fullPath);
+      }
+
+      gpsData.value =
+          '${_assertBindTaskInfo.value?.lat},${_assertBindTaskInfo.value?.lng}';
+
+      readDataContent.value =
+          _assertBindTaskInfo.value?.bindLabels?[0].labelNo ?? '';
+    }
   }
 
   ///保存
@@ -162,57 +214,36 @@ class MouldReadResultController extends GetxController {
             _assertBindTaskInfo.value?.assetBindTaskId)
         .first;
 
-    BindLabels bindLabels = BindLabels();
     if (mouldList != null) {
-      if (mouldList.bindLabels?.isEmpty ?? true) {
-        if (readDataContent.value.isNotEmpty) {
-          bindLabels.labelNo = readDataContent.value;
-        }
-        mouldList.bindLabels?.add(bindLabels);
-
-        mouldList.bindLabels?[0].labelNo = readDataContent.value;
-      }
-
-      if (imageUrlAll.value != null) {
-        if (mouldList.bindLabels?[0].overallPhoto == null) {
-          mouldList.bindLabels?[0].overallPhoto = NameplatePhoto(
-              downloadType: 'url', fullPath: imageUrlAll.value?.uriUuid);
+      if (mouldList.labelType == MOULD_TASK_TYPE_PAY &&
+          mouldList.toolingType == TOOL_TYPE_M) {
+        if (mouldList.bindLabels?[0].cavityPhoto != null &&
+            mouldList.bindLabels?[0].nameplatePhoto != null &&
+            mouldList.bindLabels?[0].overallPhoto != null) {
+          mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
         } else {
-          mouldList.bindLabels?[0].overallPhoto?.downloadType = 'url';
-          mouldList.bindLabels?[0].overallPhoto?.fullPath =
-              imageUrlAll.value?.uriUuid;
+          mouldList.bindStatus = BIND_STATUS_REBIND;
         }
-      }
-
-      if (imageUrlMp.value != null) {
-        if (mouldList.bindLabels?[0].nameplatePhoto == null) {
-          mouldList.bindLabels?[0].nameplatePhoto = NameplatePhoto(
-              downloadType: 'url', fullPath: imageUrlMp.value?.uriUuid);
+      } else if (mouldList.labelType == MOULD_TASK_TYPE_PAY ||
+          mouldList.toolingType == TOOL_TYPE_G) {
+        if (mouldList.bindLabels?[0].nameplatePhoto != null &&
+            mouldList.bindLabels?[0].overallPhoto != null) {
+          mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
         } else {
-          mouldList.bindLabels?[0].nameplatePhoto?.downloadType = 'url';
-          mouldList.bindLabels?[0].nameplatePhoto?.fullPath =
-              imageUrlMp.value?.uriUuid;
+          mouldList.bindStatus = BIND_STATUS_REBIND;
         }
-      }
-
-      if (imageUrlXq.value != null) {
-        if (mouldList.bindLabels?[0].cavityPhoto == null) {
-          mouldList.bindLabels?[0].cavityPhoto = NameplatePhoto(
-              downloadType: 'url', fullPath: imageUrlXq.value?.uriUuid);
+      } else if (mouldList.labelType == MOULD_TASK_TYPE_LABEL) {
+        if (mouldList.bindLabels?[0].nameplatePhoto != null) {
+          mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
         } else {
-          mouldList.bindLabels?[0].cavityPhoto?.downloadType = 'url';
-          mouldList.bindLabels?[0].cavityPhoto?.fullPath =
-              imageUrlXq.value?.uriUuid;
+          mouldList.bindStatus = BIND_STATUS_REBIND;
         }
-      }
-
-      if (gpsData.value.isNotEmpty) {
-        var latLng = gpsData.split(',');
-        mouldList.lat = double.parse(latLng[0]);
-        mouldList.lng = double.parse(latLng[1]);
+      } else {
+        mouldList.bindStatus = BIND_STATUS_REBIND;
       }
     }
-    mouldList?.bindStatus = BIND_STATUS_WAITING_UPLOAD;
+
+    mouldList = _assertBindTaskInfo.value;
 
     CacheUtils.to.saveMouldTask(mouldData, true);
     toastInfo(msg: "保存成功");

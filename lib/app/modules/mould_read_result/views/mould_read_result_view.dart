@@ -1,10 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
-
+import 'dart:io';
 import '../../../entity/mould_bind.dart';
 import '../../../routes/app_pages.dart';
 import '../../../style/text_style.dart';
@@ -164,22 +162,41 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                             style: textNormalTextBlueStyle()),
                       ),
                       onTap: () => {
-                        CommonUtils.showCommonDialog(
-                            content: '切换后，页面数据将被清除?',
-                            callback: () => {
-                                  Get.back(),
-                                  controller.clearData(),
-                                  if (controller.isRfidReadStatus.value)
-                                    {
-                                      controller.getScanLabel(),
-                                      controller.isRfidReadStatus.value = false,
-                                    }
-                                  else
-                                    {
-                                      // controller.startReadRfidData(),
-                                      controller.isRfidReadStatus.value = true,
-                                    }
-                                })
+                        //未读到标签时自动切换  有则弹框提醒
+                        if (controller.readDataContent.value.isEmpty)
+                          {
+                            if (controller.isRfidReadStatus.value)
+                              {
+                                controller.getScanLabel(),
+                                controller.isRfidReadStatus.value = false,
+                              }
+                            else
+                              {
+                                // controller.startReadRfidData(),
+                                controller.isRfidReadStatus.value = true,
+                              }
+                          }
+                        else
+                          {
+                            CommonUtils.showCommonDialog(
+                                content: '切换后，已读标签数据将被清除?',
+                                callback: () => {
+                                      Get.back(),
+                                      controller.clearData(),
+                                      if (controller.isRfidReadStatus.value)
+                                        {
+                                          controller.getScanLabel(),
+                                          controller.isRfidReadStatus.value =
+                                              false,
+                                        }
+                                      else
+                                        {
+                                          // controller.startReadRfidData(),
+                                          controller.isRfidReadStatus.value =
+                                              true,
+                                        }
+                                    })
+                          }
                       },
                     )
                   ],
@@ -236,16 +253,18 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
 
   ///获取标签
   String getLabels() {
-    List<BindLabels> labels = controller.assertBindTaskInfo?.bindLabels;
-    StringBuffer stringBuffer = StringBuffer();
-    labels?.forEach((element) {
-      stringBuffer.writeln(element.labelNo);
-    });
-    if (stringBuffer.isEmpty) {
-      return controller.readDataContent.value;
-    } else {
-      return stringBuffer.toString();
-    }
+    // List<BindLabels> labels = controller.assertBindTaskInfo?.bindLabels;
+    // List<String> allLebles = List.empty();
+    // List<String> existLables = labels?[0].labelNo?.split(',') ?? List.empty();
+    // allLebles.addAll(existLables);
+    // List<String> readLabels = controller.readDataContent.value.split(',');
+    // allLebles.addAll(readLabels);
+    // StringBuffer allString = StringBuffer();
+    // allLebles.forEach((element) {
+    //   allString.writeln(element);
+    // });
+
+    return controller.readDataContent.value;
   }
 
   Widget ImageContain() {
@@ -264,9 +283,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                   child: Expanded(
                       flex: 1,
                       child: textImageWidget(
-                          '铭牌照片',
-                          controller.getNetImageUrl(
-                              controller.imageUrlMp.value?.uriUuid ?? ""))),
+                          '铭牌照片', controller.imageUrlMp.value?.filePath)),
                   onTap: () => {
                     Get.toNamed(Routes.TAKE_PHOTO,
                         arguments: {'photoType': PHOTO_TYPE_MP})
@@ -287,17 +304,11 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '整体照片',
-                              controller.getNetImageUrl(
-                                  controller.imageUrlAll.value?.uriUuid ??
-                                      ""))),
+                              '整体照片', controller.imageUrlAll.value?.filePath)),
                       onTap: () => {
-                        if ((controller.gpsData.value).isEmpty)
-                          {
-                            controller.getGpsLagLng(),
-                            toastInfo(msg: '获取定位中...')
-                          }
-                        else if ((controller.readDataContent.value).isEmpty)
+                        controller.getGpsLagLng(),
+                        toastInfo(msg: '获取定位中...'),
+                        if ((controller.readDataContent.value).isEmpty)
                           {toastInfo(msg: "请先读取标签")}
                         else
                           {
@@ -311,9 +322,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '铭牌照片',
-                              controller.getNetImageUrl(
-                                  controller.imageUrlMp.value?.uriUuid ?? ""))),
+                              '铭牌照片', controller.imageUrlMp.value?.filePath)),
                       onTap: () => {
                         Get.toNamed(Routes.TAKE_PHOTO,
                             arguments: {'photoType': PHOTO_TYPE_MP})
@@ -330,9 +339,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '型腔照片',
-                              controller.getNetImageUrl(
-                                  controller.imageUrlXq.value?.uriUuid ?? ""))),
+                              '型腔照片', controller.imageUrlXq.value?.filePath)),
                       onTap: () => {
                         Get.toNamed(Routes.TAKE_PHOTO,
                             arguments: {'photoType': PHOTO_TYPE_XQ})
@@ -347,8 +354,10 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
     }
   }
 
+  /// 可查看文件 用图片路径来查看和操作
+  /// Image.file(File(imagePath))
   ///文字 图片混合组件
-  Widget textImageWidget(String title, String imageUrl) {
+  Widget textImageWidget(String title, String? imageUrl) {
     return Container(
       width: SizeConstant.IAMGE_SIZE_HEIGHT,
       height: SizeConstant.IAMGE_SIZE_HEIGHT,
@@ -356,25 +365,33 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
         children: [
           Text(title, style: textNormalListTextStyle()),
           Container(
+            height: SizeConstant.IAMGE_SIZE_HEIGHT,
+            width: SizeConstant.IAMGE_SIZE_HEIGHT,
             decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.fromBorderSide(
                     BorderSide(color: Colors.black12, width: 2)),
                 borderRadius:
                     BorderRadiusDirectional.all(Radius.circular(5.0))),
-            child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.fitWidth,
-                placeholder: (build, url) => Container(
-                    alignment: AlignmentDirectional.center,
-                    child: Icon(Icons.add_a_photo,
-                        size: 80, color: Colors.black12)),
-                errorWidget: (build, url, error) => Container(
-                    alignment: AlignmentDirectional.center,
-                    child: Icon(Icons.add_a_photo,
-                        size: 80, color: Colors.black12)),
-                height: SizeConstant.IAMGE_SIZE_HEIGHT,
-                width: SizeConstant.IAMGE_SIZE_HEIGHT),
+            child: imageUrl == null
+                ? Icon(Icons.add_a_photo, size: 80, color: Colors.black12)
+                : Image.file(File(imageUrl),
+                    height: SizeConstant.IAMGE_SIZE_HEIGHT,
+                    width: SizeConstant.IAMGE_SIZE_HEIGHT,
+                    fit: BoxFit.fill),
+            //   child: CachedNetworkImage(
+            //       imageUrl: imageUrl,
+            //       fit: BoxFit.fitWidth,
+            //       placeholder: (build, url) => Container(
+            //           alignment: AlignmentDirectional.center,
+            //           child: Icon(Icons.add_a_photo,
+            //               size: 80, color: Colors.black12)),
+            //       errorWidget: (build, url, error) => Container(
+            //           alignment: AlignmentDirectional.center,
+            //           child: Icon(Icons.add_a_photo,
+            //               size: 80, color: Colors.black12)),
+            //       height: SizeConstant.IAMGE_SIZE_HEIGHT,
+            //       width: SizeConstant.IAMGE_SIZE_HEIGHT),
           )
         ],
       ),

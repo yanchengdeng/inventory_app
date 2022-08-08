@@ -56,9 +56,9 @@ class CacheInventoryData {
 
 ///上传图片信息
 class UploadImageInfo {
-  String? fileName;
-  String? filePath;
-  String? uriUuid;
+  String? fileName; //文件名
+  String? filePath; //文件完整路径
+  String? uriUuid; //文件在网络服务器唯一id
   int? photoType; //拍照类型
 
   UploadImageInfo({this.fileName, this.filePath, this.uriUuid, this.photoType});

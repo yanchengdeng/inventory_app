@@ -164,14 +164,15 @@ class MouldReadResultController extends GetxController {
 
     BindLabels bindLabels = BindLabels();
     if (mouldList != null) {
-      if (readDataContent.value.isNotEmpty) {
-        if (mouldList.bindLabels?.isEmpty ?? true) {
+      if (mouldList.bindLabels?.isEmpty ?? true) {
+        if (readDataContent.value.isNotEmpty) {
           bindLabels.labelNo = readDataContent.value;
-          mouldList.bindLabels?.add(bindLabels);
         }
+        mouldList.bindLabels?.add(bindLabels);
 
         mouldList.bindLabels?[0].labelNo = readDataContent.value;
       }
+
       if (imageUrlAll.value != null) {
         if (mouldList.bindLabels?[0].overallPhoto == null) {
           mouldList.bindLabels?[0].overallPhoto = NameplatePhoto(
@@ -213,7 +214,7 @@ class MouldReadResultController extends GetxController {
     }
     mouldList?.bindStatus = BIND_STATUS_WAITING_UPLOAD;
 
-    CacheUtils.to.saveMouldTask(mouldData);
+    CacheUtils.to.saveMouldTask(mouldData, true);
     toastInfo(msg: "保存成功");
     Get.back();
   }

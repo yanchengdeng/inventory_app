@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+import 'package:inventory_app/app/apis/apis.dart';
 import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
+import 'package:inventory_app/app/utils/loading.dart';
 import 'package:inventory_app/app/utils/logger.dart';
+import 'package:inventory_app/app/values/constants.dart';
 
 import '../../../entity/mould_bind.dart';
 import '../../../utils/cache.dart';
+import '../../../widgets/toast.dart';
 
 class MouldBindMouldlistController extends GetxController {
   ///模具绑定搜索列表
@@ -42,4 +48,25 @@ class MouldBindMouldlistController extends GetxController {
 
   @override
   void onClose() {}
+
+  doUploadData(String taskType) async {
+    MouldList? mouldList = _mouldBindTaskListSearch.value
+        ?.where((element) => element?.bindStatus == BIND_STATUS_WAITING_UPLOAD)
+        ?.first;
+
+    Loading.show('上传中...');
+    if (mouldList != null && mouldList.bindLabels != null) {
+      if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+        await MouldTaskApi.uploadForPayType(mouldList?.assetBindTaskId ?? 0,
+            json.encode(mouldList?.bindLabels?[0]));
+      } else {
+        await MouldTaskApi.uploadForLableReplaceType(
+            mouldList?.labelReplaceTaskId ?? 0,
+            json.encode(mouldList?.bindLabels?[0]));
+      }
+      Loading.dismiss();
+    } else {
+      toastInfo(msg: '暂无需要上传');
+    }
+  }
 }

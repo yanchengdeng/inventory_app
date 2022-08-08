@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -27,6 +28,12 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
         appBar: AppBar(
           title: Text('模具绑定'),
           centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () => {controller.doUploadData(taskType)},
+                icon: Icon(Icons.upload),
+                color: Colors.blue)
+          ],
         ),
         body: Container(
           child: Column(

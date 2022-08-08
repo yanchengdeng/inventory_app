@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:dio/dio.dart';
+import 'package:inventory_app/app/widgets/toast.dart';
 
 import '../entity/mould_bind.dart';
 import '../utils/utils.dart';
@@ -52,5 +53,49 @@ class MouldTaskApi<T> {
     var response = await HttpUtil()
         .post('/mouldBindTask/finishedList', data: data, options: options);
     return MouldBindList.fromJson(response);
+  }
+
+  //支付类型绑定上传
+  static Future<void> uploadForPayType<T>(
+      int assetBindTaskId, String bodyParams) async {
+    Map<String, dynamic> fileTokenMaps = HashMap();
+    fileTokenMaps['x-resource-code'] = 'mould_assetBindUpload';
+    Options options = Options();
+    options.headers = fileTokenMaps;
+
+    var data = {
+      'assetBindTaskId': assetBindTaskId,
+      'bodyParams': bodyParams,
+    };
+
+    var response = await HttpUtil().post(
+        '/mould/assetBindUpload/${assetBindTaskId}',
+        data: data,
+        options: options);
+    toastInfo(msg: response['message']);
+  }
+
+  //支付类型绑定上传
+  static Future<void> uploadForLableReplaceType<T>(
+      int labelReplaceTaskId, String bodyParams) async {
+    Map<String, dynamic> fileTokenMaps = HashMap();
+    fileTokenMaps['x-resource-code'] = 'mould_assetBindUpload';
+    Options options = Options();
+    options.headers = fileTokenMaps;
+
+    ///"orderField": "",
+    // 	"orderType": "",
+    // 	"pageNum": 0,
+    // 	"pageSize": 5
+    var data = {
+      'labelReplaceTaskId': labelReplaceTaskId,
+      'bodyParams': bodyParams,
+    };
+
+    var response = await HttpUtil().post(
+        '/mould/labelReplaceBindUpload/${labelReplaceTaskId}',
+        data: data,
+        options: options);
+    toastInfo(msg: response['message']);
   }
 }

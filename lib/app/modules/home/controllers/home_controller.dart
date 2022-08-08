@@ -20,13 +20,13 @@ class HomeController extends GetxController {
   ///获取模具绑定列表
   getMouldTaskList() async {
     MouldBindList mouldBindList = await MouldTaskApi.getMouldTaskList();
-    await CacheUtils.to.saveMouldTask(mouldBindList.data);
+    await CacheUtils.to.saveMouldTask(mouldBindList.data, false);
   }
 
   /// 获取资产盘点列表
   getInventoryList() async {
     InventoryList inventoryList = await InventoryApi.getInventoryList();
-    await CacheUtils.to.saveInventoryTask(inventoryList.data);
+    await CacheUtils.to.saveInventoryTask(inventoryList.data, false);
   }
 
   ///已完成的盘点任务

@@ -33,17 +33,10 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
         title: Text('读取结果'),
         centerTitle: true,
         actions: <Widget>[
-          InkWell(
-            onTap: () => {controller.saveInfo(taskNo)},
-            child: Container(
-              alignment: AlignmentDirectional.center,
-              padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-              child: Text(
-                '保存',
-                style: textLitleBlackTextStyle(),
-              ),
-            ),
-          ),
+          IconButton(
+              onPressed: () => {controller.saveInfo(taskNo)},
+              icon: Icon(Icons.save_alt_sharp),
+              color: Colors.blue),
         ],
       ),
       body: Container(

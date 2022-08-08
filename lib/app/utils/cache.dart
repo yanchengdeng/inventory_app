@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -43,7 +44,8 @@ class CacheUtils extends GetxController {
 因为替换和盘点的labelReplaceTaskId\assetInventoryDetailId  和绑定的assetBindTaskId不一样，相同模具重复下发时的ID是不变的，
 需要借助下发时间做进一步判断是否需要删除缓存
  */
-  Future<void> saveMouldTask(MouldData? data) async {
+
+  Future<void> saveMouldTask(MouldData? data, bool isLocalSave) async {
     var cacheMould = await StorageService.to.getString(STORAGE_TASK_MOULD_DATA);
     if (cacheMould.isEmpty) {
       List<CacheMouldBindData> list = [
@@ -58,10 +60,19 @@ class CacheUtils extends GetxController {
       var itemList =
           list.where((element) => element['userId'] == getUserCode()).first;
 
-      if (itemList != null) {
-        list.remove(itemList);
+//本地保存直接替换  、网络存储 有比对 无则保存
+      if (isLocalSave) {
+        if (itemList != null) {
+          list.remove(itemList);
+        }
+        list.add(CacheMouldBindData(userId: getUserCode(), data: data));
+      } else {
+        if (itemList == null) {
+          list.add(CacheMouldBindData(userId: getUserCode(), data: data));
+        } else {
+          //比对替换
+        }
       }
-      list.add(CacheMouldBindData(userId: getUserCode(), data: data));
 
       // CacheMouldBindData? existData =
       //     list?.where((element) => element.userId == getUserCode())?.first;
@@ -159,7 +170,7 @@ class CacheUtils extends GetxController {
 因为替换和盘点的labelReplaceTaskId\assetInventoryDetailId  和绑定的assetBindTaskId不一样，相同模具重复下发时的ID是不变的，
 需要借助下发时间做进一步判断是否需要删除缓存
  */
-  Future<void> saveInventoryTask(InventroyData? data) async {
+  Future<void> saveInventoryTask(InventroyData? data, bool isLocalSave) async {
     var cacheMould = await StorageService.to.getString(STORAGE_INVENTORY_DATA);
     _inventoryList.value = data;
     if (cacheMould.isEmpty) {
@@ -176,9 +187,23 @@ class CacheUtils extends GetxController {
 
       var itemList =
           list.where((element) => element['userId'] == getUserCode()).first;
-      if (itemList == null) {
+
+      if (isLocalSave) {
+        if (itemList != null) {
+          list.remove(itemList);
+        }
         list.add(CacheInventoryData(userId: getUserCode(), data: data));
+      } else {
+        if (itemList == null) {
+          list.add(CacheInventoryData(userId: getUserCode(), data: data));
+        } else {
+          // 本地和网络 对比替换
+        }
       }
+
+      ///首次保存
+      await StorageService.to
+          .setString(STORAGE_INVENTORY_DATA, json.encode(list));
     }
   }
 
@@ -223,8 +248,9 @@ class CacheUtils extends GetxController {
       String key, List<int> bindStatus, List<String> toolingType) async {
     await getInventoryTask();
 
-    return await inventoryList.unfinishedList
+    var dataInfo = await inventoryList.unfinishedList
         .where((element) => element.taskNo == taskNo)
         .first;
+    return dataInfo.list ?? List.empty();
   }
 }

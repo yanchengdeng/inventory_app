@@ -113,7 +113,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '盘点年份：${CacheUtils.to.inventoryList?.finishedList?[index]?.distributionTime?.substring(0, 4)}',
+                                                            '盘点年份：${CacheUtils.to.inventoryList?.unfinishedList?[index]?.distributionTime?.substring(0, 4)}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),

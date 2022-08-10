@@ -88,7 +88,6 @@ class MainActivity : FlutterActivity() {
             when (call.method) {
 
                 START_READ_RFID_DATA -> {
-                    barcodeReader?.release()
                     if (rfidMgr.readerAvailable()) {
                         mIsReadBtnClicked = true
                         read()
@@ -137,7 +136,7 @@ class MainActivity : FlutterActivity() {
                                 LocationUtil.getLocation(this@MainActivity,object : ICallback<LocationBean>{
                                     override fun onResult(location: LocationBean?) {
                                         location?.apply {
-                                            ignoreIllegalState{ result.success("${location.latitude},${location.longitude}")}
+                                           result.success("${location.latitude},${location.longitude}")
                                         }
                                     }
                                     override fun onError(error: Throwable?) {
@@ -171,14 +170,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    fun ignoreIllegalState(fn: () -> Unit) {
-        try {
-            fn()
-        }catch (e:IllegalStateException){
-            // ignore
-            e.message?.let { Log.e("scan-code", it) }
-        }
-    }
+
 
     private fun initBarCodeReader(){
         AidcManager.create(this) { aidcManager ->
@@ -188,18 +180,22 @@ class MainActivity : FlutterActivity() {
             } catch (e: InvalidScannerNameException) {
                 toast("扫描：Invalid Scanner Name Exception:${e.message}")
             } catch (e: Exception) {
-
                 toast("扫描${e.message}")
             }
         }
     }
 
     private fun doListenBarcodeReader() {
-        // 可能扫描和 读取会有冲突 ，扫描时候 停止读取
-        mReader?.stopRead()
-        mReader?.removeOnTagReadListener(dataListener)
+
         if (barcodeReader != null) {
-            barcodeReader?.claim()
+
+            try {
+                barcodeReader!!.claim()
+            } catch (e: ScannerUnavailableException) {
+                e.printStackTrace()
+                toast("Scanner unavailable");
+            }
+
             // register bar code event listener
             barcodeReader?.addBarcodeListener(object : BarcodeReader.BarcodeListener {
                 override fun onBarcodeEvent(event: BarcodeReadEvent) {
@@ -210,7 +206,7 @@ class MainActivity : FlutterActivity() {
 //                    mTagDataList.forEach { tag.append(it).append(",") }
 //                    tag.replace(tag.length-1,tag.length,"")
 //                    scanReadResult?.success(event.barcodeData)
-                    ignoreIllegalState { scanReadResult?.success(event.barcodeData) }
+                    scanReadResult?.success(event.barcodeData)
                     toast("扫描成功")
 
                 }
@@ -321,7 +317,7 @@ class MainActivity : FlutterActivity() {
             var tag = StringBuilder()
             mTagDataList.forEach { tag.append(it).append(",") }
             tag.replace(tag.length-1,tag.length,"")
-            ignoreIllegalState{ stopReadLabelResult?.success(tag.toString())}
+             stopReadLabelResult?.success(tag.toString())
 
         }
     }
@@ -340,7 +336,7 @@ class MainActivity : FlutterActivity() {
                 var tag = StringBuilder()
                 mTagDataList.forEach { tag.append(it).append(",") }
                 tag.replace(tag.length-1,tag.length,"")
-                ignoreIllegalState{readLabelResult?.success(tag.toString())}
+               readLabelResult?.success(tag.toString())
 
 
 
@@ -350,24 +346,24 @@ class MainActivity : FlutterActivity() {
     override fun onResume() {
         super.onResume()
         Log.w("yancheng","onResume------")
-        if (barcodeReader != null) {
-            try {
-                barcodeReader!!.claim()
-            } catch (e: ScannerUnavailableException) {
-                e.printStackTrace()
-                toast("Scanner unavailable");
-            }
-        }
+//        if (barcodeReader != null) {
+//            try {
+//                barcodeReader!!.claim()
+//            } catch (e: ScannerUnavailableException) {
+//                e.printStackTrace()
+//                toast("Scanner unavailable");
+//            }
+//        }
     }
 
     override fun onPause() {
         super.onPause()
         Log.w("yancheng","onPause------")
-        if (barcodeReader != null) {
-            // release the scanner claim so we don't get any scanner
-            // notifications while paused.
-            barcodeReader!!.release()
-        }
+//        if (barcodeReader != null) {
+//            // release the scanner claim so we don't get any scanner
+//            // notifications while paused.
+//            barcodeReader!!.release()
+//        }
     }
 
 

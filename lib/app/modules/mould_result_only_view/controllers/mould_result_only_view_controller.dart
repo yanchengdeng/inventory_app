@@ -20,15 +20,15 @@ class MouldResultOnlyViewController extends GetxController {
     _mouldBindTaskFinished.value = assertBindTaskInfo;
   }
 
-  ///获取网络图片展示地址
-  String getNetImageUrl(String uriUuid) {
-    return SERVER_FILE_UPLOAD +
-        "/file/frontend/" +
-        Uri.encodeComponent(uriUuid) +
-        '?token=' +
-        StorageService.to.getString(STORAGE_FILE_TOKEN) +
-        "&mediaType=image";
-  }
+  // ///获取网络图片展示地址
+  // String getNetImageUrl(String uriUuid) {
+  //   return SERVER_FILE_UPLOAD +
+  //       "/file/frontend/" +
+  //       Uri.encodeComponent(uriUuid) +
+  //       '?token=' +
+  //       StorageService.to.getString(STORAGE_FILE_TOKEN) +
+  //       "&mediaType=image";
+  // }
 
   @override
   void onInit() {

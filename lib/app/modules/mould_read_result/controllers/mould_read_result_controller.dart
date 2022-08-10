@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/file.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/apis/apis.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/values/constants.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
@@ -172,6 +174,7 @@ class MouldReadResultController extends GetxController {
   }
 
   void getTaskInfo(taskNo, assetNo) async {
+    await FileApi.getFileToken();
     _assertBindTaskInfo.value =
         await CacheUtils.to.getUnLoadedAssetBindTaskInfo(taskNo, assetNo);
     if (_assertBindTaskInfo.value?.bindLabels != null) {
@@ -202,20 +205,33 @@ class MouldReadResultController extends GetxController {
   }
 
   ///保存
-  saveInfo(String taskNo) async {
+  saveInfo(String taskType, String taskNo) async {
     MouldData mouldData = CacheUtils.to.mouldBindTaskList;
 
-    MouldList? mouldList = mouldData.unfinishedTaskList
-        ?.where((element) => element.taskNo == taskNo)
-        .first
-        .mouldList
-        ?.where((element) =>
-            element.assetBindTaskId ==
-            _assertBindTaskInfo.value?.assetBindTaskId)
-        .first;
+    MouldList? mouldList = null;
+
+    if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+      mouldList = mouldData.unfinishedTaskList
+          ?.where((element) => element.taskNo == taskNo)
+          .first
+          .mouldList
+          ?.where((element) =>
+              element.assetBindTaskId ==
+              _assertBindTaskInfo.value?.assetBindTaskId)
+          .first;
+    } else {
+      mouldList = mouldData.unfinishedTaskList
+          ?.where((element) => element.taskNo == taskNo)
+          .first
+          .mouldList
+          ?.where((element) =>
+              element.labelReplaceTaskId ==
+              _assertBindTaskInfo.value?.labelReplaceTaskId)
+          .first;
+    }
 
     if (mouldList != null) {
-      if (mouldList.labelType == MOULD_TASK_TYPE_PAY &&
+      if (taskType == MOULD_TASK_TYPE_PAY.toString() &&
           mouldList.toolingType == TOOL_TYPE_M) {
         if (mouldList.bindLabels?[0].cavityPhoto != null &&
             mouldList.bindLabels?[0].nameplatePhoto != null &&
@@ -224,7 +240,7 @@ class MouldReadResultController extends GetxController {
         } else {
           mouldList.bindStatus = BIND_STATUS_REBIND;
         }
-      } else if (mouldList.labelType == MOULD_TASK_TYPE_PAY ||
+      } else if (taskType == MOULD_TASK_TYPE_PAY.toString() &&
           mouldList.toolingType == TOOL_TYPE_G) {
         if (mouldList.bindLabels?[0].nameplatePhoto != null &&
             mouldList.bindLabels?[0].overallPhoto != null) {
@@ -232,7 +248,7 @@ class MouldReadResultController extends GetxController {
         } else {
           mouldList.bindStatus = BIND_STATUS_REBIND;
         }
-      } else if (mouldList.labelType == MOULD_TASK_TYPE_LABEL) {
+      } else if (taskType == MOULD_TASK_TYPE_LABEL.toString()) {
         if (mouldList.bindLabels?[0].nameplatePhoto != null) {
           mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
         } else {
@@ -243,7 +259,11 @@ class MouldReadResultController extends GetxController {
       }
     }
 
-    mouldList = _assertBindTaskInfo.value;
+    mouldList?.lat = _assertBindTaskInfo.value?.lat;
+    mouldList?.lng = _assertBindTaskInfo.value?.lng;
+    mouldList?.bindLabels?[0].labelNo = readDataContent.value;
+
+    // mouldList = _assertBindTaskInfo.value;
 
     CacheUtils.to.saveMouldTask(mouldData, true);
     toastInfo(msg: "保存成功");

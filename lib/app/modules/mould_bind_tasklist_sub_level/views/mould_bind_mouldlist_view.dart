@@ -5,6 +5,7 @@ import 'package:inventory_app/app/routes/app_pages.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 
 import '../../../style/text_style.dart';
+import '../../../utils/loading.dart';
 import '../../../utils/logger.dart';
 import '../../../values/constants.dart';
 import '../controllers/mould_bind_mouldlist_controller.dart';
@@ -28,7 +29,11 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
           centerTitle: true,
           actions: [
             IconButton(
-                onPressed: () => {controller.doUploadData(taskType)},
+                onPressed: () async => {
+                      await controller.doUploadData(taskType),
+                      controller.mouldBindTaskListSearch,
+                      Loading.show("已上传完成")
+                    },
                 icon: Icon(Icons.upload),
                 color: Colors.blue)
           ],

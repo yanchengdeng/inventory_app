@@ -8,7 +8,7 @@ class AppColors {
   static const Color primaryText = Color.fromARGB(255, 45, 45, 47);
 
   /// 主控件-背景 蓝色
-  static const Color primaryElement = Color.fromARGB(255, 41, 103, 255);
+  static const Color primaryElement = Color.fromARGB(255, 0, 59, 220);
 
   /// 主控件-文本 白色
   static const Color primaryElementText = Color.fromARGB(255, 255, 255, 255);
@@ -19,7 +19,7 @@ class AppColors {
   static const Color secondaryElement = Color.fromARGB(255, 246, 246, 246);
 
   /// 第二种控件-文本 浅蓝色
-  static const Color secondaryElementText = Color.fromARGB(255, 41, 103, 255);
+  static const Color secondaryElementText = Color.fromARGB(255, 41, 162, 255);
 
   // *****************************************
 

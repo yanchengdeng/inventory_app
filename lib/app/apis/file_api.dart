@@ -53,12 +53,15 @@ class FileApi<T> {
   }
 
   ///获取文件服务token
-  static void uploadFile<T>(String filePath, int photoType) async {
+  static Future<String> uploadFile<T>(String filePath) async {
+    if (filePath.isEmpty) {
+      return '';
+    }
+
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'file_backend_upload';
     Options options = Options();
     options.headers = fileTokenMaps;
-    EasyLoading.show(status: "上传中...");
 
     ///防止文件token失效导致 中途操作中断，每次上传重新获取
     FileTokenResponseEntity fileTokenResponseEntity = await getFileToken();
@@ -76,9 +79,7 @@ class FileApi<T> {
         '${SERVER_FILE_UPLOAD}/silkfile/frontend/upload',
         options: options,
         data: formData);
-
     Log.d("返回的图片URL/uuid=$response");
-
-    EasyLoading.dismiss();
+    return response.toString();
   }
 }

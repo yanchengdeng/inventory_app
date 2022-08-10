@@ -63,14 +63,14 @@ class MouldTaskApi<T> {
     Options options = Options();
     options.headers = fileTokenMaps;
 
-    var data = {
-      'assetBindTaskId': assetBindTaskId,
-      'bodyParams': bodyParams,
-    };
+    // var data = {
+    //   'assetBindTaskId': assetBindTaskId,
+    //   'bodyParams': bodyParams,
+    // };
 
     var response = await HttpUtil().post(
         '/mould/assetBindUpload/${assetBindTaskId}',
-        data: data,
+        data: bodyParams,
         options: options);
     toastInfo(msg: response['message']);
   }
@@ -87,14 +87,14 @@ class MouldTaskApi<T> {
     // 	"orderType": "",
     // 	"pageNum": 0,
     // 	"pageSize": 5
-    var data = {
-      'labelReplaceTaskId': labelReplaceTaskId,
-      'bodyParams': bodyParams,
-    };
+    // var data = {
+    //   'labelReplaceTaskId': labelReplaceTaskId,
+    //   'bodyParams': bodyParams,
+    // };
 
     var response = await HttpUtil().post(
         '/mould/labelReplaceBindUpload/${labelReplaceTaskId}',
-        data: data,
+        data: bodyParams,
         options: options);
     toastInfo(msg: response['message']);
   }

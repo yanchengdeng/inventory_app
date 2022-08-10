@@ -219,7 +219,6 @@ class HttpUtil {
     headers['content-type'] = 'application/json; charset=utf-8';
     headers['contentType'] = 'application/json; charset=utf-8';
 
-    ///todo 后期切换为token
     if (UserStore.to.userLoginResponseEntity != null) {
       headers['x-user-code'] =
           UserStore.to.userLoginResponseEntity?.data.userCode;

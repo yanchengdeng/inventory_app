@@ -60,11 +60,15 @@ const SPLIT_URL = 'x-mid-token=';
 ///分页数量 默认  10
 const PAGE_SIZE = 10;
 
-
 ///拍照类型
 ///整体
 const PHOTO_TYPE_ALL = 10;
+
 ///铭牌
 const PHOTO_TYPE_MP = 20;
+
 ///型腔
 const PHOTO_TYPE_XQ = 30;
+
+///app 名称  本地图片在改包下 以此判定图片展示方式
+const APP_PACKAGE = 'com.luojie.erapp';

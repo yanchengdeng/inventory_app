@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/logger.dart';
@@ -32,7 +33,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
         centerTitle: true,
         actions: <Widget>[
           IconButton(
-              onPressed: () => {controller.saveInfo(taskNo)},
+              onPressed: () => {controller.saveInfo(taskType, taskNo)},
               icon: Icon(Icons.save_alt_sharp),
               color: Colors.blue),
         ],
@@ -285,8 +286,15 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: textImageWidget(
                           '铭牌照片', controller.imageUrlMp.value?.filePath)),
                   onTap: () => {
-                    Get.toNamed(Routes.TAKE_PHOTO,
-                        arguments: {'photoType': PHOTO_TYPE_MP})
+                    controller.getGpsLagLng(),
+                    toastInfo(msg: '获取定位中...'),
+                    if ((controller.readDataContent.value).isEmpty)
+                      {toastInfo(msg: "请先读取标签")}
+                    else
+                      {
+                        Get.toNamed(Routes.TAKE_PHOTO,
+                            arguments: {'photoType': PHOTO_TYPE_MP})
+                      }
                   },
                 )),
             Expanded(flex: 1, child: Text('')),
@@ -365,34 +373,41 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
         children: [
           Text(title, style: textNormalListTextStyle()),
           Container(
-            height: SizeConstant.IAMGE_SIZE_HEIGHT,
-            width: SizeConstant.IAMGE_SIZE_HEIGHT,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.fromBorderSide(
-                    BorderSide(color: Colors.black12, width: 2)),
-                borderRadius:
-                    BorderRadiusDirectional.all(Radius.circular(5.0))),
-            child: imageUrl == null
-                ? Icon(Icons.add_a_photo, size: 80, color: Colors.black12)
-                : Image.file(File(imageUrl),
-                    height: SizeConstant.IAMGE_SIZE_HEIGHT,
-                    width: SizeConstant.IAMGE_SIZE_HEIGHT,
-                    fit: BoxFit.fill),
-            //   child: CachedNetworkImage(
-            //       imageUrl: imageUrl,
-            //       fit: BoxFit.fitWidth,
-            //       placeholder: (build, url) => Container(
-            //           alignment: AlignmentDirectional.center,
-            //           child: Icon(Icons.add_a_photo,
-            //               size: 80, color: Colors.black12)),
-            //       errorWidget: (build, url, error) => Container(
-            //           alignment: AlignmentDirectional.center,
-            //           child: Icon(Icons.add_a_photo,
-            //               size: 80, color: Colors.black12)),
-            //       height: SizeConstant.IAMGE_SIZE_HEIGHT,
-            //       width: SizeConstant.IAMGE_SIZE_HEIGHT),
-          )
+              height: SizeConstant.IAMGE_SIZE_HEIGHT,
+              width: SizeConstant.IAMGE_SIZE_HEIGHT,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.fromBorderSide(
+                      BorderSide(color: Colors.black12, width: 2)),
+                  borderRadius:
+                      BorderRadiusDirectional.all(Radius.circular(5.0))),
+              child: imageUrl == null
+                  ? Icon(Icons.add_a_photo, size: 80, color: Colors.black12)
+                  : imageUrl.contains(APP_PACKAGE)
+                      ? Image.file(File(imageUrl),
+                          height: SizeConstant.IAMGE_SIZE_HEIGHT,
+                          width: SizeConstant.IAMGE_SIZE_HEIGHT,
+                          fit: BoxFit.fill)
+                      : CachedNetworkImage(
+                          imageUrl: CommonUtils.getNetImageUrl(imageUrl),
+                          fit: BoxFit.fill,
+                          height: SizeConstant.IAMGE_SIZE_HEIGHT,
+                          width: SizeConstant.IAMGE_SIZE_HEIGHT,
+                        )
+              //   child: CachedNetworkImage(
+              //       imageUrl: imageUrl,
+              //       fit: BoxFit.fitWidth,
+              //       placeholder: (build, url) => Container(
+              //           alignment: AlignmentDirectional.center,
+              //           child: Icon(Icons.add_a_photo,
+              //               size: 80, color: Colors.black12)),
+              //       errorWidget: (build, url, error) => Container(
+              //           alignment: AlignmentDirectional.center,
+              //           child: Icon(Icons.add_a_photo,
+              //               size: 80, color: Colors.black12)),
+              //       height: SizeConstant.IAMGE_SIZE_HEIGHT,
+              //       width: SizeConstant.IAMGE_SIZE_HEIGHT),
+              )
         ],
       ),
     );

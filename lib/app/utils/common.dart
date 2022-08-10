@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/utils/logger.dart';
 import '../routes/app_pages.dart';
+import '../services/storage.dart';
 import '../store/user.dart';
 import '../style/color.dart';
+import '../values/storage.dart';
+import '../values/values.dart';
 
 /**
  * 常见工具类
@@ -50,5 +54,17 @@ class CommonUtils {
             elevation: MaterialStateProperty.all(0)),
       ),
     );
+  }
+
+  ///获取网络图片展示地址
+  static String getNetImageUrl(String uriUuid) {
+    String imageUrl = SERVER_FILE_UPLOAD +
+        "/file/frontend/" +
+        Uri.encodeComponent(uriUuid) +
+        '?token=' +
+        StorageService.to.getString(STORAGE_FILE_TOKEN) +
+        "&mediaType=image";
+    Log.d("加载图片：${imageUrl}");
+    return imageUrl;
   }
 }

@@ -65,14 +65,14 @@ android {
 //
 //    }
 //
-    signingConfigs {
-        debug {
-            keyAlias 'rfid'
-            keyPassword 'rfid123456'
-            storeFile file('rfid.jks')
-            storePassword 'rfid123456'
-        }
-    }
+    // signingConfigs {
+    //     debug {
+    //         keyAlias 'rfid'
+    //         keyPassword 'rfid123456'
+    //         storeFile file('rfid.jks')
+    //         storePassword 'rfid123456'
+    //     }
+    // }
 
     lintOptions {
         checkReleaseBuilds false

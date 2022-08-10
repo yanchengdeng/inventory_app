@@ -7,6 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/store/store.dart';
 import 'package:inventory_app/app/utils/utils.dart';
+import 'package:inventory_app/app/values/constants.dart';
 
 import '../entity/cache_data.dart';
 import '../entity/inventory_list.dart';
@@ -135,6 +136,29 @@ class CacheUtils extends GetxController {
 
     var mouldList = unfinisedtask?.mouldList;
     return mouldList;
+  }
+
+  ///更新模具任务
+  updateMouldListState(String taskType, MouldList? mouldListItem) async {
+    await getMouldTask();
+    var unfinisedtask = await mouldBindTaskList.unfinishedTaskList
+        .where((element) => element.taskNo == mouldListItem?.taskNo)
+        ?.first;
+
+    var mouldList = unfinisedtask?.mouldList;
+    if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+      mouldList
+          ?.where((element) =>
+              element.assetBindTaskId == mouldListItem?.assetBindTaskId)
+          .first = mouldListItem;
+    } else if (taskType == MOULD_TASK_TYPE_LABEL.toString()) {
+      mouldList
+          ?.where((element) =>
+              element.labelReplaceTaskId == mouldListItem?.labelReplaceTaskId)
+          .first = mouldListItem;
+    }
+
+    Log.d('' + unfinisedtask);
   }
 
   /**

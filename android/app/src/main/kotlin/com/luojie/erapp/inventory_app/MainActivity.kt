@@ -68,6 +68,20 @@ class MainActivity : FlutterActivity() {
     ///只执行一次
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+///==================================模拟测试
+        var eventChannel = FlutterEventChannel.getInstance()
+        flutterEngine?.plugins?.add(eventChannel)
+
+        GlobalScope.launch(Dispatchers.Main) {
+            repeat(10) {
+                eventChannel.sendEventData("你好世界${it}")
+                delay(2000)
+            }
+        }.start()
+
+        ///==================================模拟测试
+
+
         Log.w("yancheng", "onCreate------")
         initBarCodeReader()
         rfidMgr = RfidManager.getInstance(this)

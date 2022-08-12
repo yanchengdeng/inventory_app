@@ -64,6 +64,8 @@ class MouldReadResultController extends GetxController {
 
   get assertBindTaskInfo => _assertBindTaskInfo.value;
 
+  final _eventChannel = const EventChannel('event_channel_name');
+
   ///开始读 、停止读
   startReadRfidData() async {
     if (isReadData.value) {
@@ -112,6 +114,10 @@ class MouldReadResultController extends GetxController {
   void onInit() {
     super.onInit();
     Log.d("MouldReadResultController--------onInit--");
+
+    _eventChannel.receiveBroadcastStream().listen((event) {
+      print("yancheng-接受数据：--$event");
+    });
   }
 
   @override

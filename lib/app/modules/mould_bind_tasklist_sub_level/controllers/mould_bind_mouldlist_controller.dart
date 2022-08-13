@@ -1,15 +1,8 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:inventory_app/app/apis/apis.dart';
-import 'package:inventory_app/app/entity/cache_data.dart';
 import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
 import 'package:inventory_app/app/utils/loading.dart';
-import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/values/constants.dart';
-
-import '../../../entity/FileTokenResponseEntity.dart';
-import '../../../entity/FileTokenResponseEntity.dart';
 import '../../../entity/MouldBindTask.dart';
 import '../../../utils/cache.dart';
 import '../../../widgets/toast.dart';
@@ -24,29 +17,42 @@ class MouldBindMouldListController extends GetxController {
 
   final homeController = Get.find<HomeController>();
 
+  var taskNo = "";
+
   ///todo  查询条件  查找查询数据
   /**
    * isFromFinish  来自已完成列表
    */
-  findByParams(bool isFromFinish, String taskNo, String key, List<int> bindStatus,
-      List<String> toolingType) async {
+  findByParams(bool isFromFinish, String taskNo, String key,
+      List<int> bindStatus, List<String> toolingType) async {
+    this.taskNo = taskNo;
 
-    if(isFromFinish){
-      _mouldBindTaskListSearch.value = homeController.mouldTaskFinishedList?.where((element) => element.taskNo == taskNo)
-          ?.first
-          ?.
-      mouldList
-          ?.toList() ?? List.empty();
-    }else {
-      _mouldBindTaskListSearch.value = homeController.mouldBindList.value.
-      data
-          ?.where((element) => element.taskNo == taskNo)
-          ?.first
-          ?.
-      mouldList
-          ?.toList() ?? List.empty();
+    if (isFromFinish) {
+      _mouldBindTaskListSearch.value = homeController.mouldTaskFinishedList
+              ?.where((element) => element.taskNo == taskNo)
+              ?.first
+              ?.mouldList
+              ?.toList() ??
+          List.empty();
+    } else {
+      _mouldBindTaskListSearch.value = homeController.mouldBindList.value.data
+              ?.where((element) => element.taskNo == taskNo)
+              ?.first
+              ?.mouldList
+              ?.toList() ??
+          List.empty();
     }
+  }
 
+  @override
+  void refresh() {
+    super.refresh();
+    _mouldBindTaskListSearch.value = homeController.mouldBindList.value.data
+            ?.where((element) => element.taskNo == this.taskNo)
+            .first
+            .mouldList
+            ?.toList() ??
+        List.empty();
   }
 
   @override

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/store/store.dart';
+import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/values/constants.dart';
 
 import '../entity/InventoryData.dart';
@@ -61,15 +62,14 @@ class CacheUtils extends GetxController {
   Future<MouldBindTask> getMouldTask() async {
     var cacheMould = await StorageService.to.getString(getMouldSaveKey());
     if (cacheMould.isNotEmpty) {
-      mouldBindTask.value = MouldBindTask.fromJson(cacheMould);
+      Log.d("转移1${jsonDecode(cacheMould) is Map}");
+
+      mouldBindTask.value = MouldBindTask.fromJson(jsonDecode(cacheMould));
       return mouldBindTask.value;
     } else {
       return MouldBindTask();
     }
   }
-
-
-
 
   /**根据传入的类型及关键字查询模具列表
    * @param taskNo  任务编号

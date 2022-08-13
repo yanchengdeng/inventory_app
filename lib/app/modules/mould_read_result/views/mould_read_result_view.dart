@@ -254,8 +254,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                       }
                                     },
                                     child: Container(
-                                      margin:
-                                          EdgeInsetsDirectional.only(start: 15),
+                                      margin: EdgeInsetsDirectional.only(
+                                          start: 15, top: 5, bottom: 5),
                                       child: Image(
                                         image: AssetImage(
                                             'images/icon_round_close.png'),

@@ -24,6 +24,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
   Widget build(BuildContext context) {
     homeController
         .getMouldTaskFinishedList(homeController.state.mouldTaskFinishedPage);
+    controller.getMouldTaskItems();
     return Scaffold(
         appBar: AppBar(
           title: Text('模具绑定'),
@@ -40,8 +41,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                       children: [
                         Expanded(
                           child: selectTabView(
-                              text:
-                                  '未完成(${CacheUtils.to.mouldBindTask.value.data?.length})',
+                              text: '未完成(${controller.mouldTaskItems.length})',
                               selected: homeController.state.selectedMouldTab,
                               isLeft: true,
                               callback: () {
@@ -90,25 +90,22 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                    '${CacheUtils.to.mouldBindTask.value.data?[index].taskType == MOULD_TASK_TYPE_PAY ? '支付任务编号' : '标签替换任务编号'}：'
-                                                        '${CacheUtils.to.mouldBindTask.value.data?[index]?.taskNo}',
+                                                    '${controller.mouldTaskItems[index].taskType == MOULD_TASK_TYPE_PAY ? '支付任务编号' : '标签替换任务编号'}：'
+                                                    '${controller.mouldTaskItems[index].taskNo}',
                                                     style:
                                                         textBoldListTextStyle()),
                                                 Visibility(
-                                                  visible: CacheUtils
-                                                          .to
-                                                          .mouldBindTask.value.data?
-                                                          [
-                                                              index]
+                                                  visible: controller
+                                                          .mouldTaskItems[index]
                                                           ?.taskType ==
                                                       MOULD_TASK_TYPE_PAY,
                                                   child: Text(
-                                                      'PO编号：${CacheUtils.to.mouldBindTask.value.data?[index]?.poNo}',
+                                                      'PO编号：${controller.mouldTaskItems[index].poNo}',
                                                       style:
                                                           textNormalListTextStyle()),
                                                 ),
                                                 Text(
-                                                    '工装模具总数：${CacheUtils.to.mouldBindTask.value.data?[index]?.totalMoulds}',
+                                                    '工装模具总数：${controller.mouldTaskItems[index].totalMoulds}',
                                                     style:
                                                         textNormalListTextStyle()),
                                                 Padding(
@@ -129,19 +126,25 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '待绑定',
-                                                                count: CacheUtils
-                                                                    .to
-                                                                    .mouldBindTask.value?.data?[index].mouldList?.
-                                                                where((element) => element.bindStatus == BIND_STATUS_WAITING_BIND)?.toList().length ?? 0,
+                                                                count: controller
+                                                                        .mouldTaskItems[
+                                                                            index]
+                                                                        .mouldList
+                                                                        ?.where((element) =>
+                                                                            element.bindStatus ==
+                                                                            BIND_STATUS_WAITING_BIND)
+                                                                        .toList()
+                                                                        .length ??
+                                                                    0,
                                                                 callback: () {
                                                                   Get.toNamed(
                                                                       Routes
                                                                           .MOULD_BIND_MOULDLIST,
                                                                       arguments: {
                                                                         'taskType':
-                                                                            '${CacheUtils.to.mouldBindTask.value.data?[index]?.taskType}',
+                                                                            '${controller.mouldTaskItems[index].taskType}',
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.mouldBindTask.value.data?[index]?.taskNo}',
+                                                                            '${controller.mouldTaskItems[index].taskNo}',
                                                                         'bindStatus':
                                                                             BIND_STATUS_WAITING_BIND,
                                                                         "isFinish":
@@ -161,19 +164,25 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '重新绑定',
-                                                                count: CacheUtils
-                                                                    .to
-                                                                    .mouldBindTask.value?.data?[index].mouldList?.
-                                                                where((element) => element.bindStatus == BIND_STATUS_REBIND)?.toList().length ?? 0,
+                                                                count: controller
+                                                                        .mouldTaskItems[
+                                                                            index]
+                                                                        .mouldList
+                                                                        ?.where((element) =>
+                                                                            element.bindStatus ==
+                                                                            BIND_STATUS_REBIND)
+                                                                        .toList()
+                                                                        .length ??
+                                                                    0,
                                                                 callback: () {
                                                                   Get.toNamed(
                                                                       Routes
                                                                           .MOULD_BIND_MOULDLIST,
                                                                       arguments: {
                                                                         'taskType':
-                                                                            '${CacheUtils.to.mouldBindTask.value.data?[index]?.taskType}',
+                                                                            '${controller.mouldTaskItems[index].taskType}',
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.mouldBindTask.value.data?[index]?.taskNo}',
+                                                                            '${controller.mouldTaskItems[index].taskNo}',
                                                                         'bindStatus':
                                                                             BIND_STATUS_REBIND,
                                                                         "isFinish":
@@ -193,19 +202,25 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '待上传',
-                                                                count: CacheUtils
-                                                                    .to
-                                                                    .mouldBindTask.value?.data?[index].mouldList?.
-                                                                where((element) => element.bindStatus == BIND_STATUS_WAITING_UPLOAD)?.toList().length ?? 0,
+                                                                count: controller
+                                                                        .mouldTaskItems[
+                                                                            index]
+                                                                        .mouldList
+                                                                        ?.where((element) =>
+                                                                            element.bindStatus ==
+                                                                            BIND_STATUS_WAITING_UPLOAD)
+                                                                        .toList()
+                                                                        .length ??
+                                                                    0,
                                                                 callback: () {
                                                                   Get.toNamed(
                                                                       Routes
                                                                           .MOULD_BIND_MOULDLIST,
                                                                       arguments: {
                                                                         'taskType':
-                                                                            '${CacheUtils.to.mouldBindTask.value.data?[index].taskType}',
+                                                                            '${controller.mouldTaskItems[index].taskType}',
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.mouldBindTask.value.data?[index].taskNo}',
+                                                                            '${controller.mouldTaskItems[index].taskNo}',
                                                                         'bindStatus':
                                                                             BIND_STATUS_WAITING_UPLOAD,
                                                                         "isFinish":
@@ -225,19 +240,25 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '已上传',
-                                                                count: CacheUtils
-                                                                    .to
-                                                                    .mouldBindTask.value?.data?[index].mouldList?.
-                                                                where((element) => element.bindStatus == BIND_STATUS_UPLOADED)?.toList().length ?? 0,
+                                                                count: controller
+                                                                        .mouldTaskItems[
+                                                                            index]
+                                                                        .mouldList
+                                                                        ?.where((element) =>
+                                                                            element.bindStatus ==
+                                                                            BIND_STATUS_UPLOADED)
+                                                                        .toList()
+                                                                        .length ??
+                                                                    0,
                                                                 callback: () {
                                                                   Get.toNamed(
                                                                       Routes
                                                                           .MOULD_BIND_MOULDLIST,
                                                                       arguments: {
                                                                         'taskType':
-                                                                            '${CacheUtils.to.mouldBindTask.value.data?[index]?.taskType}',
+                                                                            '${controller.mouldTaskItems[index].taskType}',
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.mouldBindTask.value.data?[index]?.taskNo}',
+                                                                            '${controller.mouldTaskItems[index].taskNo}',
                                                                         'bindStatus':
                                                                             BIND_STATUS_UPLOADED,
                                                                         "isFinish":
@@ -255,16 +276,17 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                 Routes.MOULD_BIND_MOULDLIST,
                                                 arguments: {
                                                   'taskType':
-                                                      '${CacheUtils.to.mouldBindTask.value.data?[index]?.taskType}',
+                                                      '${controller.mouldTaskItems[index].taskType}',
                                                   'taskNo':
-                                                      '${CacheUtils.to.mouldBindTask.value.data?[index]?.taskNo}',
+                                                      '${controller.mouldTaskItems[index].taskNo}',
                                                   'bindStatus': BIND_STATUS_ALL,
                                                   "isFinish": false
                                                 })
                                           },
                                         ),
                                       )),
-                                  itemCount: CacheUtils.to.mouldBindTask.value.data?.length,
+                                  itemCount: homeController
+                                      .mouldBindList.value.data?.length,
                                 )
 
                               ///已完成 直接数据传递过去

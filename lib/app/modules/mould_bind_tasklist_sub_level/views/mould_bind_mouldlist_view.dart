@@ -22,6 +22,7 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
         "传入二级模具菜单参数：taskNo = $taskNo,taskType = ${taskType},bindStatus = ${bindStatus},isFinish = ${isFinish}");
 
     controller.findByParams(isFinish, taskNo, '', [bindStatus], []);
+    Get.put(MouldBindMouldListController());
 
     return Scaffold(
         appBar: AppBar(
@@ -87,8 +88,11 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          getTextByStatus(controller.mouldBindTaskListSearch[index]
-                                              ?.bindStatus ?? BIND_STATUS_WAITING_BIND),
+                                          getTextByStatus(controller
+                                                  .mouldBindTaskListSearch[
+                                                      index]
+                                                  ?.bindStatus ??
+                                              BIND_STATUS_WAITING_BIND),
                                           Text(
                                               '${controller.mouldBindTaskListSearch?[index]?.assetNo}',
                                               style: textNormalListTextStyle())

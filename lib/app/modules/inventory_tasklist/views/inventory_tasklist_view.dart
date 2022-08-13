@@ -101,7 +101,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                    '${CacheUtils.to.inventoryData.value.data?[index]?.taskNo}',
+                                                    '${CacheUtils.to.inventoryData.value.data?[index].taskNo}',
                                                     style:
                                                         textBoldNumberStyle()),
                                                 Row(
@@ -282,8 +282,9 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                           },
                                         ),
                                       )),
-                                  itemCount:
-                                      CacheUtils.to.inventoryData.value.data?.length?? 0)
+                                  itemCount: CacheUtils.to.inventoryData.value
+                                          .data?.length ??
+                                      0)
                               : ListView.builder(
                                   itemBuilder: ((context, index) => Card(
                                       elevation: CARD_ELEVATION,
@@ -395,8 +396,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
       InventoryData inventoryList = await homeController
           .getInventoryFinishedList(homeController.state.inventoryFinishedPage);
 
-      if (
-          inventoryList.data != null &&
+      if (inventoryList.data != null &&
           inventoryList.data?.length == PAGE_SIZE) {
         _refreshBindTaskController.loadComplete();
       } else {

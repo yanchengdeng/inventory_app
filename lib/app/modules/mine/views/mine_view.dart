@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/app/store/store.dart';
 import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/values/fontsize.dart';
-import '../../../routes/app_pages.dart';
 import '../../../style/style.dart';
 import '../../home/controllers/home_controller.dart';
 import '../controllers/mine_controller.dart';
@@ -14,9 +12,8 @@ import '../controllers/mine_controller.dart';
  * 用户信息页面
  */
 class MineView extends GetView<MineController> {
-  final mineController = Get.put(MineController());
 
-  final homeController = Get.find<HomeController>();
+  var homeController = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +30,6 @@ class MineView extends GetView<MineController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Container(
-                //     width: 80,
-                //     height: 80,
-                //     decoration: BoxDecoration(
-                //         borderRadius: BorderRadius.circular(100),
-                //         image: DecorationImage(
-                //           fit: BoxFit.fill,
-                //           image: NetworkImage(
-                //               'https://ts1.cn.mm.bing.net/th/id/R-C.cd2db2f6c8e5cc456ef0e62f2c871360?rik=dVxM55sEqkPztA&riu=http%3a%2f%2fsc.68design.net%2fphotofiles%2f201409%2fcxoVx6if1c.jpg&ehk=ya3IyE4KeapPkWVgYRGQVkifGvXz4cscxqjrpqTxAfw%3d&risl=&pid=ImgRaw&r=0'),
-                //         ))),
                 Container(
                   padding: EdgeInsets.only(left: 16),
                   child: Column(
@@ -50,7 +37,7 @@ class MineView extends GetView<MineController> {
                     children: [
                       Obx(
                         () => Text(
-                            homeController.state.userProfile?.data.name ?? "",
+                            homeController.state.userData.value.name ??"" ,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: AppFontSize.FONT_SIZE_SUB_TITLE
@@ -60,8 +47,7 @@ class MineView extends GetView<MineController> {
                         padding: const EdgeInsets.only(top: 10),
                         child: Obx(
                           () => Text(
-                            homeController.state.userProfile?.data.userCode ??
-                                "",
+                            homeController.state.userData.value.userCode ??"",
                             textAlign: TextAlign.left,
                             textDirection: TextDirection.ltr,
                             style: TextStyle(

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:inventory_app/app/apis/apis.dart';
-import '../../../entity/mould_bind.dart';
+import '../../../entity/MouldBindTask.dart';
 import '../../../services/storage.dart';
 import '../../../values/server.dart';
 import '../../../values/storage.dart';

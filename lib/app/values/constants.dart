@@ -5,16 +5,19 @@
  * desc : 常量信息
  */
 
+///接口返回正常code 码  1
+const int API_RESPONSE_OK = 1;
+
 ///模具任务状态  -1  默认全部状态
 const int BIND_STATUS_ALL = -1;
-const int BIND_STATUS_WAING = 0;
+const int BIND_STATUS_WAITING_BIND = 0;
 const int BIND_STATUS_REBIND = 1;
 const int BIND_STATUS_UPLOADED = 2;
 const int BIND_STATUS_WAITING_UPLOAD = 3;
 
 const MOULD_BIND_STATUS = {
   BIND_STATUS_ALL: '全部',
-  BIND_STATUS_WAING: '待绑定',
+  BIND_STATUS_WAITING_BIND: '待绑定',
   BIND_STATUS_REBIND: '重新绑定',
   BIND_STATUS_UPLOADED: '已上传',
   BIND_STATUS_WAITING_UPLOAD: '待上传'
@@ -72,3 +75,8 @@ const PHOTO_TYPE_XQ = 30;
 
 ///app 名称  本地图片在改包下 以此判定图片展示方式
 const APP_PACKAGE = 'com.luojie.erapp';
+
+///模具保存key
+const SAVE_KEY_FOR_MOULD = "mould_key";
+///盘点保存key
+const SAVE_KEY_FOR_INVENTORY = "inventory_key";

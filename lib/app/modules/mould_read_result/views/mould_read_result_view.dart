@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
 import 'dart:io';
-import '../../../entity/mould_bind.dart';
+import '../../../entity/MouldBindTask.dart';
 import '../../../routes/app_pages.dart';
 import '../../../style/text_style.dart';
 import '../../../utils/common.dart';
@@ -64,14 +64,14 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('固定资产编号：${controller.assertBindTaskInfo?.assetNo}',
+                      Text('固定资产编号：${controller.assertBindTaskInfo.value.assetNo}',
                           style: textBoldNumberWhiteStyle()),
-                      Text('SGM车型：${controller.assertBindTaskInfo?.vehicle}',
+                      Text('SGM车型：${controller.assertBindTaskInfo.value.vehicle}',
                           style: textLitleWhiteTextStyle()),
-                      Text('零件号：${controller.assertBindTaskInfo?.moldNo}',
+                      Text('零件号：${controller.assertBindTaskInfo.value.moldNo}',
                           style: textLitleWhiteTextStyle()),
                       Text(
-                          '工装&模具名称：${controller.assertBindTaskInfo?.toolingName}',
+                          '工装&模具名称：${controller.assertBindTaskInfo.value.toolingName}',
                           style: textLitleWhiteTextStyle()),
                       Obx(() => (Visibility(
                           visible: controller.isShowAllInfo.value,
@@ -79,19 +79,19 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '工装&模具尺寸(mm)：${controller.assertBindTaskInfo?.toolingSize}',
+                                  '工装&模具尺寸(mm)：${controller.assertBindTaskInfo.value.toolingSize}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '工装&模具重量(kg)：${controller.assertBindTaskInfo?.toolingWeight}',
+                                  '工装&模具重量(kg)：${controller.assertBindTaskInfo.value.toolingWeight}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '使用单位：${controller.assertBindTaskInfo?.usedUnits}',
+                                  '使用单位：${controller.assertBindTaskInfo.value.usedUnits}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '制造单位：${controller.assertBindTaskInfo?.manufactureUnits}',
+                                  '制造单位：${controller.assertBindTaskInfo.value.manufactureUnits}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '工装模具寿命：${controller.assertBindTaskInfo?.assetLifespan}',
+                                  '工装模具寿命：${controller.assertBindTaskInfo.value.assetLifespan}',
                                   style: textLitleWhiteTextStyle()),
                             ],
                           )))),
@@ -148,7 +148,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                     Text('标签编号', style: textBoldNumberBlueStyle()),
                     InkWell(
                       child: Text(
-                        getGpsInfo(),
+                        "${controller.assertBindTaskInfo.value.lat},${controller.assertBindTaskInfo.value.lng}",
                         style: textSmallTextStyle(),
                       ),
                       onTap: () => {controller.getGpsLagLng()},
@@ -284,7 +284,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                   child: Expanded(
                       flex: 1,
                       child: textImageWidget(
-                          '铭牌照片', controller.imageUrlMp.value?.filePath)),
+                          '铭牌照片', controller.imageUrlMp.value?.fullPath)),
                   onTap: () => {
                     controller.getGpsLagLng(),
                     toastInfo(msg: '获取定位中...'),
@@ -312,7 +312,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '整体照片', controller.imageUrlAll.value?.filePath)),
+                              '整体照片', controller.imageUrlAll.value?.fullPath)),
                       onTap: () => {
                         controller.getGpsLagLng(),
                         toastInfo(msg: '获取定位中...'),
@@ -330,7 +330,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '铭牌照片', controller.imageUrlMp.value?.filePath)),
+                              '铭牌照片', controller.imageUrlMp.value?.fullPath)),
                       onTap: () => {
                         Get.toNamed(Routes.TAKE_PHOTO,
                             arguments: {'photoType': PHOTO_TYPE_MP})
@@ -347,7 +347,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '型腔照片', controller.imageUrlXq.value?.filePath)),
+                              '型腔照片', controller.imageUrlXq.value?.fullPath)),
                       onTap: () => {
                         Get.toNamed(Routes.TAKE_PHOTO,
                             arguments: {'photoType': PHOTO_TYPE_XQ})
@@ -413,11 +413,5 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
     );
   }
 
-  String getGpsInfo() {
-    if (controller.assertBindTaskInfo?.lat != null) {
-      return '(${controller.assertBindTaskInfo?.lat}-${controller.assertBindTaskInfo?.lng})';
-    } else {
-      return controller.gpsData.value ?? '0.00-0.00';
-    }
-  }
+
 }

@@ -8,7 +8,7 @@ import 'package:get/get.dart' as get_multipart_file;
 import 'package:get/get_core/src/get_main.dart';
 import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/utils/logger.dart';
-import '../entity/base_data.dart';
+import '../entity/FileTokenResponseEntity.dart';
 import '../entity/cache_data.dart';
 import '../modules/mould_read_result/controllers/mould_read_result_controller.dart';
 import '../utils/http.dart';

@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:dio/dio.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
 
-import '../entity/mould_bind.dart';
+import '../entity/MouldBindTask.dart';
 import '../utils/utils.dart';
 import '../values/constants.dart';
 

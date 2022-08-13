@@ -8,8 +8,6 @@ import '../modules/inventory_tasklist/bindings/inventory_tasklist_binding.dart';
 import '../modules/inventory_tasklist/views/inventory_tasklist_view.dart';
 import '../modules/inventory_tasklist_sub_level/bindings/inventory_tasklist_sub_level_binding.dart';
 import '../modules/inventory_tasklist_sub_level/views/inventory_tasklist_sub_level_view.dart';
-import '../modules/login/bindings/login_binding.dart';
-import '../modules/login/views/login_view.dart';
 import '../modules/main/bindings/main_binding.dart';
 import '../modules/main/views/main_view.dart';
 import '../modules/mine/bindings/mine_binding.dart';
@@ -46,11 +44,7 @@ class AppPages {
       page: () => HomeView(),
       binding: HomeBinding(),
     ),
-    GetPage(
-      name: _Paths.LOGIN,
-      page: () => LoginView(),
-      binding: LoginBinding(),
-    ),
+
     GetPage(
       name: _Paths.SPLASH,
       page: () => SplashView(),

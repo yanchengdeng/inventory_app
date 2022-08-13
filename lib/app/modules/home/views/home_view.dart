@@ -27,18 +27,14 @@ class HomeView extends GetView<HomeController> {
                 child: homeItem(
                     title: '模具绑定',
                     iconFileName: 'images/setting.png',
-                    unFinished: CacheUtils.to.mouldBindTaskList == null
-                        ? 0
-                        : CacheUtils.to.mouldBindTaskList)))),
+                    unFinished: controller.mouldBindList.value.data?.length ?? 0)))),
         Expanded(
             child: Obx(() => InkWell(
                 onTap: () => {Get.toNamed(Routes.INVENTORY_TASKLIST)},
                 child: homeItem(
                     title: '资产盘点',
                     iconFileName: 'images/invertory.png',
-                    unFinished: CacheUtils.to.inventoryList == null
-                        ? 0
-                        : CacheUtils.to.inventoryList))))
+                    unFinished: controller.inventoryList.value.data?.length ?? 0))))
       ]),
     );
   }

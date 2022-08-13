@@ -42,14 +42,14 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.luojie.erapp"
+        applicationId "com.sgm.rfidapp"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 
         ndk {
-            abiFilters 'armeabi-v7a', "arm64-v8a" //不支持armeabi
+            abiFilters  "arm64-v8a" //,'armeabi-v7a'//不支持armeabi
         }
     }
 

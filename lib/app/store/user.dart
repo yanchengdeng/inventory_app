@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-
+import 'package:inventory_app/app/entity/UserInfo.dart';
+import 'package:inventory_app/app/values/constants.dart';
 import '../apis/apis.dart';
-import '../entity/user.dart';
 import '../services/services.dart';
 import '../values/values.dart';
 
@@ -13,7 +13,7 @@ class UserStore extends GetxController {
   // 令牌 token
   String token = '';
   // 用户 profile
-  UserLoginResponseEntity? userLoginResponseEntity = null;
+  UserData? userData = null;
   bool get hasToken => token.isNotEmpty;
 
   @override
@@ -22,8 +22,8 @@ class UserStore extends GetxController {
     token = StorageService.to.getString(STORAGE_USER_TOKEN_KEY);
     var profileOffline = StorageService.to.getString(STORAGE_USER_PROFILE_KEY);
     if (profileOffline.isNotEmpty) {
-      userLoginResponseEntity =
-          (UserLoginResponseEntity.fromJson(jsonDecode(profileOffline)));
+      userData =
+          UserData.fromJson(jsonDecode(profileOffline));
     }
   }
 
@@ -34,24 +34,24 @@ class UserStore extends GetxController {
   }
 
   // 获取 profile
-  Future<UserLoginResponseEntity?> getProfile() async {
-    userLoginResponseEntity = await UserAPI.profile();
-    if (userLoginResponseEntity != null) {
-      saveProfile(userLoginResponseEntity!);
-    }
-    return userLoginResponseEntity;
+  Future<UserInfo?> getProfile() async {
+   var userInfo = await UserAPI.profile();
+   if(userInfo.state == API_RESPONSE_OK) {
+     saveProfile(userInfo.data);
+   }
+    return userInfo;
   }
 
   // 保存 profile
-  Future<void> saveProfile(UserLoginResponseEntity profile) async {
-    StorageService.to.setString(STORAGE_USER_PROFILE_KEY, jsonEncode(profile));
+  Future<void> saveProfile(UserData? userData) async {
+    StorageService.to.setString(STORAGE_USER_PROFILE_KEY, jsonEncode(userData));
   }
 
   // 注销
   Future<void> onLogout() async {
     await StorageService.to.remove(STORAGE_USER_TOKEN_KEY);
     await StorageService.to.setString(STORAGE_USER_PROFILE_KEY, '');
-    userLoginResponseEntity = null;
+    userData = null;
     token = '';
   }
 }

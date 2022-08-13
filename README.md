@@ -117,5 +117,12 @@ e.printStackTrace();
 
 ```
 
+##2022-08-11待确定问题：
+1.拍照验证  一定要在拍照前读到 已有的rfid标签？？才可拍照
+![img_1.png](img_1.png)
+
+2.user/login 接口 还未完善去掉user-code 会报错，还未实现token 替换user-code
+上 ST 的时候再把user-code 去掉
+
 
 

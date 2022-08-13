@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/app/entity/mould_bind.dart';
+import 'package:inventory_app/app/entity/MouldBindTask.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 
@@ -11,7 +11,7 @@ import '../../../values/constants.dart';
 import '../controllers/mould_bind_mouldlist_controller.dart';
 
 ///  模具绑定任务信息列表
-class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
+class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
   @override
   Widget build(BuildContext context) {
     var taskNo = Get.arguments['taskNo'];
@@ -32,7 +32,6 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                 onPressed: () async => {
                       await controller.doUploadData(taskType),
                       controller.mouldBindTaskListSearch,
-                      Loading.show("已上传完成")
                     },
                 icon: Icon(Icons.upload),
                 color: Colors.blue)
@@ -88,9 +87,8 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          getTextByStatus(controller
-                                              .mouldBindTaskListSearch?[index]
-                                              ?.bindStatus),
+                                          getTextByStatus(controller.mouldBindTaskListSearch[index]
+                                              ?.bindStatus ?? BIND_STATUS_WAITING_BIND),
                                           Text(
                                               '${controller.mouldBindTaskListSearch?[index]?.assetNo}',
                                               style: textNormalListTextStyle())
@@ -194,14 +192,14 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
   /// 根据绑定状态输入不同颜色
   getTextByStatus(int status) {
     var style = textLitleBlackTextStyle();
-    if (status == BIND_STATUS_WAING) {
+    if (status == BIND_STATUS_WAITING_BIND) {
       style = textLitleOrangeTextStyle();
     } else if (status == BIND_STATUS_REBIND) {
       style = textLitleRedTextStyle();
     } else if (status == BIND_STATUS_UPLOADED) {
-      style = textLitleBlackTextStyle();
-    } else if (status == BIND_STATUS_WAITING_UPLOAD) {
       style = textLitleGreenTextStyle();
+    } else if (status == BIND_STATUS_WAITING_UPLOAD) {
+      style = textLitleBrownTextStyle();
     }
 
     return Text('${MOULD_BIND_STATUS[status]}', style: style);

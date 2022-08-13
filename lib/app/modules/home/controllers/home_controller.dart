@@ -4,29 +4,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:inventory_app/app/apis/apis.dart';
-import 'package:inventory_app/app/apis/mould_task_api.dart';
+import 'package:inventory_app/app/entity/UserInfo.dart';
 import 'package:inventory_app/app/modules/home/HomeState.dart';
 import 'package:inventory_app/app/utils/common.dart';
-import 'package:inventory_app/app/utils/logger.dart';
-import '../../../entity/inventory_list.dart';
-import '../../../entity/mould_bind.dart';
+import '../../../entity/InventoryData.dart';
+import '../../../entity/MouldBindTask.dart';
 import '../../../store/user.dart';
 import '../../../utils/cache.dart';
+import '../../../values/constants.dart';
 
 class HomeController extends GetxController {
   ///响应式变量
   final state = HomeState();
 
+  var mouldBindList = MouldBindTask().obs;
+  var inventoryList = InventoryData().obs;
+
   ///获取模具绑定列表
   getMouldTaskList() async {
-    MouldBindTask mouldBindList = await MouldTaskApi.getMouldTaskList();
-    await CacheUtils.to.saveMouldTask(mouldBindList, false);
+     mouldBindList.value = await MouldTaskApi.getMouldTaskList();
+    await CacheUtils.to.saveMouldTask(mouldBindList.value, false);
   }
 
   /// 获取资产盘点列表
   getInventoryList() async {
-    InventoryData inventoryList = await InventoryApi.getInventoryData();
-    await CacheUtils.to.saveInventoryTask(inventoryList, false);
+     inventoryList.value = await InventoryApi.getInventoryData();
+    await CacheUtils.to.saveInventoryTask(inventoryList.value, false);
   }
 
   ///已完成的盘点任务
@@ -70,7 +73,7 @@ class HomeController extends GetxController {
         _mouldTaskFinishedList.value = [];
       }
 
-      _mouldTaskFinishedList
+      mouldTaskFinishedList
           .addAll(mouldBindList.data ?? List.empty());
       _mouldTaskFinishedList.value = mouldTaskFinishedList;
     }
@@ -78,29 +81,27 @@ class HomeController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async{
     super.onInit();
+    EasyLoading.show(status: "获取中...");
+    var userResponseData = await UserStore.to.getProfile();
+    if(userResponseData?.state == API_RESPONSE_OK && userResponseData?.data != null){
+      state.userData.value = userResponseData?.data ?? UserData();
+      getMouldTaskList();
+      getInventoryList();
+    }else{
+      CommonUtils.logOut();
+    }
   }
 
   @override
-  void onReady() async {
+  void onReady()  {
     super.onReady();
-    Log.d("HomeController--onReady()");
-    EasyLoading.show(status: "获取中...");
-    Log.d("HomeController--onInit()");
-    state.userProfile = await UserStore.to.getProfile();
-    getMouldTaskList();
-    getInventoryList();
+
   }
 
   @override
   void onClose() {
-    Log.d("HomeController--onClose()");
   }
 
-  void setMouldData(MouldBindTask? mouldData) {
-    if (mouldData != null) {
-      _mouldTaskFinishedList.value = mouldData.data??List.empty();
-    }
-  }
 }

@@ -6,7 +6,7 @@ import 'package:inventory_app/app/utils/cache.dart';
 import 'package:inventory_app/app/values/constants.dart';
 import 'package:inventory_app/app/values/size.dart';
 
-import '../../../entity/mould_bind.dart';
+import '../../../entity/MouldBindTask.dart';
 import '../../../style/text_style.dart';
 import '../../../utils/logger.dart';
 import '../controllers/mould_result_only_view_controller.dart';

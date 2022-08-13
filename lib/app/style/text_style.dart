@@ -104,6 +104,15 @@ TextStyle textLitleRedTextStyle() {
 }
 
 ///常规字体样式
+TextStyle textLitleBrownTextStyle() {
+  return TextStyle(
+    fontWeight: FontWeight.w400,
+    color: Colors.deepOrange,
+    fontSize: AppFontSize.FONT_SIZE_SUB_TITLE.toDouble(),
+  );
+}
+
+///常规字体样式
 TextStyle textLitleGreenTextStyle() {
   return TextStyle(
     fontWeight: FontWeight.w400,

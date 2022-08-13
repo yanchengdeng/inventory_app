@@ -64,6 +64,7 @@ class InventoryFinishedList {
     int? distributionTimeStamp,
     String? endDate,
     String? finishedTime,
+    String? inventoryYear,
     int? inventoryTotal,
     int? inventoryType,
     String? inventoryTypeText,
@@ -73,6 +74,7 @@ class InventoryFinishedList {
     _distributionTimeStamp = distributionTimeStamp;
     _endDate = endDate;
     _finishedTime = finishedTime;
+    _inventoryYear = inventoryYear;
     _inventoryTotal = inventoryTotal;
     _inventoryType = inventoryType;
     _inventoryTypeText = inventoryTypeText;
@@ -85,6 +87,7 @@ class InventoryFinishedList {
     _distributionTimeStamp = json['distributionTimeStamp'];
     _endDate = json['endDate'];
     _finishedTime = json['finishedTime'];
+    _inventoryYear = json['inventoryYear'];
     _inventoryTotal = json['inventoryTotal'];
     _inventoryType = json['inventoryType'];
     _inventoryTypeText = json['inventoryTypeText'];
@@ -100,6 +103,7 @@ class InventoryFinishedList {
   int? _distributionTimeStamp;
   String? _endDate;
   String? _finishedTime;
+  String? _inventoryYear;
   int? _inventoryTotal;
   int? _inventoryType;
   String? _inventoryTypeText;
@@ -109,6 +113,7 @@ class InventoryFinishedList {
     int? distributionTimeStamp,
     String? endDate,
     String? finishedTime,
+    String? inventoryYear,
     int? inventoryTotal,
     int? inventoryType,
     String? inventoryTypeText,
@@ -118,6 +123,7 @@ class InventoryFinishedList {
     distributionTimeStamp: distributionTimeStamp ?? _distributionTimeStamp,
     endDate: endDate ?? _endDate,
     finishedTime: finishedTime ?? _finishedTime,
+    inventoryYear : inventoryYear ??_inventoryYear,
     inventoryTotal: inventoryTotal ?? _inventoryTotal,
     inventoryType: inventoryType ?? _inventoryType,
     inventoryTypeText: inventoryTypeText ?? _inventoryTypeText,
@@ -128,6 +134,7 @@ class InventoryFinishedList {
   int? get distributionTimeStamp => _distributionTimeStamp;
   String? get endDate => _endDate;
   String? get finishedTime => _finishedTime;
+  String? get inventoryYear => _inventoryYear;
   int? get inventoryTotal => _inventoryTotal;
   int? get inventoryType => _inventoryType;
   String? get inventoryTypeText => _inventoryTypeText;
@@ -140,6 +147,7 @@ class InventoryFinishedList {
     map['distributionTimeStamp'] = _distributionTimeStamp;
     map['endDate'] = _endDate;
     map['finishedTime'] = _finishedTime;
+    map['inventoryYear'] = _inventoryYear;
     map['inventoryTotal'] = _inventoryTotal;
     map['inventoryType'] = _inventoryType;
     map['inventoryTypeText'] = _inventoryTypeText;

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/cache.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../../../entity/inventory_list.dart';
+import '../../../entity/InventoryData.dart';
 import '../../../routes/app_pages.dart';
 import '../../../style/text_style.dart';
 import '../../../values/constants.dart';
@@ -42,7 +42,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                         Expanded(
                           child: selectTabView(
                               text:
-                                  '未完成(${CacheUtils.to.inventoryList?.unfinished})',
+                                  '未完成(${CacheUtils.to.inventoryData.value.data?.length})',
                               selected:
                                   homeController.state.selectedInventoryTab,
                               isLeft: true,
@@ -101,7 +101,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                    '${CacheUtils.to.inventoryList?.unfinishedList?[index]?.taskNo}',
+                                                    '${CacheUtils.to.inventoryData.value.data?[index]?.taskNo}',
                                                     style:
                                                         textBoldNumberStyle()),
                                                 Row(
@@ -113,7 +113,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '盘点年份：${CacheUtils.to.inventoryList?.unfinishedList?[index]?.distributionTime?.substring(0, 4)}',
+                                                            '盘点年份：${CacheUtils.to.inventoryData.value.data?[index].inventoryYear}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -125,7 +125,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topEnd,
                                                         child: Text(
-                                                            '盘点类型：${CacheUtils.to.inventoryList?.unfinishedList?[index]?.inventoryTypeText}',
+                                                            '盘点类型：${CacheUtils.to.inventoryData.value.data?[index].inventoryTypeText}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -141,7 +141,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '截止日期：${CacheUtils.to.inventoryList?.unfinishedList?[index]?.endDate}',
+                                                            '截止日期：${CacheUtils.to.inventoryData.value.data?[index].endDate}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -153,7 +153,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topEnd,
                                                         child: Text(
-                                                            '盘点总数：${CacheUtils.to.inventoryList?.unfinishedList?[index]?.inventoryTotal}',
+                                                            '盘点总数：${CacheUtils.to.inventoryData.value.data?[index].inventoryTotal}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -190,7 +190,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                                           .INVENTORY_TASKLIST_SUB_LEVEL,
                                                                       arguments: {
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.inventoryList?.unfinishedList?[index]?.taskNo}',
+                                                                            '${CacheUtils.to.inventoryData.value.data?[index].taskNo}',
                                                                         'bindStatus':
                                                                             INVENTORY_STATUS_NOT,
                                                                         "isFinish":
@@ -223,7 +223,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                                           .INVENTORY_TASKLIST_SUB_LEVEL,
                                                                       arguments: {
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.inventoryList?.unfinishedList?[index]?.taskNo}',
+                                                                            '${CacheUtils.to.inventoryData.value.data?[index].taskNo}',
                                                                         'bindStatus':
                                                                             INVENTORY_WAITING_UPLOAD,
                                                                         "isFinish":
@@ -256,7 +256,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                                           .INVENTORY_TASKLIST_SUB_LEVEL,
                                                                       arguments: {
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.inventoryList?.unfinishedList?[index]?.taskNo}',
+                                                                            '${CacheUtils.to.inventoryData.value.data?[index].taskNo}',
                                                                         'bindStatus':
                                                                             INVENTORY_HAVE_UPLOADED,
                                                                         "isFinish":
@@ -274,7 +274,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                     .INVENTORY_TASKLIST_SUB_LEVEL,
                                                 arguments: {
                                                   'taskNo':
-                                                      '${CacheUtils.to.inventoryList?.unfinishedList?[index]?.taskNo}',
+                                                      '${CacheUtils.to.inventoryData.value.data?[index].taskNo}',
                                                   'bindStatus':
                                                       INVENTORY_STATUS_ALL,
                                                   "isFinish": false
@@ -283,7 +283,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                         ),
                                       )),
                                   itemCount:
-                                      CacheUtils.to.inventoryList?.unfinished)
+                                      CacheUtils.to.inventoryData.value.data?.length?? 0)
                               : ListView.builder(
                                   itemBuilder: ((context, index) => Card(
                                       elevation: CARD_ELEVATION,
@@ -308,7 +308,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '盘点年份：${homeController.inventoryFinishedList?[index]?.distributionTime?.substring(0, 4)}',
+                                                            '盘点年份：${homeController.inventoryFinishedList?[index]?.inventoryYear}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -395,7 +395,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
       InventoryData inventoryList = await homeController
           .getInventoryFinishedList(homeController.state.inventoryFinishedPage);
 
-      if (inventoryList.data != null &&
+      if (
           inventoryList.data != null &&
           inventoryList.data?.length == PAGE_SIZE) {
         _refreshBindTaskController.loadComplete();

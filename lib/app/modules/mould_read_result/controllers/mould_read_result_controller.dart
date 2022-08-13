@@ -4,16 +4,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/file.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/apis/apis.dart';
+import 'package:inventory_app/app/entity/UploadLabelParams.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/values/constants.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
 
 import '../../../entity/cache_data.dart';
-import '../../../entity/mould_bind.dart';
+import '../../../entity/MouldBindTask.dart';
 import '../../../services/storage.dart';
 import '../../../utils/cache.dart';
 import '../../../values/server.dart';
 import '../../../values/storage.dart';
+import '../../home/controllers/home_controller.dart';
 
 class MouldReadResultController extends GetxController {
   ///是否显示全部
@@ -26,13 +28,13 @@ class MouldReadResultController extends GetxController {
   var readDataContent = Rx<String>('');
 
   ///图片信息  全部照片
-  var imageUrlAll = Rx<UploadImageInfo?>(null);
+  var imageUrlAll = Rx<PhotoInfo?>(null);
 
   ///铭牌照片
-  var imageUrlMp = Rx<UploadImageInfo?>(null);
+  var imageUrlMp = Rx<PhotoInfo?>(null);
 
   ///型腔照片
-  var imageUrlXq = Rx<UploadImageInfo?>(null);
+  var imageUrlXq = Rx<PhotoInfo?>(null);
 
   ///经纬度数据121.23312,1232.32
   var gpsData = Rx<String>('');
@@ -40,7 +42,7 @@ class MouldReadResultController extends GetxController {
   ///读取rfid数据
   var isReadData = Rx<bool>(true);
 
-  ///RFID SDK 通信channel
+  ///RFID SDK 通信channel  只允许上下行 一次交互
   static const String READ_RFID_DATA_CHANNEL = 'mould_read_result/blue_teeth';
 
   ///rfid 开始通过蓝牙获取信息
@@ -58,12 +60,11 @@ class MouldReadResultController extends GetxController {
   static const platform = MethodChannel(READ_RFID_DATA_CHANNEL);
 
   ///模具资产信息
-  var _assertBindTaskInfo = Rx<MouldList?>(null);
+  var assertBindTaskInfo =  MouldList().obs;
 
-  set assertBindTaskInfo(value) => _assertBindTaskInfo.value = value;
+  final homeController = Get.find<HomeController>();
 
-  get assertBindTaskInfo => _assertBindTaskInfo.value;
-
+  /// 可以实现 android 低层持续向flutter 发送消息
   final _eventChannel = const EventChannel('event_channel_name');
 
   ///开始读 、停止读
@@ -93,27 +94,19 @@ class MouldReadResultController extends GetxController {
   getGpsLagLng() async {
     var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
     gpsData.value = latLng;
-    // if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
-    //   _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
-    // }
-    // _assertBindTaskInfo.value?.lat = double.parse(gpsData.value.split(',')[0]);
-    // _assertBindTaskInfo.value?.lng = double.parse(gpsData.value.split(',')[1]);
+
   }
 
   /// 获取扫描label
   getScanLabel() async {
     var scanLabel = await platform.invokeMethod(GET_SCAN_LABEL) as String;
     readDataContent.value = scanLabel;
-    // if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
-    //   _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
-    // }
-    // _assertBindTaskInfo.value?.labelNo = readDataContent.value;
+
   }
 
   @override
   void onInit() {
     super.onInit();
-    Log.d("MouldReadResultController--------onInit--");
 
     _eventChannel.receiveBroadcastStream().listen((event) {
       print("yancheng-接受数据：--$event");
@@ -123,12 +116,10 @@ class MouldReadResultController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    Log.d("MouldReadResultController--------onReady--");
   }
 
   @override
   void onClose() {
-    Log.d("MouldReadResultController--------onClose--");
 
     ///需要做处理 关闭读取rfid
     if (!isReadData.value) {
@@ -137,37 +128,8 @@ class MouldReadResultController extends GetxController {
     }
   }
 
-  void refreshImage(UploadImageInfo uploadImageInfo) {
-    MouldList? mouldList = _assertBindTaskInfo.value;
-    // if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
-    //   _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
-    // }
-    // if (uploadImageInfo.photoType == PHOTO_TYPE_ALL) {
-    //   if (_assertBindTaskInfo.value?.overallPhoto == null) {
-    //     _assertBindTaskInfo.value?.overallPhoto =
-    //         NameplatePhoto();
-    //   }
-    //   imageUrlAll.value = uploadImageInfo;
-    //   mouldList?.overallPhoto?.fullPath =
-    //       uploadImageInfo.filePath;
-    // } else if (uploadImageInfo.photoType == PHOTO_TYPE_MP) {
-    //   if (_assertBindTaskInfo.value?.nameplatePhoto == null) {
-    //     _assertBindTaskInfo.value?.nameplatePhoto =
-    //         NameplatePhoto();
-    //   }
-    //   imageUrlMp.value = uploadImageInfo;
-    //   mouldList?.nameplatePhoto?.fullPath =
-    //       uploadImageInfo.filePath;
-    // } else if (uploadImageInfo.photoType == PHOTO_TYPE_XQ) {
-    //   if (_assertBindTaskInfo.value?.cavityPhoto == null) {
-    //     _assertBindTaskInfo.value?.cavityPhoto =
-    //         NameplatePhoto();
-    //   }
-    //   imageUrlXq.value = uploadImageInfo;
-    //   mouldList?.cavityPhoto?.fullPath =
-    //       uploadImageInfo.filePath;
-    // }
-    _assertBindTaskInfo.value = mouldList;
+  void refreshImage(PhotoInfo uploadImageInfo) {
+
   }
 
   ///清除页面信息  图片  标签
@@ -179,99 +141,16 @@ class MouldReadResultController extends GetxController {
     readDataContent.value = '';
   }
 
+  ///获取编辑信息
   void getTaskInfo(taskNo, assetNo) async {
-    await FileApi.getFileToken();
-    _assertBindTaskInfo.value =
-        await CacheUtils.to.getUnLoadedAssetBindTaskInfo(taskNo, assetNo);
-    if (_assertBindTaskInfo.value?.bindLabels != null) {
-      if (_assertBindTaskInfo.value?.nameplatePhoto != null) {
-        imageUrlMp.value = UploadImageInfo(
-            filePath: _assertBindTaskInfo
-                .value?.nameplatePhoto?.fullPath);
-      }
-
-      if (_assertBindTaskInfo.value?.cavityPhoto != null) {
-        imageUrlXq.value = UploadImageInfo(
-            filePath: _assertBindTaskInfo
-                .value?.cavityPhoto?.fullPath);
-      }
-
-      // if (_assertBindTaskInfo.value?.bindLabels?[0].overallPhoto != null) {
-      //   imageUrlAll.value = UploadImageInfo(
-      //       filePath: _assertBindTaskInfo
-      //           .value?.bindLabels?[0].overallPhoto?.fullPath);
-      // }
-      //
-      // gpsData.value =
-      //     '${_assertBindTaskInfo.value?.lat},${_assertBindTaskInfo.value?.lng}';
-      //
-      // readDataContent.value =
-      //     _assertBindTaskInfo.value?.bindLabels?[0].labelNo ?? '';
-    }
+    assertBindTaskInfo.value =  homeController.mouldBindList.value.data
+        ?.where((element) => element.taskNo == taskNo)?.first?.mouldList
+        ?.where((element) => element.assetNo == assetNo)?.first ?? MouldList();
   }
 
   ///保存
   saveInfo(String taskType, String taskNo) async {
-    // MouldData mouldData = CacheUtils.to.mouldBindTaskList;
-    //
-    // MouldList? mouldList = null;
-    //
-    // if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
-    //   mouldList = mouldData
-    //       ?.where((element) => element.taskNo == taskNo)
-    //       .first
-    //       .mouldList
-    //       ?.where((element) =>
-    //           element.assetBindTaskId ==
-    //           _assertBindTaskInfo.value?.assetBindTaskId)
-    //       .first;
-    // } else {
-    //   mouldList = mouldData
-    //       ?.where((element) => element.taskNo == taskNo)
-    //       .first
-    //       .mouldList
-    //       ?.where((element) =>
-    //           element.labelReplaceTaskId ==
-    //           _assertBindTaskInfo.value?.labelReplaceTaskId)
-    //       .first;
-    // }
-    //
-    // if (mouldList != null) {
-    //   if (taskType == MOULD_TASK_TYPE_PAY.toString() &&
-    //       mouldList.toolingType == TOOL_TYPE_M) {
-    //     if (mouldList.bindLabels?[0].cavityPhoto != null &&
-    //         mouldList.bindLabels?[0].nameplatePhoto != null &&
-    //         mouldList.bindLabels?[0].overallPhoto != null) {
-    //       mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
-    //     } else {
-    //       mouldList.bindStatus = BIND_STATUS_REBIND;
-    //     }
-    //   } else if (taskType == MOULD_TASK_TYPE_PAY.toString() &&
-    //       mouldList.toolingType == TOOL_TYPE_G) {
-    //     if (mouldList.bindLabels?[0].nameplatePhoto != null &&
-    //         mouldList.bindLabels?[0].overallPhoto != null) {
-    //       mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
-    //     } else {
-    //       mouldList.bindStatus = BIND_STATUS_REBIND;
-    //     }
-    //   } else if (taskType == MOULD_TASK_TYPE_LABEL.toString()) {
-    //     if (mouldList.bindLabels?[0].nameplatePhoto != null) {
-    //       mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
-    //     } else {
-    //       mouldList.bindStatus = BIND_STATUS_REBIND;
-    //     }
-    //   } else {
-    //     mouldList.bindStatus = BIND_STATUS_REBIND;
-    //   }
-    // }
-    //
-    // mouldList?.lat = _assertBindTaskInfo.value?.lat;
-    // mouldList?.lng = _assertBindTaskInfo.value?.lng;
-    // mouldList?.bindLabels?[0].labelNo = readDataContent.value;
-    //
-    // // mouldList = _assertBindTaskInfo.value;
 
-    // CacheUtils.to.saveMouldTask(mouldData, true);
     toastInfo(msg: "保存成功");
     Get.back();
   }

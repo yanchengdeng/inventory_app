@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../../../entity/inventory_list.dart';
+import '../../../entity/InventoryData.dart';
 import '../../../utils/cache.dart';
 import '../../home/controllers/home_controller.dart';
 

@@ -219,9 +219,9 @@ class HttpUtil {
     headers['content-type'] = 'application/json; charset=utf-8';
     headers['contentType'] = 'application/json; charset=utf-8';
 
-    if (UserStore.to.userLoginResponseEntity != null) {
+    if (UserStore.to.userData != null) {
       headers['x-user-code'] =
-          UserStore.to.userLoginResponseEntity?.data.userCode;
+          UserStore.to.userData?.userCode;
     } else {
       headers['x-user-code'] = 'spl01';
     }

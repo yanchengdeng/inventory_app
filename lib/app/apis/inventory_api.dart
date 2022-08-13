@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:inventory_app/app/values/constants.dart';
 
-import '../entity/inventory_list.dart';
+import '../entity/InventoryData.dart';
 import '../utils/http.dart';
 
 class InventoryApi<T> {

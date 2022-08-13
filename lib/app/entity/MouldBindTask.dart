@@ -1,3 +1,5 @@
+import 'package:inventory_app/app/entity/UploadLabelParams.dart';
+
 /// data : [{"distributionTime":"2022-07-13 01:03:57","distributionTimeStamp":1657645437000,"finishedTime":"2022-07-13 00:33:28","mouldList":[{"assetBindTaskId":0,"assetLifespan":"4.542","assetNo":"PO124250-1657645404-F","bindLabels":["XP705_0"],"bindStatus":0,"bindStatusText":"待绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 01:03:57","labelReplaceTaskId":46,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"机油压力表","moldNo":"65832191","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"上次出问题再绑","taskNo":"BQT1657645437","toolingName":"机油压力表模具","toolingSize":"2300*3000*5000","toolingType":"F","toolingWeight":"3.1","usedUnits":"","vehicle":"387"}],"poNo":"","taskNo":"BQT1657645437","taskType":1,"totalMoulds":1},{"distributionTime":"2022-07-13 01:03:35","distributionTimeStamp":1657645415000,"finishedTime":"2022-07-13 00:33:24","mouldList":[{"assetBindTaskId":0,"assetLifespan":"3.88","assetNo":"PO149253-1657645407-M","bindLabels":["XP711_0"],"bindStatus":0,"bindStatusText":"待绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 01:03:39","labelReplaceTaskId":37,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"差速器","moldNo":"65824253","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"标签磨损，换了再绑","taskNo":"BQT1657645409","toolingName":"差速器工装","toolingSize":"2300*3000*5000","toolingType":"M","toolingWeight":"3.1","usedUnits":"","vehicle":"399"},{"assetBindTaskId":0,"assetLifespan":"3.5","assetNo":"PO153846-1657645407-F","bindLabels":["XP713_0"],"bindStatus":0,"bindStatusText":"待绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 01:03:43","labelReplaceTaskId":39,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"车轮定位","moldNo":"65837522","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"晒坏了，还得绑","taskNo":"BQT1657645409","toolingName":"车轮定位模具","toolingSize":"2300*3000*5000","toolingType":"F","toolingWeight":"3.1","usedUnits":"","vehicle":"405"},{"assetBindTaskId":0,"assetLifespan":"4.326","assetNo":"PO154703-1657645409-M","bindLabels":["XP716_0"],"bindStatus":0,"bindStatusText":"待绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 01:03:45","labelReplaceTaskId":40,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"手排档变速箱","moldNo":"65841380","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"晒坏了，还得绑","taskNo":"BQT1657645409","toolingName":"手排档变速箱模具","toolingSize":"2300*3000*5000","toolingType":"M","toolingWeight":"3.1","usedUnits":"","vehicle":"387"},{"assetBindTaskId":0,"assetLifespan":"3.705","assetNo":"PO138826-1657645403-G","bindLabels":["XP702_0"],"bindStatus":1,"bindStatusText":"重新绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 01:03:35","labelReplaceTaskId":35,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"四行程引擎","moldNo":"65849048","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"标签磨损，换了再绑","taskNo":"BQT1657645409","toolingName":"四行程引擎模具","toolingSize":"2300*3000*5000","toolingType":"G","toolingWeight":"3.1","usedUnits":"","vehicle":"400"},{"assetBindTaskId":0,"assetLifespan":"3.408","assetNo":"PO142222-1657645406-M","bindLabels":["XP709_0"],"bindStatus":1,"bindStatusText":"重新绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 01:03:37","labelReplaceTaskId":36,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"齿轮润滑油","moldNo":"65838254","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"上次出问题再绑","taskNo":"BQT1657645409","toolingName":"齿轮润滑油模具","toolingSize":"2300*3000*5000","toolingType":"M","toolingWeight":"3.1","usedUnits":"","vehicle":"359"},{"assetBindTaskId":0,"assetLifespan":"4.236","assetNo":"PO154699-1657645404-F","bindLabels":["XP703_0"],"bindStatus":1,"bindStatusText":"重新绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 01:03:51","labelReplaceTaskId":43,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"连杆","moldNo":"65842802","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"上次出问题再绑","taskNo":"BQT1657645409","toolingName":"连杆模具","toolingSize":"2300*3000*5000","toolingType":"F","toolingWeight":"3.1","usedUnits":"","vehicle":"381"},{"assetBindTaskId":0,"assetLifespan":"4.108","assetNo":"PO159238-1657645408-G","bindLabels":["XP715_0"],"bindStatus":1,"bindStatusText":"重新绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 01:03:41","labelReplaceTaskId":38,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"轮胎面","moldNo":"65823902","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"晒坏了，还得绑","taskNo":"BQT1657645409","toolingName":"轮胎面模具","toolingSize":"2300*3000*5000","toolingType":"G","toolingWeight":"3.1","usedUnits":"","vehicle":"370"}],"poNo":"","taskNo":"BQT1657645409","taskType":1,"totalMoulds":7},{"distributionTime":"2022-07-13 00:45:04","distributionTimeStamp":1657644304000,"finishedTime":"2022-07-13 00:33:18","mouldList":[{"assetBindTaskId":0,"assetLifespan":"4.387","assetNo":"PO216988-1657644297-M","bindLabels":["XP674_0"],"bindStatus":0,"bindStatusText":"待绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 00:45:04","labelReplaceTaskId":19,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"液压式离合器系统","moldNo":"65847587","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"晒坏了，还得绑","taskNo":"BQT1657644303","toolingName":"液压式离合器系统工装","toolingSize":"2300*3000*5000","toolingType":"M","toolingWeight":"3.1","usedUnits":"","vehicle":"371"}],"poNo":"","taskNo":"BQT1657644303","taskType":1,"totalMoulds":1},{"distributionTime":"2022-07-13 00:44:58","distributionTimeStamp":1657644298000,"finishedTime":"2022-07-13 00:33:16","mouldList":[{"assetBindTaskId":0,"assetLifespan":"3.524","assetNo":"PO176402-1657644291-F","bindLabels":["XP660_0"],"bindStatus":0,"bindStatusText":"待绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 00:45:00","labelReplaceTaskId":17,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"垫片","moldNo":"65836481","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"上次出问题再绑","taskNo":"BQT1657644298","toolingName":"垫片模具","toolingSize":"2300*3000*5000","toolingType":"F","toolingWeight":"3.1","usedUnits":"","vehicle":"407"},{"assetBindTaskId":0,"assetLifespan":"4.763","assetNo":"PO198197-1657644296-G","bindLabels":["XP670_0"],"bindStatus":1,"bindStatusText":"重新绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 00:44:58","labelReplaceTaskId":16,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"水泵","moldNo":"65836088","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"标签磨损，换了再绑","taskNo":"BQT1657644298","toolingName":"水泵模具","toolingSize":"2300*3000*5000","toolingType":"G","toolingWeight":"3.1","usedUnits":"","vehicle":"383"}],"poNo":"","taskNo":"BQT1657644298","taskType":1,"totalMoulds":2},{"distributionTime":"2022-07-13 00:33:28","distributionTimeStamp":1657643608000,"finishedTime":"2022-07-13 00:33:10","mouldList":[{"assetBindTaskId":0,"assetLifespan":"4.564","assetNo":"PO201829-1657643585-F","bindLabels":["XP646_0"],"bindStatus":1,"bindStatusText":"重新绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 00:33:28","labelReplaceTaskId":12,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"敲击","moldNo":"65841368","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"晒坏了，还得绑","taskNo":"BQT1657643603","toolingName":"敲击模具","toolingSize":"2300*3000*5000","toolingType":"F","toolingWeight":"3.1","usedUnits":"","vehicle":"386"}],"poNo":"","taskNo":"BQT1657643603","taskType":1,"totalMoulds":1},{"distributionTime":"2022-07-13 00:33:14","distributionTimeStamp":1657643594000,"finishedTime":"","mouldList":[{"assetBindTaskId":0,"assetLifespan":"3.172","assetNo":"PO201987-1657643581-G","bindLabels":["XP639_0"],"bindStatus":0,"bindStatusText":"待绑定","cavityPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"distributionTime":"2022-07-13 00:33:14","labelReplaceTaskId":5,"labelType":0,"lat":0.0,"lng":0.0,"manufactureUnits":"","moldName":"刹车来令","moldNo":"65821004","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"","downloadType":"","fileSize":0,"fileSuffix":"","fullPath":""},"poNo":"","remark":"标签磨损，换了再绑","taskNo":"BQT1657643585","toolingName":"刹车来令模具","toolingSize":"2300*3000*5000","toolingType":"G","toolingWeight":"3.1","usedUnits":"","vehicle":"409"}],"poNo":"","taskNo":"BQT1657643585","taskType":1,"totalMoulds":1},{"distributionTime":"","distributionTimeStamp":0,"finishedTime":"","mouldList":[{"assetBindTaskId":9,"assetLifespan":"3.18","assetNo":"PO128122-1657644984-F","bindLabels":[],"bindStatus":1,"bindStatusText":"重新绑定","cavityPhoto":{"docComments":"","documentName":"xxx型腔图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"distributionTime":"","labelReplaceTaskId":0,"labelType":1,"lat":0.0,"lng":0.0,"manufactureUnits":"上海晋拓金属制品公司","moldName":"速率表","moldNo":"65825543","mouldFixedassetId":0,"nameplatePhoto":{"docComments":"","documentName":"xxx铭牌图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"overallPhoto":{"docComments":"","documentName":"xxx整体图","downloadType":"url","fileSize":0,"fileSuffix":"","fullPath":"2022-8-9/testimage_0VcOfkAl2wP.jpg"},"poNo":"PO128122","remark":"xxx备注","taskNo":"TA123456-1657644987","toolingName":"速率表模具","toolingSize":"2300*3000*5000","toolingType":"F","toolingWeight":"3.1","usedUnits":"上海晋拓金属制品公司","vehicle":"386"}],"poNo":"PO128122","taskNo":"TA123456-1657644987","taskType":0,"totalMoulds":1}]
 /// message : ""
 /// state : 1
@@ -6,7 +8,8 @@ class MouldBindTask {
   MouldBindTask({
     List<MouldTaskItem>? data,
     String? message,
-    int? state,}){
+    int? state,
+  }) {
     _data = data;
     _message = message;
     _state = state;
@@ -25,13 +28,16 @@ class MouldBindTask {
   List<MouldTaskItem>? _data;
   String? _message;
   int? _state;
-  MouldBindTask copyWith({  List<MouldTaskItem>? data,
+  MouldBindTask copyWith({
+    List<MouldTaskItem>? data,
     String? message,
     int? state,
-  }) => MouldBindTask(  data: data ?? _data,
-    message: message ?? _message,
-    state: state ?? _state,
-  );
+  }) =>
+      MouldBindTask(
+        data: data ?? _data,
+        message: message ?? _message,
+        state: state ?? _state,
+      );
   List<MouldTaskItem>? get data => _data;
   String? get message => _message;
   int? get state => _state;
@@ -45,7 +51,6 @@ class MouldBindTask {
     map['state'] = _state;
     return map;
   }
-
 }
 
 /// distributionTime : "2022-07-13 01:03:57"
@@ -66,7 +71,8 @@ class MouldTaskItem {
     String? poNo,
     String? taskNo,
     int? taskType,
-    int? totalMoulds,}){
+    int? totalMoulds,
+  }) {
     _distributionTime = distributionTime;
     _distributionTimeStamp = distributionTimeStamp;
     _finishedTime = finishedTime;
@@ -100,7 +106,8 @@ class MouldTaskItem {
   String? _taskNo;
   int? _taskType;
   int? _totalMoulds;
-  MouldTaskItem copyWith({  String? distributionTime,
+  MouldTaskItem copyWith({
+    String? distributionTime,
     int? distributionTimeStamp,
     String? finishedTime,
     List<MouldList>? mouldList,
@@ -108,15 +115,17 @@ class MouldTaskItem {
     String? taskNo,
     int? taskType,
     int? totalMoulds,
-  }) => MouldTaskItem(  distributionTime: distributionTime ?? _distributionTime,
-    distributionTimeStamp: distributionTimeStamp ?? _distributionTimeStamp,
-    finishedTime: finishedTime ?? _finishedTime,
-    mouldList: mouldList ?? _mouldList,
-    poNo: poNo ?? _poNo,
-    taskNo: taskNo ?? _taskNo,
-    taskType: taskType ?? _taskType,
-    totalMoulds: totalMoulds ?? _totalMoulds,
-  );
+  }) =>
+      MouldTaskItem(
+        distributionTime: distributionTime ?? _distributionTime,
+        distributionTimeStamp: distributionTimeStamp ?? _distributionTimeStamp,
+        finishedTime: finishedTime ?? _finishedTime,
+        mouldList: mouldList ?? _mouldList,
+        poNo: poNo ?? _poNo,
+        taskNo: taskNo ?? _taskNo,
+        taskType: taskType ?? _taskType,
+        totalMoulds: totalMoulds ?? _totalMoulds,
+      );
   String? get distributionTime => _distributionTime;
   int? get distributionTimeStamp => _distributionTimeStamp;
   String? get finishedTime => _finishedTime;
@@ -140,7 +149,6 @@ class MouldTaskItem {
     map['totalMoulds'] = _totalMoulds;
     return map;
   }
-
 }
 
 /// assetBindTaskId : 0
@@ -179,7 +187,8 @@ class MouldList {
     List<String>? bindLabels,
     int? bindStatus,
     String? bindStatusText,
-    CavityPhoto? cavityPhoto,
+    String? address,
+    PhotoInfo? cavityPhoto,
     String? distributionTime,
     int? labelReplaceTaskId,
     int? labelType,
@@ -189,8 +198,8 @@ class MouldList {
     String? moldName,
     String? moldNo,
     int? mouldFixedassetId,
-    NameplatePhoto? nameplatePhoto,
-    OverallPhoto? overallPhoto,
+    PhotoInfo? nameplatePhoto,
+    PhotoInfo? overallPhoto,
     String? poNo,
     String? remark,
     String? taskNo,
@@ -199,13 +208,15 @@ class MouldList {
     String? toolingType,
     String? toolingWeight,
     String? usedUnits,
-    String? vehicle,}){
+    String? vehicle,
+  }) {
     _assetBindTaskId = assetBindTaskId;
     _assetLifespan = assetLifespan;
     _assetNo = assetNo;
     _bindLabels = bindLabels;
     _bindStatus = bindStatus;
     _bindStatusText = bindStatusText;
+    _address = address;
     _cavityPhoto = cavityPhoto;
     _distributionTime = distributionTime;
     _labelReplaceTaskId = labelReplaceTaskId;
@@ -233,10 +244,14 @@ class MouldList {
     _assetBindTaskId = json['assetBindTaskId'];
     _assetLifespan = json['assetLifespan'];
     _assetNo = json['assetNo'];
-    _bindLabels = json['bindLabels'] != null ? json['bindLabels'].cast<String>() : [];
+    _bindLabels =
+        json['bindLabels'] != null ? json['bindLabels'].cast<String>() : [];
     _bindStatus = json['bindStatus'];
     _bindStatusText = json['bindStatusText'];
-    _cavityPhoto = json['cavityPhoto'] != null ? CavityPhoto.fromJson(json['cavityPhoto']) : null;
+    _address = json['address'];
+    _cavityPhoto = json['cavityPhoto'] != null
+        ? PhotoInfo.fromJson(json['cavityPhoto'])
+        : null;
     _distributionTime = json['distributionTime'];
     _labelReplaceTaskId = json['labelReplaceTaskId'];
     _labelType = json['labelType'];
@@ -246,8 +261,12 @@ class MouldList {
     _moldName = json['moldName'];
     _moldNo = json['moldNo'];
     _mouldFixedassetId = json['mouldFixedassetId'];
-    _nameplatePhoto = json['nameplatePhoto'] != null ? NameplatePhoto.fromJson(json['nameplatePhoto']) : null;
-    _overallPhoto = json['overallPhoto'] != null ? OverallPhoto.fromJson(json['overallPhoto']) : null;
+    _nameplatePhoto = json['nameplatePhoto'] != null
+        ? PhotoInfo.fromJson(json['nameplatePhoto'])
+        : null;
+    _overallPhoto = json['overallPhoto'] != null
+        ? PhotoInfo.fromJson(json['overallPhoto'])
+        : null;
     _poNo = json['poNo'];
     _remark = json['remark'];
     _taskNo = json['taskNo'];
@@ -264,7 +283,8 @@ class MouldList {
   List<String>? _bindLabels;
   int? _bindStatus;
   String? _bindStatusText;
-  CavityPhoto? _cavityPhoto;
+  String? _address;
+  PhotoInfo? _cavityPhoto;
   String? _distributionTime;
   int? _labelReplaceTaskId;
   int? _labelType;
@@ -274,8 +294,8 @@ class MouldList {
   String? _moldName;
   String? _moldNo;
   int? _mouldFixedassetId;
-  NameplatePhoto? _nameplatePhoto;
-  OverallPhoto? _overallPhoto;
+  PhotoInfo? _nameplatePhoto;
+  PhotoInfo? _overallPhoto;
   String? _poNo;
   String? _remark;
   String? _taskNo;
@@ -285,13 +305,15 @@ class MouldList {
   String? _toolingWeight;
   String? _usedUnits;
   String? _vehicle;
-  MouldList copyWith({  int? assetBindTaskId,
+  MouldList copyWith({
+    int? assetBindTaskId,
     String? assetLifespan,
     String? assetNo,
     List<String>? bindLabels,
     int? bindStatus,
     String? bindStatusText,
-    CavityPhoto? cavityPhoto,
+    String? address,
+    PhotoInfo? cavityPhoto,
     String? distributionTime,
     int? labelReplaceTaskId,
     int? labelType,
@@ -301,8 +323,8 @@ class MouldList {
     String? moldName,
     String? moldNo,
     int? mouldFixedassetId,
-    NameplatePhoto? nameplatePhoto,
-    OverallPhoto? overallPhoto,
+    PhotoInfo? nameplatePhoto,
+    PhotoInfo? overallPhoto,
     String? poNo,
     String? remark,
     String? taskNo,
@@ -312,52 +334,66 @@ class MouldList {
     String? toolingWeight,
     String? usedUnits,
     String? vehicle,
-  }) => MouldList(  assetBindTaskId: assetBindTaskId ?? _assetBindTaskId,
-    assetLifespan: assetLifespan ?? _assetLifespan,
-    assetNo: assetNo ?? _assetNo,
-    bindLabels: bindLabels ?? _bindLabels,
-    bindStatus: bindStatus ?? _bindStatus,
-    bindStatusText: bindStatusText ?? _bindStatusText,
-    cavityPhoto: cavityPhoto ?? _cavityPhoto,
-    distributionTime: distributionTime ?? _distributionTime,
-    labelReplaceTaskId: labelReplaceTaskId ?? _labelReplaceTaskId,
-    labelType: labelType ?? _labelType,
-    lat: lat ?? _lat,
-    lng: lng ?? _lng,
-    manufactureUnits: manufactureUnits ?? _manufactureUnits,
-    moldName: moldName ?? _moldName,
-    moldNo: moldNo ?? _moldNo,
-    mouldFixedassetId: mouldFixedassetId ?? _mouldFixedassetId,
-    nameplatePhoto: nameplatePhoto ?? _nameplatePhoto,
-    overallPhoto: overallPhoto ?? _overallPhoto,
-    poNo: poNo ?? _poNo,
-    remark: remark ?? _remark,
-    taskNo: taskNo ?? _taskNo,
-    toolingName: toolingName ?? _toolingName,
-    toolingSize: toolingSize ?? _toolingSize,
-    toolingType: toolingType ?? _toolingType,
-    toolingWeight: toolingWeight ?? _toolingWeight,
-    usedUnits: usedUnits ?? _usedUnits,
-    vehicle: vehicle ?? _vehicle,
-  );
+  }) =>
+      MouldList(
+        assetBindTaskId: assetBindTaskId ?? _assetBindTaskId,
+        assetLifespan: assetLifespan ?? _assetLifespan,
+        assetNo: assetNo ?? _assetNo,
+        bindLabels: bindLabels ?? _bindLabels,
+        bindStatus: bindStatus ?? _bindStatus,
+        bindStatusText: bindStatusText ?? _bindStatusText,
+        address: address ?? _address,
+        cavityPhoto: cavityPhoto ?? _cavityPhoto,
+        distributionTime: distributionTime ?? _distributionTime,
+        labelReplaceTaskId: labelReplaceTaskId ?? _labelReplaceTaskId,
+        labelType: labelType ?? _labelType,
+        lat: lat ?? _lat,
+        lng: lng ?? _lng,
+        manufactureUnits: manufactureUnits ?? _manufactureUnits,
+        moldName: moldName ?? _moldName,
+        moldNo: moldNo ?? _moldNo,
+        mouldFixedassetId: mouldFixedassetId ?? _mouldFixedassetId,
+        nameplatePhoto: nameplatePhoto ?? _nameplatePhoto,
+        overallPhoto: overallPhoto ?? _overallPhoto,
+        poNo: poNo ?? _poNo,
+        remark: remark ?? _remark,
+        taskNo: taskNo ?? _taskNo,
+        toolingName: toolingName ?? _toolingName,
+        toolingSize: toolingSize ?? _toolingSize,
+        toolingType: toolingType ?? _toolingType,
+        toolingWeight: toolingWeight ?? _toolingWeight,
+        usedUnits: usedUnits ?? _usedUnits,
+        vehicle: vehicle ?? _vehicle,
+      );
   int? get assetBindTaskId => _assetBindTaskId;
   String? get assetLifespan => _assetLifespan;
   String? get assetNo => _assetNo;
   List<String>? get bindLabels => _bindLabels;
+  set bindLabels(List<String>? bindLabels) => _bindLabels = bindLabels;
   int? get bindStatus => _bindStatus;
+  set bindStatus(int? bindStatus) => _bindStatus = bindStatus;
   String? get bindStatusText => _bindStatusText;
-  CavityPhoto? get cavityPhoto => _cavityPhoto;
+  set bindStatusText(String? bindStatusText) =>
+      _bindStatusText = bindStatusText;
+  String? get address => _address;
+  set address(String? address) => _address = address;
+  PhotoInfo? get cavityPhoto => _cavityPhoto;
   String? get distributionTime => _distributionTime;
   int? get labelReplaceTaskId => _labelReplaceTaskId;
   int? get labelType => _labelType;
+  set labelType(int? labelType) => _labelType = labelType;
+  // double? get lat => _lat;
+  // double? get lng => _lng;
   double? get lat => _lat;
+  set lat(double? lat) => _lat = lat;
   double? get lng => _lng;
+  set lng(double? lng) => _lng = lng;
   String? get manufactureUnits => _manufactureUnits;
   String? get moldName => _moldName;
   String? get moldNo => _moldNo;
   int? get mouldFixedassetId => _mouldFixedassetId;
-  NameplatePhoto? get nameplatePhoto => _nameplatePhoto;
-  OverallPhoto? get overallPhoto => _overallPhoto;
+  PhotoInfo? get nameplatePhoto => _nameplatePhoto;
+  PhotoInfo? get overallPhoto => _overallPhoto;
   String? get poNo => _poNo;
   String? get remark => _remark;
   String? get taskNo => _taskNo;
@@ -376,6 +412,7 @@ class MouldList {
     map['bindLabels'] = _bindLabels;
     map['bindStatus'] = _bindStatus;
     map['bindStatusText'] = _bindStatusText;
+    map['address'] = _address;
     if (_cavityPhoto != null) {
       map['cavityPhoto'] = _cavityPhoto?.toJson();
     }
@@ -405,215 +442,4 @@ class MouldList {
     map['vehicle'] = _vehicle;
     return map;
   }
-
-}
-
-/// docComments : ""
-/// documentName : ""
-/// downloadType : ""
-/// fileSize : 0
-/// fileSuffix : ""
-/// fullPath : ""
-
-class OverallPhoto {
-  OverallPhoto({
-    String? docComments,
-    String? documentName,
-    String? downloadType,
-    int? fileSize,
-    String? fileSuffix,
-    String? fullPath,}){
-    _docComments = docComments;
-    _documentName = documentName;
-    _downloadType = downloadType;
-    _fileSize = fileSize;
-    _fileSuffix = fileSuffix;
-    _fullPath = fullPath;
-  }
-
-  OverallPhoto.fromJson(dynamic json) {
-    _docComments = json['docComments'];
-    _documentName = json['documentName'];
-    _downloadType = json['downloadType'];
-    _fileSize = json['fileSize'];
-    _fileSuffix = json['fileSuffix'];
-    _fullPath = json['fullPath'];
-  }
-  String? _docComments;
-  String? _documentName;
-  String? _downloadType;
-  int? _fileSize;
-  String? _fileSuffix;
-  String? _fullPath;
-  OverallPhoto copyWith({  String? docComments,
-    String? documentName,
-    String? downloadType,
-    int? fileSize,
-    String? fileSuffix,
-    String? fullPath,
-  }) => OverallPhoto(  docComments: docComments ?? _docComments,
-    documentName: documentName ?? _documentName,
-    downloadType: downloadType ?? _downloadType,
-    fileSize: fileSize ?? _fileSize,
-    fileSuffix: fileSuffix ?? _fileSuffix,
-    fullPath: fullPath ?? _fullPath,
-  );
-  String? get docComments => _docComments;
-  String? get documentName => _documentName;
-  String? get downloadType => _downloadType;
-  int? get fileSize => _fileSize;
-  String? get fileSuffix => _fileSuffix;
-  String? get fullPath => _fullPath;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['docComments'] = _docComments;
-    map['documentName'] = _documentName;
-    map['downloadType'] = _downloadType;
-    map['fileSize'] = _fileSize;
-    map['fileSuffix'] = _fileSuffix;
-    map['fullPath'] = _fullPath;
-    return map;
-  }
-
-}
-
-/// docComments : ""
-/// documentName : "xxx铭牌图"
-/// downloadType : "url"
-/// fileSize : 0
-/// fileSuffix : ""
-/// fullPath : "2022-8-9/testimage_0VcOfkAl2wP.jpg"
-
-class NameplatePhoto {
-  NameplatePhoto({
-    String? docComments,
-    String? documentName,
-    String? downloadType,
-    int? fileSize,
-    String? fileSuffix,
-    String? fullPath,}){
-    _docComments = docComments;
-    _documentName = documentName;
-    _downloadType = downloadType;
-    _fileSize = fileSize;
-    _fileSuffix = fileSuffix;
-    _fullPath = fullPath;
-  }
-
-  NameplatePhoto.fromJson(dynamic json) {
-    _docComments = json['docComments'];
-    _documentName = json['documentName'];
-    _downloadType = json['downloadType'];
-    _fileSize = json['fileSize'];
-    _fileSuffix = json['fileSuffix'];
-    _fullPath = json['fullPath'];
-  }
-  String? _docComments;
-  String? _documentName;
-  String? _downloadType;
-  int? _fileSize;
-  String? _fileSuffix;
-  String? _fullPath;
-  NameplatePhoto copyWith({  String? docComments,
-    String? documentName,
-    String? downloadType,
-    int? fileSize,
-    String? fileSuffix,
-    String? fullPath,
-  }) => NameplatePhoto(  docComments: docComments ?? _docComments,
-    documentName: documentName ?? _documentName,
-    downloadType: downloadType ?? _downloadType,
-    fileSize: fileSize ?? _fileSize,
-    fileSuffix: fileSuffix ?? _fileSuffix,
-    fullPath: fullPath ?? _fullPath,
-  );
-  String? get docComments => _docComments;
-  String? get documentName => _documentName;
-  String? get downloadType => _downloadType;
-  int? get fileSize => _fileSize;
-  String? get fileSuffix => _fileSuffix;
-  String? get fullPath => _fullPath;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['docComments'] = _docComments;
-    map['documentName'] = _documentName;
-    map['downloadType'] = _downloadType;
-    map['fileSize'] = _fileSize;
-    map['fileSuffix'] = _fileSuffix;
-    map['fullPath'] = _fullPath;
-    return map;
-  }
-
-}
-
-/// docComments : ""
-/// documentName : ""
-/// downloadType : ""
-/// fileSize : 0
-/// fileSuffix : ""
-/// fullPath : ""
-
-class CavityPhoto {
-  CavityPhoto({
-    String? docComments,
-    String? documentName,
-    String? downloadType,
-    int? fileSize,
-    String? fileSuffix,
-    String? fullPath,}){
-    _docComments = docComments;
-    _documentName = documentName;
-    _downloadType = downloadType;
-    _fileSize = fileSize;
-    _fileSuffix = fileSuffix;
-    _fullPath = fullPath;
-  }
-
-  CavityPhoto.fromJson(dynamic json) {
-    _docComments = json['docComments'];
-    _documentName = json['documentName'];
-    _downloadType = json['downloadType'];
-    _fileSize = json['fileSize'];
-    _fileSuffix = json['fileSuffix'];
-    _fullPath = json['fullPath'];
-  }
-  String? _docComments;
-  String? _documentName;
-  String? _downloadType;
-  int? _fileSize;
-  String? _fileSuffix;
-  String? _fullPath;
-  CavityPhoto copyWith({  String? docComments,
-    String? documentName,
-    String? downloadType,
-    int? fileSize,
-    String? fileSuffix,
-    String? fullPath,
-  }) => CavityPhoto(  docComments: docComments ?? _docComments,
-    documentName: documentName ?? _documentName,
-    downloadType: downloadType ?? _downloadType,
-    fileSize: fileSize ?? _fileSize,
-    fileSuffix: fileSuffix ?? _fileSuffix,
-    fullPath: fullPath ?? _fullPath,
-  );
-  String? get docComments => _docComments;
-  String? get documentName => _documentName;
-  String? get downloadType => _downloadType;
-  int? get fileSize => _fileSize;
-  String? get fileSuffix => _fileSuffix;
-  String? get fullPath => _fullPath;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['docComments'] = _docComments;
-    map['documentName'] = _documentName;
-    map['downloadType'] = _downloadType;
-    map['fileSize'] = _fileSize;
-    map['fileSuffix'] = _fileSuffix;
-    map['fullPath'] = _fullPath;
-    return map;
-  }
-
 }

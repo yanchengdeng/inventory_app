@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
 import 'package:inventory_app/app/apis/apis.dart';
@@ -41,6 +42,7 @@ class TakePhotoView extends GetView<TakePhotoController> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           try {
+            EasyLoading.show(status: "拍照中....");
             await controller.initializeControllerFuture;
             final image = await controller.cameraController.takePicture();
             Log.d("拍照成功${image.path}");
@@ -49,6 +51,7 @@ class TakePhotoView extends GetView<TakePhotoController> {
                 Get.find<MouldReadResultController>();
             resultController.refreshImage(
                 PhotoInfo(fullPath: image.path, photoType: photoType));
+            EasyLoading.dismiss();
             Get.back();
           } catch (e) {
             Log.d("拍照异常${e}");

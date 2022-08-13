@@ -32,7 +32,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
         centerTitle: true,
         actions: <Widget>[
           IconButton(
-              onPressed: () => {controller.saveInfo(taskType, taskNo)},
+              onPressed: () => {controller.saveInfo(taskType, taskNo, assetNo)},
               icon: Icon(Icons.save_alt_sharp),
               color: Colors.blue),
         ],
@@ -64,15 +64,16 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          '固定资产编号：${controller.assertBindTaskInfo.value.assetNo}',
+                          '固定资产编号：${controller.assertBindTaskInfo.value.assetNo ?? ""}',
                           style: textBoldNumberWhiteStyle()),
                       Text(
-                          'SGM车型：${controller.assertBindTaskInfo.value.vehicle}',
-                          style: textLitleWhiteTextStyle()),
-                      Text('零件号：${controller.assertBindTaskInfo.value.moldNo}',
+                          'SGM车型：${controller.assertBindTaskInfo.value.vehicle ?? ""}',
                           style: textLitleWhiteTextStyle()),
                       Text(
-                          '工装&模具名称：${controller.assertBindTaskInfo.value.toolingName}',
+                          '零件号：${controller.assertBindTaskInfo.value.moldNo ?? ""}',
+                          style: textLitleWhiteTextStyle()),
+                      Text(
+                          '工装&模具名称：${controller.assertBindTaskInfo.value.toolingName ?? ""}',
                           style: textLitleWhiteTextStyle()),
                       Obx(() => (Visibility(
                           visible: controller.isShowAllInfo.value,
@@ -183,22 +184,27 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                           }
                         else
                           {
-                            CommonUtils.showCommonDialog(
-                                content: '切换后，已读标签数据将被清除?',
-                                callback: () => {
-                                      controller.showAllLabels.clear(),
-                                      if (controller.isRfidReadStatus.value)
-                                        {
-                                          controller.isRfidReadStatus.value =
-                                              false,
-                                        }
-                                      else
-                                        {
-                                          controller.isRfidReadStatus.value =
-                                              true,
-                                        },
-                                      Get.back()
-                                    })
+                            if (controller.isReadData.value == false)
+                              {toastInfo(msg: "请停止读取RFID标签操作")}
+                            else
+                              {
+                                CommonUtils.showCommonDialog(
+                                    content: '切换后，已读标签数据将被清除?',
+                                    callback: () => {
+                                          controller.showAllLabels.clear(),
+                                          if (controller.isRfidReadStatus.value)
+                                            {
+                                              controller.isRfidReadStatus
+                                                  .value = false,
+                                            }
+                                          else
+                                            {
+                                              controller.isRfidReadStatus
+                                                  .value = true,
+                                            },
+                                          Get.back()
+                                        })
+                              }
                           }
                       },
                     )
@@ -342,7 +348,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                               : controller.imageUrlMp.value)),
                   onTap: () => {
                     controller.getGpsLagLng(),
-                    if (controller.readDataContent.value.data?.isEmpty == true)
+                    if (controller.showAllLabels.isEmpty == true)
                       {toastInfo(msg: "请先读取标签")}
                     else
                       {
@@ -374,8 +380,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       onTap: () => {
                         controller.getGpsLagLng(),
                         toastInfo(msg: '获取定位中...'),
-                        if (controller.readDataContent.value.data?.isEmpty ==
-                            true)
+                        if (controller.showAllLabels.isEmpty == true)
                           {toastInfo(msg: "请先读取标签")}
                         else
                           {
@@ -395,8 +400,15 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                       .nameplatePhoto?.fullPath
                                   : controller.imageUrlMp.value)),
                       onTap: () => {
-                        Get.toNamed(Routes.TAKE_PHOTO,
-                            arguments: {'photoType': PHOTO_TYPE_MP})
+                        controller.getGpsLagLng(),
+                        toastInfo(msg: '获取定位中...'),
+                        if (controller.showAllLabels.isEmpty == true)
+                          {toastInfo(msg: "请先读取标签")}
+                        else
+                          {
+                            Get.toNamed(Routes.TAKE_PHOTO,
+                                arguments: {'photoType': PHOTO_TYPE_MP})
+                          }
                       },
                     )),
               ],

@@ -185,10 +185,12 @@ class PhotoInfo {
 
   int? get fileSize => _fileSize;
   int? get photoType => _photoType;
+  set photoType(int? photoType) => _photoType = photoType;
 
   String? get fileSuffix => _fileSuffix;
 
   String? get fullPath => _fullPath;
+  set fullPath(String? fullPath) => _fullPath = fullPath;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

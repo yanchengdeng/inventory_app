@@ -5,6 +5,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/ReadLabelInfo.dart';
 import 'package:inventory_app/app/entity/UploadLabelParams.dart';
+import 'package:inventory_app/app/utils/cache.dart';
+import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/values/constants.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
@@ -175,8 +177,106 @@ class MouldReadResultController extends GetxController {
   }
 
   ///保存
-  saveInfo(String taskType, String taskNo) async {
-    toastInfo(msg: "保存成功");
-    Get.back();
+  /**
+   * 6.2标签是否在其它模具的标签信息中存在，如果重复，对重复模具进行提示，例：标签（XP000001）已被其他工装模具
+   * （固定资产编号）绑定；标签（XP000002）已被其他工装模具（固定资产编号）绑定
+   * 
+   * 6.4.1支付任务类型+模具工装类型为M：标签编号至少有一个、整体照片、铭牌照片、型腔照片、存放位置经纬度
+6.4.2支付任务类型+模具工装类型为F/G：标签编号至少有一个、整体照片、铭牌照片、存放位置经纬度
+6.4.3标签替换任务类型：标签编号至少有一个、铭牌照片、存放位置经纬度
+当模具绑定状态为“待上传”，对内容进行编辑后，以上内容有缺失时，保存后变为“待绑定/重新绑定
+   */
+  saveInfo(String taskType, String taskNo, String assertNo) async {
+    if (showAllLabels.length == 0) {
+      toastInfo(msg: "未做任何修改");
+    } else {
+      CommonUtils.showCommonDialog(
+          content: "本模具已绑定${showAllLabels.length}个标签，是否确认？",
+          callback: () {
+            if (locationInfo.value.lat != null) {
+              assertBindTaskInfo.value.lat = locationInfo.value.lat;
+              assertBindTaskInfo.value.lng = locationInfo.value.lng;
+              assertBindTaskInfo.value.address = locationInfo.value.address;
+            }
+
+            if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+              if (imageUrlAll.isNotEmpty) {
+                assertBindTaskInfo.value.overallPhoto?.fullPath =
+                    imageUrlAll.value;
+              }
+
+              if (imageUrlMp.isNotEmpty) {
+                assertBindTaskInfo.value.nameplatePhoto?.fullPath =
+                    imageUrlMp.value;
+              }
+
+              if (imageUrlXq.isNotEmpty) {
+                assertBindTaskInfo.value.cavityPhoto?.fullPath =
+                    imageUrlXq.value;
+              }
+            } else {
+              if (imageUrlMp.isNotEmpty) {
+                assertBindTaskInfo.value.nameplatePhoto?.fullPath =
+                    imageUrlMp.value;
+              }
+            }
+
+            assertBindTaskInfo.value.bindLabels = showAllLabels.cast<String>();
+            if (readDataContent.value.data?.length != 0) {
+              assertBindTaskInfo.value.labelType = readDataContent.value.type;
+            }
+
+            if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+              if (assertBindTaskInfo.value.toolingType == TOOL_TYPE_M) {
+                if (showAllLabels.length > 0 &&
+                    imageUrlAll.isNotEmpty &&
+                    imageUrlMp.isNotEmpty &&
+                    imageUrlXq.isNotEmpty &&
+                    locationInfo.value.lat != null) {
+                  assertBindTaskInfo.value.bindStatus =
+                      BIND_STATUS_WAITING_UPLOAD;
+                  assertBindTaskInfo.value.bindStatusText =
+                      MOULD_BIND_STATUS[BIND_STATUS_WAITING_UPLOAD];
+                }
+              } else if (assertBindTaskInfo.value.toolingType == TOOL_TYPE_F ||
+                  assertBindTaskInfo.value.toolingType == TOOL_TYPE_G) {
+                if (showAllLabels.length > 0 &&
+                    imageUrlAll.isNotEmpty &&
+                    imageUrlMp.isNotEmpty &&
+                    locationInfo.value.lat != null) {
+                  assertBindTaskInfo.value.bindStatus =
+                      BIND_STATUS_WAITING_BIND;
+                  assertBindTaskInfo.value.bindStatusText =
+                      MOULD_BIND_STATUS[BIND_STATUS_WAITING_UPLOAD];
+                }
+              }
+            } else {
+              if (showAllLabels.length > 0 &&
+                  imageUrlMp.isNotEmpty &&
+                  locationInfo.value.lat != null) {
+                assertBindTaskInfo.value.bindStatus =
+                    BIND_STATUS_WAITING_UPLOAD;
+                assertBindTaskInfo.value.bindStatusText =
+                    MOULD_BIND_STATUS[BIND_STATUS_WAITING_UPLOAD];
+              }
+            }
+
+            var st = homeController.mouldBindList.value.data
+                ?.where((element) => element.taskNo == taskNo)
+                ?.first
+                .mouldList
+                ?.where((element) => element.assetNo == assertNo)
+                .first;
+            st = assertBindTaskInfo.value;
+
+            Log.d("最终结果：${st}");
+            Log.d("最终结果：${homeController.mouldBindList}");
+            CacheUtils.to
+                .saveMouldTask(homeController.mouldBindList.value, true);
+            toastInfo(msg: "保存成功");
+            Get.back();
+            Get.back();
+          });
+    }
   }
 }

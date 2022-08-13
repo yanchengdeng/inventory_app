@@ -19,14 +19,14 @@ class HomeController extends GetxController {
 
   ///获取模具绑定列表
   getMouldTaskList() async {
-    MouldBindList mouldBindList = await MouldTaskApi.getMouldTaskList();
-    await CacheUtils.to.saveMouldTask(mouldBindList.data, false);
+    MouldBindTask mouldBindList = await MouldTaskApi.getMouldTaskList();
+    await CacheUtils.to.saveMouldTask(mouldBindList, false);
   }
 
   /// 获取资产盘点列表
   getInventoryList() async {
-    InventoryList inventoryList = await InventoryApi.getInventoryList();
-    await CacheUtils.to.saveInventoryTask(inventoryList.data, false);
+    InventoryData inventoryList = await InventoryApi.getInventoryData();
+    await CacheUtils.to.saveInventoryTask(inventoryList, false);
   }
 
   ///已完成的盘点任务
@@ -37,41 +37,41 @@ class HomeController extends GetxController {
   get inventoryFinishedList => _inventoryFinishedList.value;
 
   /// 获取已完成的资产盘点列表
-  Future<InventoryList> getInventoryFinishedList(int page) async {
-    InventoryList inventoryList =
+  Future<InventoryData> getInventoryFinishedList(int page) async {
+    InventoryData inventoryList =
         await InventoryApi.getInventoryFinishedList(page);
 
-    if (inventoryList.data?.finishedList?.isNotEmpty ?? false) {
+    if (inventoryList.data?.isNotEmpty ?? false) {
       if (page == 1) {
         _inventoryFinishedList.value = [];
       }
 
       inventoryFinishedList
-          .addAll(inventoryList.data?.finishedList ?? List.empty());
+          .addAll(inventoryList.data ?? List.empty());
       _inventoryFinishedList.value = inventoryFinishedList;
     }
     return inventoryList;
   }
 
   ///已完成的模具任务
-  var _mouldTaskFinishedList = RxList<MouldFinishedTaskList>(List.empty());
+  var _mouldTaskFinishedList = RxList<MouldTaskItem>(List.empty());
 
   set mouldTaskFinishedList(value) => _mouldTaskFinishedList.value = value;
 
   get mouldTaskFinishedList => _mouldTaskFinishedList.value;
 
   /// 获取已完成的模具任务列表
-  Future<MouldBindList> getMouldTaskFinishedList(int page) async {
-    MouldBindList mouldBindList =
+  Future<MouldBindTask> getMouldTaskFinishedList(int page) async {
+    MouldBindTask mouldBindList =
         await MouldTaskApi.getMouldBindListFinishedList(page);
 
-    if (mouldBindList.data?.finishedTaskList?.isNotEmpty ?? false) {
+    if (mouldBindList.data?.isNotEmpty ?? false) {
       if (page == 1) {
         _mouldTaskFinishedList.value = [];
       }
 
       _mouldTaskFinishedList
-          .addAll(mouldBindList.data?.finishedTaskList ?? List.empty());
+          .addAll(mouldBindList.data ?? List.empty());
       _mouldTaskFinishedList.value = mouldTaskFinishedList;
     }
     return mouldBindList;
@@ -98,9 +98,9 @@ class HomeController extends GetxController {
     Log.d("HomeController--onClose()");
   }
 
-  void setMouldData(MouldData? mouldData) {
-    if (mouldData != null && mouldData.unfinishedTaskList != null) {
-      _mouldTaskFinishedList.value = mouldData.unfinishedTaskList!;
+  void setMouldData(MouldBindTask? mouldData) {
+    if (mouldData != null) {
+      _mouldTaskFinishedList.value = mouldData.data??List.empty();
     }
   }
 }

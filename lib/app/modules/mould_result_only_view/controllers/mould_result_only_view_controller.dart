@@ -9,13 +9,13 @@ class MouldResultOnlyViewController extends GetxController {
   var isShowAllInfo = false.obs;
 
   ///已完成模具任务
-  var _mouldBindTaskFinished = Rx<MouldList?>(null);
+  var _mouldBindTaskFinished = Rx<MouldList>(MouldList());
 
   set mouldBindTaskFinished(value) => _mouldBindTaskFinished.value = value;
 
   get mouldBindTaskFinished => _mouldBindTaskFinished.value;
 
-  void setMouldBindData(MouldList? assertBindTaskInfo) async {
+  void setMouldBindData(MouldList assertBindTaskInfo) async {
     await FileApi.getFileToken();
     _mouldBindTaskFinished.value = assertBindTaskInfo;
   }

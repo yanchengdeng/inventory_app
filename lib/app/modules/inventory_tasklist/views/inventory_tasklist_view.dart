@@ -392,12 +392,12 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
   Future<void> _onLoadMore() async {
     if (!homeController.state.selectedInventoryTab) {
       homeController.state.inventoryFinishedPage++;
-      InventoryList inventoryList = await homeController
+      InventoryData inventoryList = await homeController
           .getInventoryFinishedList(homeController.state.inventoryFinishedPage);
 
       if (inventoryList.data != null &&
-          inventoryList.data?.finishedList != null &&
-          inventoryList.data?.finishedList?.length == PAGE_SIZE) {
+          inventoryList.data != null &&
+          inventoryList.data?.length == PAGE_SIZE) {
         _refreshBindTaskController.loadComplete();
       } else {
         _refreshBindTaskController.loadNoData();

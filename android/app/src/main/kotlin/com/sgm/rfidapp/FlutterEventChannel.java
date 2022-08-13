@@ -1,4 +1,4 @@
-package com.luojie.erapp.inventory_app;
+package com.sgm.rfidapp;
 
 import androidx.annotation.NonNull;
 

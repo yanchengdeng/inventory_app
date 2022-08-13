@@ -1,4 +1,4 @@
-package com.luojie.erapp.inventory_app.dialog
+package com.sgm.rfidapp.dialog
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -26,10 +26,10 @@ import com.honeywell.rfidservice.EventListener
 import com.honeywell.rfidservice.RfidManager
 import com.honeywell.rfidservice.TriggerMode
 import com.honeywell.rfidservice.rfid.RfidReader
-import com.luojie.erapp.inventory_app.BlueAdapter
-import com.luojie.erapp.inventory_app.MainActivity
-import com.luojie.erapp.inventory_app.R
-import com.luojie.erapp.inventory_app.data.BtDeviceInfo
+import com.sgm.rfidapp.BlueAdapter
+import com.sgm.rfidapp.MainActivity
+import com.sgm.rfidapp.R
+import com.sgm.rfidapp.data.BtDeviceInfo
 
 
 /**

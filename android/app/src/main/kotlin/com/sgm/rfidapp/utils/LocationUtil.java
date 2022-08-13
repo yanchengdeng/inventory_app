@@ -1,4 +1,4 @@
-package com.luojie.erapp.inventory_app.utils;
+package com.sgm.rfidapp.utils;
 
 import android.Manifest;
 import android.content.Context;

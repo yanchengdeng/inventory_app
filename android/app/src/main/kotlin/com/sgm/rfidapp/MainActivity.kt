@@ -1,4 +1,4 @@
-package com.luojie.erapp.inventory_app
+package com.sgm.rfidapp
 
 import android.Manifest
 import android.os.Build
@@ -11,7 +11,6 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import com.github.dfqin.grantor.PermissionListener
 import com.github.dfqin.grantor.PermissionsUtil
-import com.google.gson.Gson
 import com.honeywell.aidc.*
 import com.honeywell.rfidservice.EventListener
 import com.honeywell.rfidservice.RfidManager
@@ -20,15 +19,19 @@ import com.honeywell.rfidservice.rfid.OnTagReadListener
 import com.honeywell.rfidservice.rfid.RfidReader
 import com.honeywell.rfidservice.rfid.TagAdditionData
 import com.honeywell.rfidservice.rfid.TagReadOption
-import com.luojie.erapp.inventory_app.data.READ_STATUS
-import com.luojie.erapp.inventory_app.data.RfidStatus
-import com.luojie.erapp.inventory_app.dialog.BlueToothDialog
-import com.luojie.erapp.inventory_app.utils.ICallback
-import com.luojie.erapp.inventory_app.utils.LocationBean
-import com.luojie.erapp.inventory_app.utils.LocationUtil
+import com.sgm.rfidapp.dialog.BlueToothDialog
+import com.sgm.rfidapp.data.READ_STATUS
+import com.sgm.rfidapp.data.RfidStatus
+import com.sgm.rfidapp.utils.ICallback
+import com.sgm.rfidapp.utils.LocationBean
+import com.sgm.rfidapp.utils.LocationUtil
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainActivity : FlutterActivity() {
@@ -59,25 +62,18 @@ class MainActivity : FlutterActivity() {
     private var mTagDataList = mutableListOf<String>()
     private var mIsReadBtnClicked = false
 
-    private var readLabelResult: MethodChannel.Result? = null
-    private var stopReadLabelResult: MethodChannel.Result? = null
-    private var scanReadResult :   MethodChannel.Result? = null
 
     private var handler: Handler? = null
+
+    private lateinit var eventChannel : FlutterEventChannel
 
     ///只执行一次
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-///==================================模拟测试
-        var eventChannel = FlutterEventChannel.getInstance()
+         eventChannel = FlutterEventChannel.getInstance()
         flutterEngine?.plugins?.add(eventChannel)
 
-        GlobalScope.launch(Dispatchers.Main) {
-            repeat(10) {
-                eventChannel.sendEventData("你好世界${it}")
-                delay(2000)
-            }
-        }.start()
+
 
         ///==================================模拟测试
 
@@ -105,7 +101,6 @@ class MainActivity : FlutterActivity() {
                     if (rfidMgr.readerAvailable()) {
                         mIsReadBtnClicked = true
                         read()
-                        this.readLabelResult = result
                     } else {
                         ///是否连接定位
                         PermissionsUtil.requestPermission(
@@ -135,7 +130,6 @@ class MainActivity : FlutterActivity() {
                 }
                 STOP_READ_RFID_DATA -> {
                     mIsReadBtnClicked = false
-                    this.stopReadLabelResult = result
                     stopRead()
                 }
                 GET_GPS_LAT_LNG -> {
@@ -174,7 +168,6 @@ class MainActivity : FlutterActivity() {
                     )
                 }
                 GET_SCAN_LABEL -> {
-                    this.scanReadResult = result
                     doListenBarcodeReader()
                 }
                 else -> {
@@ -191,6 +184,7 @@ class MainActivity : FlutterActivity() {
             manager = aidcManager
             try {
                 barcodeReader = manager?.createBarcodeReader()
+                doListenBarcodeReader()
             } catch (e: InvalidScannerNameException) {
                 toast("扫描：Invalid Scanner Name Exception:${e.message}")
             } catch (e: Exception) {
@@ -213,15 +207,10 @@ class MainActivity : FlutterActivity() {
             // register bar code event listener
             barcodeReader?.addBarcodeListener(object : BarcodeReader.BarcodeListener {
                 override fun onBarcodeEvent(event: BarcodeReadEvent) {
-                    val rfidStatus = RfidStatus(code = READ_STATUS.SCAN_READ, listOf(event.barcodeData))
 
-//                    mTagDataList.add(event.barcodeData)
-//                    var tag = StringBuilder()
-//                    mTagDataList.forEach { tag.append(it).append(",") }
-//                    tag.replace(tag.length-1,tag.length,"")
-//                    scanReadResult?.success(event.barcodeData)
-                    scanReadResult?.success(event.barcodeData)
-                    toast("扫描成功")
+                    GlobalScope.launch(Dispatchers.Main) {
+                        eventChannel.sendEventData("二维码扫描：${event.barcodeData}")
+                    }.start()
 
                 }
 
@@ -326,12 +315,13 @@ class MainActivity : FlutterActivity() {
         if (isReaderAvailable()) {
             mReader?.stopRead()
             mReader?.removeOnTagReadListener(dataListener)
-            val rfidStatus = RfidStatus(code = READ_STATUS.STOP_READING, mTagDataList)
-
             var tag = StringBuilder()
             mTagDataList.forEach { tag.append(it).append(",") }
             tag.replace(tag.length-1,tag.length,"")
-             stopReadLabelResult?.success(tag.toString())
+
+            GlobalScope.launch(Dispatchers.Main) {
+                eventChannel.sendEventData("结束读取：${tag.toString()}")
+            }.start()
 
         }
     }
@@ -346,11 +336,13 @@ class MainActivity : FlutterActivity() {
                     }
                 }
                 Log.w("yancheng", "mTagDataList------$mTagDataList")
-                val rfidStatus = RfidStatus(code = READ_STATUS.READING_DATA, mTagDataList)
                 var tag = StringBuilder()
                 mTagDataList.forEach { tag.append(it).append(",") }
                 tag.replace(tag.length-1,tag.length,"")
-               readLabelResult?.success(tag.toString())
+
+                GlobalScope.launch(Dispatchers.Main) {
+                    eventChannel.sendEventData("开启读取：${tag.toString()}")
+                }.start()
 
 
 

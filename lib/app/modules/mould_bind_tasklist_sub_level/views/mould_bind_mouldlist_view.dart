@@ -215,29 +215,30 @@ class MouldBindMouldListView extends GetView<MouldBindMouldlistController> {
     if (mouldList != null && (mouldList.bindLabels?.isNotEmpty ?? false)) {
       if (mouldList.labelType == MOULD_TASK_TYPE_PAY &&
           mouldList.toolingType == TOOL_TYPE_M) {
-        if (mouldList.bindLabels?[0].cavityPhoto != null &&
-            mouldList.bindLabels?[0].nameplatePhoto != null &&
-            mouldList.bindLabels?[0].overallPhoto != null) {
-          return mouldList.bindLabels?[0].labelNo ?? "-";
+        if (mouldList.cavityPhoto != null &&
+            mouldList.nameplatePhoto != null &&
+            mouldList.overallPhoto != null) {
+          ///TODO  待确定
+          return mouldList.bindLabels.toString() ?? "-";
         } else {
-          return mouldList.bindLabels?[0].labelNo ?? "(缺照片)";
+          return mouldList.bindLabels.toString() ?? "(缺照片)";
         }
       } else if (mouldList.labelType == MOULD_TASK_TYPE_PAY ||
           mouldList.toolingType == TOOL_TYPE_G) {
-        if (mouldList.bindLabels?[0].nameplatePhoto != null &&
-            mouldList.bindLabels?[0].overallPhoto != null) {
-          return mouldList.bindLabels?[0].labelNo ?? "-";
+        if (mouldList.nameplatePhoto != null &&
+            mouldList.overallPhoto != null) {
+          return mouldList.bindLabels.toString() ?? "-";
         } else {
-          return mouldList.bindLabels?[0].labelNo ?? "(缺照片)";
+          return mouldList.bindLabels.toString() ?? "(缺照片)";
         }
       } else if (mouldList.labelType == MOULD_TASK_TYPE_LABEL) {
-        if (mouldList.bindLabels?[0].nameplatePhoto != null) {
-          return mouldList.bindLabels?[0].labelNo ?? "-";
+        if (mouldList.nameplatePhoto != null) {
+          return mouldList.bindLabels.toString() ?? "-";
         } else {
-          return mouldList.bindLabels?[0].labelNo ?? "(缺照片)";
+          return mouldList.bindLabels.toString() ?? "(缺照片)";
         }
       } else {
-        return mouldList.bindLabels?[0].labelNo ?? "-";
+        return mouldList.bindLabels.toString() ?? "-";
       }
     } else {
       return " -(缺照片) ";

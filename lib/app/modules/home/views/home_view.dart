@@ -29,7 +29,7 @@ class HomeView extends GetView<HomeController> {
                     iconFileName: 'images/setting.png',
                     unFinished: CacheUtils.to.mouldBindTaskList == null
                         ? 0
-                        : CacheUtils.to.mouldBindTaskList?.unfinished)))),
+                        : CacheUtils.to.mouldBindTaskList)))),
         Expanded(
             child: Obx(() => InkWell(
                 onTap: () => {Get.toNamed(Routes.INVENTORY_TASKLIST)},
@@ -38,7 +38,7 @@ class HomeView extends GetView<HomeController> {
                     iconFileName: 'images/invertory.png',
                     unFinished: CacheUtils.to.inventoryList == null
                         ? 0
-                        : CacheUtils.to.inventoryList.unfinished))))
+                        : CacheUtils.to.inventoryList))))
       ]),
     );
   }

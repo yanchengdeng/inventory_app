@@ -14,7 +14,7 @@ import '../values/constants.dart';
  * */
 class MouldTaskApi<T> {
   //获取模具任务列表
-  static Future<MouldBindList> getMouldTaskList<T>() async {
+  static Future<MouldBindTask> getMouldTaskList<T>() async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'mouldBindTask_list';
     Options options = Options();
@@ -29,11 +29,11 @@ class MouldTaskApi<T> {
       Log.d("模具列表类型：map");
     }
 
-    return MouldBindList.fromJson(response);
+    return MouldBindTask.fromJson(response);
   }
 
   //获取已完成资产盘点列表
-  static Future<MouldBindList> getMouldBindListFinishedList<T>(int page) async {
+  static Future<MouldBindTask> getMouldBindListFinishedList<T>(int page) async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = '/mouldBindTask/finishedList';
     Options options = Options();
@@ -52,7 +52,7 @@ class MouldTaskApi<T> {
 
     var response = await HttpUtil()
         .post('/mouldBindTask/finishedList', data: data, options: options);
-    return MouldBindList.fromJson(response);
+    return MouldBindTask.fromJson(response);
   }
 
   //支付类型绑定上传

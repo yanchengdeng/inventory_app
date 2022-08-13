@@ -186,12 +186,9 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
 
   ///获取标签
   StringBuffer getLabels() {
-    List<BindLabels> labels =
-        controller.mouldBindTaskFinished?.bindLabels ?? List.empty();
+
     StringBuffer stringBuffer = StringBuffer();
-    labels.forEach((element) {
-      stringBuffer.writeln(element.labelNo);
-    });
+
     return stringBuffer;
   }
 
@@ -204,8 +201,8 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
     const String testImage3 =
         'https://tse1-mm.cn.bing.net/th/id/OET.2567873a1fd04be7852a03de23158a00?w=272&h=272&c=7&rs=1&o=5&dpr=1.25&pid=1.9';
 
-    List<BindLabels> labels =
-        controller.mouldBindTaskFinished?.bindLabels ?? List.empty();
+    List<String> labels =
+        controller.mouldBindTaskFinished ?? List.empty();
 
     ///标签类型 只显示 铭牌
     if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL.toString()) {

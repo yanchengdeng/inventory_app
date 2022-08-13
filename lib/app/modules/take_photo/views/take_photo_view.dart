@@ -46,8 +46,8 @@ class TakePhotoView extends GetView<TakePhotoController> {
 
             final MouldReadResultController resultController =
                 Get.find<MouldReadResultController>();
-            resultController.refreshImage(
-                UploadImageInfo(filePath: image.path, photoType: photoType));
+            // resultController.refreshImage(
+            //     UploadImageInfo(filePath: image.path, photoType: photoType));
             Get.back();
           } catch (e) {
             Log.d("拍照异常${e}");

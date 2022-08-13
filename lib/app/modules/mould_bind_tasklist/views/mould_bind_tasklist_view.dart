@@ -90,24 +90,24 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                    '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskType == MOULD_TASK_TYPE_PAY ? '支付任务编号' : '标签替换任务编号'}：${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskNo}',
+                                                    '${CacheUtils.to.mouldBindTaskList[index].taskType == MOULD_TASK_TYPE_PAY ? '支付任务编号' : '标签替换任务编号'}：${CacheUtils.to.mouldBindTaskList[index]?.taskNo}',
                                                     style:
                                                         textBoldListTextStyle()),
                                                 Visibility(
                                                   visible: CacheUtils
                                                           .to
                                                           .mouldBindTaskList
-                                                          ?.unfinishedTaskList?[
+                                                          [
                                                               index]
                                                           ?.taskType ==
                                                       MOULD_TASK_TYPE_PAY,
                                                   child: Text(
-                                                      'PO编号：${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.poNo}',
+                                                      'PO编号：${CacheUtils.to.mouldBindTaskList[index]?.poNo}',
                                                       style:
                                                           textNormalListTextStyle()),
                                                 ),
                                                 Text(
-                                                    '工装模具总数：${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.totalMoulds}',
+                                                    '工装模具总数：${CacheUtils.to.mouldBindTaskList[index]?.totalMoulds}',
                                                     style:
                                                         textNormalListTextStyle()),
                                                 Padding(
@@ -140,9 +140,9 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                           .MOULD_BIND_MOULDLIST,
                                                                       arguments: {
                                                                         'taskType':
-                                                                            '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskType}',
+                                                                            '${CacheUtils.to.mouldBindTaskList[index]?.taskType}',
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskNo}',
+                                                                            '${CacheUtils.to.mouldBindTaskList[index]?.taskNo}',
                                                                         'bindStatus':
                                                                             BIND_STATUS_WAING,
                                                                         "isFinish":
@@ -174,9 +174,9 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                           .MOULD_BIND_MOULDLIST,
                                                                       arguments: {
                                                                         'taskType':
-                                                                            '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskType}',
+                                                                            '${CacheUtils.to.mouldBindTaskList[index]?.taskType}',
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskNo}',
+                                                                            '${CacheUtils.to.mouldBindTaskList[index]?.taskNo}',
                                                                         'bindStatus':
                                                                             BIND_STATUS_REBIND,
                                                                         "isFinish":
@@ -208,9 +208,9 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                           .MOULD_BIND_MOULDLIST,
                                                                       arguments: {
                                                                         'taskType':
-                                                                            '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskType}',
+                                                                            '${CacheUtils.to.mouldBindTaskList[index].taskType}',
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskNo}',
+                                                                            '${CacheUtils.to.mouldBindTaskList[index].taskNo}',
                                                                         'bindStatus':
                                                                             BIND_STATUS_WAITING_UPLOAD,
                                                                         "isFinish":
@@ -242,9 +242,9 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                           .MOULD_BIND_MOULDLIST,
                                                                       arguments: {
                                                                         'taskType':
-                                                                            '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskType}',
+                                                                            '${CacheUtils.to.mouldBindTaskList[index]?.taskType}',
                                                                         'taskNo':
-                                                                            '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskNo}',
+                                                                            '${CacheUtils.to.mouldBindTaskList[index]?.taskNo}',
                                                                         'bindStatus':
                                                                             BIND_STATUS_UPLOADED,
                                                                         "isFinish":
@@ -262,17 +262,16 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                 Routes.MOULD_BIND_MOULDLIST,
                                                 arguments: {
                                                   'taskType':
-                                                      '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskType}',
+                                                      '${CacheUtils.to.mouldBindTaskList[index]?.taskType}',
                                                   'taskNo':
-                                                      '${CacheUtils.to.mouldBindTaskList?.unfinishedTaskList?[index]?.taskNo}',
+                                                      '${CacheUtils.to.mouldBindTaskList[index]?.taskNo}',
                                                   'bindStatus': BIND_STATUS_ALL,
                                                   "isFinish": false
                                                 })
                                           },
                                         ),
                                       )),
-                                  itemCount: CacheUtils.to.mouldBindTaskList
-                                      ?.unfinishedTaskList?.length,
+                                  itemCount: CacheUtils.to.mouldBindTaskList.length,
                                 )
 
                               ///已完成 直接数据传递过去
@@ -345,12 +344,12 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
 
   Future<void> _onLoadMore() async {
     homeController.state.mouldTaskFinishedPage++;
-    MouldBindList mouldBindList = await homeController
+    MouldBindTask mouldBindList = await homeController
         .getMouldTaskFinishedList(homeController.state.inventoryFinishedPage);
 
     if (mouldBindList.data != null &&
-        mouldBindList.data?.finishedTaskList != null &&
-        mouldBindList.data?.finishedTaskList?.length == PAGE_SIZE) {
+        mouldBindList.data != null &&
+        mouldBindList.data?.length == PAGE_SIZE) {
       _refreshBindTaskController.loadComplete();
     } else {
       _refreshBindTaskController.loadNoData();

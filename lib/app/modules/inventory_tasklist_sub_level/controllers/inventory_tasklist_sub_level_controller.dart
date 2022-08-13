@@ -6,7 +6,7 @@ import '../../home/controllers/home_controller.dart';
 
 class InventoryTasklistSubLevelController extends GetxController {
   ///资产盘点搜索列表
-  var _inventoryTaskListSearch = RxList<ItemList?>(List.empty());
+  var _inventoryTaskListSearch = RxList<InventoryDetail?>(List.empty());
 
   set inventoryTaskListSearch(value) => _inventoryTaskListSearch.value = value;
 

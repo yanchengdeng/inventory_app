@@ -1,4 +1,4 @@
-package com.luojie.erapp.inventory_app.data
+package com.sgm.rfidapp.data
 
 import android.bluetooth.BluetoothDevice
 

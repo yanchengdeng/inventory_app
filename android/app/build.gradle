@@ -42,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.luojie.erapp.inventory_app"
+        applicationId "com.luojie.erapp"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
@@ -54,25 +54,6 @@ android {
     }
 
 
-//    flavorDimensions "flavor-type"
-//
-//    productFlavors {
-//        rfid {
-//            dimension "flavor-type"
-//            applicationId "com.luojie.erapp.inventory_app"
-//            resValue "string", "app_name", "rfid"
-//        }
-//
-//    }
-//
-    // signingConfigs {
-    //     debug {
-    //         keyAlias 'rfid'
-    //         keyPassword 'rfid123456'
-    //         storeFile file('rfid.jks')
-    //         storePassword 'rfid123456'
-    //     }
-    // }
 
     lintOptions {
         checkReleaseBuilds false

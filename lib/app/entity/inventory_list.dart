@@ -1,140 +1,76 @@
-/// data : {"finished":0,"finishedList":[{"distributionTime":"2022-06-11 12:17:46","endDate":"2021-05-04","finishedTime":"2022-06-18 12:17:46","inventoryTotal":1,"inventoryType":1,"list":[{"assetInventoryDetailId":1,"assetInventoryStatus":1,"assetName":"天窗边框模具","assetNo":"PO123456-001-M","inventoryTaskId":1,"labelNo":"XP000000001,XP000000002","toolingType":"F","usedArea":"上海金桥"}],"taskNo":"I20220317914"}],"unfinished":1,"unfinishedList":[{"distributionTime":"2022-06-11 12:17:46","endDate":"2021-05-04","finishedTime":"2022-06-18 12:17:46","inventoryTotal":1,"inventoryType":1,"list":[{"assetInventoryDetailId":1,"assetInventoryStatus":1,"assetName":"天窗边框模具","assetNo":"PO123456-001-M","inventoryTaskId":1,"labelNo":"XP000000001,XP000000002","toolingType":"F","usedArea":"上海金桥"}],"taskNo":"I20220317914"}]}
+/// data : [{"distributionTime":"2022-07-18 13:37:10","distributionTimeStamp":1658122630000,"endDate":"2022-07-19","finishedTime":"","inventoryTotal":1,"inventoryType":1,"inventoryTypeText":"年度盘点","list":[{"assetInventoryDetailId":769,"assetInventoryStatus":0,"assetName":"火星塞","assetNo":"PO218912-1657547716-F","distributionTime":"2022-07-18 13:37:10","distributionTimeStamp":1658122630000,"inventoryNo":"I20220713207","labelNo":"","toolingType":"F","usedArea":"上海浦东"}],"taskNo":"I20220713207"},{"distributionTime":"2022-07-11 21:55:09","distributionTimeStamp":1657547709000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":2,"inventoryTypeText":"临时盘点","list":[{"assetInventoryDetailId":62,"assetInventoryStatus":0,"assetName":"卤素头灯","assetNo":"PO195730-1657547708-M","distributionTime":"2022-07-11 21:55:09","distributionTimeStamp":1657547709000,"inventoryNo":"I20220711979","labelNo":"XP199_1657547709,XP199_1657547710,XP199_1657547711","toolingType":"M","usedArea":"上海浦东"}],"taskNo":"I20220711979"},{"distributionTime":"2022-07-11 21:55:02","distributionTimeStamp":1657547702000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":2,"inventoryTypeText":"临时盘点","list":[{"assetInventoryDetailId":60,"assetInventoryStatus":0,"assetName":"万向接头","assetNo":"PO169912-1657547700-G","distributionTime":"2022-07-11 21:55:02","distributionTimeStamp":1657547702000,"inventoryNo":"I20220711812","labelNo":"XP197_1657547702,XP197_1657547703,XP197_1657547704","toolingType":"G","usedArea":"上海嘉定"}],"taskNo":"I20220711812"},{"distributionTime":"2022-07-11 21:55:00","distributionTimeStamp":1657547700000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":1,"inventoryTypeText":"年度盘点","list":[{"assetInventoryDetailId":59,"assetInventoryStatus":0,"assetName":"爆震","assetNo":"PO152720-1657547698-F","distributionTime":"2022-07-11 21:55:00","distributionTimeStamp":1657547700000,"inventoryNo":"I20220711602","labelNo":"XP196_1657547700,XP196_1657547701,XP196_1657547702","toolingType":"F","usedArea":"上海金桥"}],"taskNo":"I20220711602"},{"distributionTime":"2022-07-11 21:54:58","distributionTimeStamp":1657547698000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":1,"inventoryTypeText":"年度盘点","list":[{"assetInventoryDetailId":58,"assetInventoryStatus":0,"assetName":"储液器和干燥器","assetNo":"PO197982-1657547696-M","distributionTime":"2022-07-11 21:54:58","distributionTimeStamp":1657547698000,"inventoryNo":"I20220711765","labelNo":"XP195_1657547698,XP195_1657547699,XP195_1657547700","toolingType":"M","usedArea":"上海金桥"}],"taskNo":"I20220711765"},{"distributionTime":"2022-07-11 21:54:49","distributionTimeStamp":1657547689000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":1,"inventoryTypeText":"年度盘点","list":[{"assetInventoryDetailId":54,"assetInventoryStatus":0,"assetName":"卤素头灯","assetNo":"PO139887-1657547688-G","distributionTime":"2022-07-11 21:54:49","distributionTimeStamp":1657547689000,"inventoryNo":"I20220711707","labelNo":"XP191_1657547689,XP191_1657547690,XP191_1657547691","toolingType":"G","usedArea":"上海嘉定"}],"taskNo":"I20220711707"},{"distributionTime":"2022-07-11 21:54:48","distributionTimeStamp":1657547688000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":2,"inventoryTypeText":"临时盘点","list":[{"assetInventoryDetailId":53,"assetInventoryStatus":0,"assetName":"起动马达","assetNo":"PO186056-1657547686-G","distributionTime":"2022-07-11 21:54:48","distributionTimeStamp":1657547688000,"inventoryNo":"I20220711629","labelNo":"XP190_1657547688,XP190_1657547689,XP190_1657547690","toolingType":"G","usedArea":"上海嘉定"}],"taskNo":"I20220711629"}]
 /// message : ""
 /// state : 1
 
-class InventoryList {
-  InventoryList({
-    InventroyData? data,
+class InventoryData {
+  InventoryData({
+    List<InventoryFinishedList>? data,
     String? message,
-    int? state,
-  }) {
+    int? state,}){
     _data = data;
     _message = message;
     _state = state;
   }
 
-  InventoryList.fromJson(dynamic json) {
-    _data = json['data'] != null ? InventroyData.fromJson(json['data']) : null;
+  InventoryData.fromJson(dynamic json) {
+    if (json['data'] != null) {
+      _data = [];
+      json['data'].forEach((v) {
+        _data?.add(InventoryFinishedList.fromJson(v));
+      });
+    }
     _message = json['message'];
     _state = json['state'];
   }
-  InventroyData? _data;
+  List<InventoryFinishedList>? _data;
   String? _message;
   int? _state;
-  InventoryList copyWith({
-    InventroyData? data,
+  InventoryData copyWith({  List<InventoryFinishedList>? data,
     String? message,
     int? state,
-  }) =>
-      InventoryList(
-        data: data ?? _data,
-        message: message ?? _message,
-        state: state ?? _state,
-      );
-  InventroyData? get data => _data;
+  }) => InventoryData(  data: data ?? _data,
+    message: message ?? _message,
+    state: state ?? _state,
+  );
+  List<InventoryFinishedList>? get data => _data;
   String? get message => _message;
   int? get state => _state;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (_data != null) {
-      map['data'] = _data?.toJson();
+      map['data'] = _data?.map((v) => v.toJson()).toList();
     }
     map['message'] = _message;
     map['state'] = _state;
     return map;
   }
+
 }
 
-/// finished : 0
-/// finishedList : [{"distributionTime":"2022-06-11 12:17:46","endDate":"2021-05-04","finishedTime":"2022-06-18 12:17:46","inventoryTotal":1,"inventoryType":1,"list":[{"assetInventoryDetailId":1,"assetInventoryStatus":1,"assetName":"天窗边框模具","assetNo":"PO123456-001-M","inventoryTaskId":1,"labelNo":"XP000000001,XP000000002","toolingType":"F","usedArea":"上海金桥"}],"taskNo":"I20220317914"}]
-/// unfinished : 1
-/// unfinishedList : [{"distributionTime":"2022-06-11 12:17:46","endDate":"2021-05-04","finishedTime":"2022-06-18 12:17:46","inventoryTotal":1,"inventoryType":1,"list":[{"assetInventoryDetailId":1,"assetInventoryStatus":1,"assetName":"天窗边框模具","assetNo":"PO123456-001-M","inventoryTaskId":1,"labelNo":"XP000000001,XP000000002","toolingType":"F","usedArea":"上海金桥"}],"taskNo":"I20220317914"}]
-
-class InventroyData {
-  InventroyData({
-    int? finished,
-    List<InventoryFinishedList>? finishedList,
-    int? unfinished,
-    List<InventoryFinishedList>? unfinishedList,
-  }) {
-    _finished = finished;
-    _finishedList = finishedList;
-    _unfinished = unfinished;
-    _unfinishedList = unfinishedList;
-  }
-
-  InventroyData.fromJson(dynamic json) {
-    _finished = json['finished'];
-    if (json['finishedList'] != null) {
-      _finishedList = [];
-      json['finishedList'].forEach((v) {
-        _finishedList?.add(InventoryFinishedList.fromJson(v));
-      });
-    }
-    _unfinished = json['unfinished'];
-    if (json['unfinishedList'] != null) {
-      _unfinishedList = [];
-      json['unfinishedList'].forEach((v) {
-        _unfinishedList?.add(InventoryFinishedList.fromJson(v));
-      });
-    }
-  }
-  int? _finished;
-  List<InventoryFinishedList>? _finishedList;
-  int? _unfinished;
-  List<InventoryFinishedList>? _unfinishedList;
-  InventroyData copyWith({
-    int? finished,
-    List<InventoryFinishedList>? finishedList,
-    int? unfinished,
-    List<InventoryFinishedList>? unfinishedList,
-  }) =>
-      InventroyData(
-        finished: finished ?? _finished,
-        finishedList: finishedList ?? _finishedList,
-        unfinished: unfinished ?? _unfinished,
-        unfinishedList: unfinishedList ?? _unfinishedList,
-      );
-  int? get finished => _finished;
-  List<InventoryFinishedList>? get finishedList => _finishedList;
-  int? get unfinished => _unfinished;
-  List<InventoryFinishedList>? get unfinishedList => _unfinishedList;
-
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['finished'] = _finished;
-    if (_finishedList != null) {
-      map['finishedList'] = _finishedList?.map((v) => v.toJson()).toList();
-    }
-    map['unfinished'] = _unfinished;
-    if (_unfinishedList != null) {
-      map['unfinishedList'] = _unfinishedList?.map((v) => v.toJson()).toList();
-    }
-    return map;
-  }
-}
-
-/// distributionTime : "2022-06-11 12:17:46"
-/// endDate : "2021-05-04"
-/// finishedTime : "2022-06-18 12:17:46"
+/// distributionTime : "2022-07-18 13:37:10"
+/// distributionTimeStamp : 1658122630000
+/// endDate : "2022-07-19"
+/// finishedTime : ""
 /// inventoryTotal : 1
 /// inventoryType : 1
-/// list : [{"assetInventoryDetailId":1,"assetInventoryStatus":1,"assetName":"天窗边框模具","assetNo":"PO123456-001-M","inventoryTaskId":1,"labelNo":"XP000000001,XP000000002","toolingType":"F","usedArea":"上海金桥"}]
-/// taskNo : "I20220317914"
+/// inventoryTypeText : "年度盘点"
+/// list : [{"assetInventoryDetailId":769,"assetInventoryStatus":0,"assetName":"火星塞","assetNo":"PO218912-1657547716-F","distributionTime":"2022-07-18 13:37:10","distributionTimeStamp":1658122630000,"inventoryNo":"I20220713207","labelNo":"","toolingType":"F","usedArea":"上海浦东"}]
+/// taskNo : "I20220713207"
 
 class InventoryFinishedList {
   InventoryFinishedList({
     String? distributionTime,
+    int? distributionTimeStamp,
     String? endDate,
     String? finishedTime,
     int? inventoryTotal,
     int? inventoryType,
     String? inventoryTypeText,
-    List<ItemList>? list,
-    String? taskNo,
-  }) {
+    List<InventoryDetail>? list,
+    String? taskNo,}){
     _distributionTime = distributionTime;
+    _distributionTimeStamp = distributionTimeStamp;
     _endDate = endDate;
     _finishedTime = finishedTime;
     _inventoryTotal = inventoryTotal;
@@ -146,6 +82,7 @@ class InventoryFinishedList {
 
   InventoryFinishedList.fromJson(dynamic json) {
     _distributionTime = json['distributionTime'];
+    _distributionTimeStamp = json['distributionTimeStamp'];
     _endDate = json['endDate'];
     _finishedTime = json['finishedTime'];
     _inventoryTotal = json['inventoryTotal'];
@@ -154,51 +91,53 @@ class InventoryFinishedList {
     if (json['list'] != null) {
       _list = [];
       json['list'].forEach((v) {
-        _list?.add(ItemList.fromJson(v));
+        _list?.add(InventoryDetail.fromJson(v));
       });
     }
     _taskNo = json['taskNo'];
   }
   String? _distributionTime;
+  int? _distributionTimeStamp;
   String? _endDate;
   String? _finishedTime;
   int? _inventoryTotal;
   int? _inventoryType;
   String? _inventoryTypeText;
-  List<ItemList>? _list;
+  List<InventoryDetail>? _list;
   String? _taskNo;
-  InventoryFinishedList copyWith({
-    String? distributionTime,
+  InventoryFinishedList copyWith({  String? distributionTime,
+    int? distributionTimeStamp,
     String? endDate,
     String? finishedTime,
     int? inventoryTotal,
     int? inventoryType,
     String? inventoryTypeText,
-    List<ItemList>? list,
+    List<InventoryDetail>? list,
     String? taskNo,
-  }) =>
-      InventoryFinishedList(
-        distributionTime: distributionTime ?? _distributionTime,
-        endDate: endDate ?? _endDate,
-        finishedTime: finishedTime ?? _finishedTime,
-        inventoryTotal: inventoryTotal ?? _inventoryTotal,
-        inventoryType: inventoryType ?? _inventoryType,
-        inventoryTypeText: inventoryTypeText ?? _inventoryTypeText,
-        list: list ?? _list,
-        taskNo: taskNo ?? _taskNo,
-      );
+  }) => InventoryFinishedList(  distributionTime: distributionTime ?? _distributionTime,
+    distributionTimeStamp: distributionTimeStamp ?? _distributionTimeStamp,
+    endDate: endDate ?? _endDate,
+    finishedTime: finishedTime ?? _finishedTime,
+    inventoryTotal: inventoryTotal ?? _inventoryTotal,
+    inventoryType: inventoryType ?? _inventoryType,
+    inventoryTypeText: inventoryTypeText ?? _inventoryTypeText,
+    list: list ?? _list,
+    taskNo: taskNo ?? _taskNo,
+  );
   String? get distributionTime => _distributionTime;
+  int? get distributionTimeStamp => _distributionTimeStamp;
   String? get endDate => _endDate;
   String? get finishedTime => _finishedTime;
   int? get inventoryTotal => _inventoryTotal;
   int? get inventoryType => _inventoryType;
   String? get inventoryTypeText => _inventoryTypeText;
-  List<ItemList>? get list => _list;
+  List<InventoryDetail>? get list => _list;
   String? get taskNo => _taskNo;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['distributionTime'] = _distributionTime;
+    map['distributionTimeStamp'] = _distributionTimeStamp;
     map['endDate'] = _endDate;
     map['finishedTime'] = _finishedTime;
     map['inventoryTotal'] = _inventoryTotal;
@@ -210,44 +149,52 @@ class InventoryFinishedList {
     map['taskNo'] = _taskNo;
     return map;
   }
+
 }
 
-/// assetInventoryDetailId : 1
-/// assetInventoryStatus : 1
-/// assetName : "天窗边框模具"
-/// assetNo : "PO123456-001-M"
-/// inventoryTaskId : 1
-/// labelNo : "XP000000001,XP000000002"
+/// assetInventoryDetailId : 769
+/// assetInventoryStatus : 0
+/// assetName : "火星塞"
+/// assetNo : "PO218912-1657547716-F"
+/// distributionTime : "2022-07-18 13:37:10"
+/// distributionTimeStamp : 1658122630000
+/// inventoryNo : "I20220713207"
+/// labelNo : ""
 /// toolingType : "F"
-/// usedArea : "上海金桥"
+/// usedArea : "上海浦东"
 
-class ItemList {
-  ItemList({
+class InventoryDetail {
+  InventoryDetail({
     int? assetInventoryDetailId,
     int? assetInventoryStatus,
     String? assetName,
     String? assetNo,
-    int? inventoryTaskId,
+    String? distributionTime,
+    int? distributionTimeStamp,
+    String? inventoryNo,
     String? labelNo,
     String? toolingType,
-    String? usedArea,
-  }) {
+    String? usedArea,}){
     _assetInventoryDetailId = assetInventoryDetailId;
     _assetInventoryStatus = assetInventoryStatus;
     _assetName = assetName;
     _assetNo = assetNo;
-    _inventoryTaskId = inventoryTaskId;
+    _distributionTime = distributionTime;
+    _distributionTimeStamp = distributionTimeStamp;
+    _inventoryNo = inventoryNo;
     _labelNo = labelNo;
     _toolingType = toolingType;
     _usedArea = usedArea;
   }
 
-  ItemList.fromJson(dynamic json) {
+  InventoryDetail.fromJson(dynamic json) {
     _assetInventoryDetailId = json['assetInventoryDetailId'];
     _assetInventoryStatus = json['assetInventoryStatus'];
     _assetName = json['assetName'];
     _assetNo = json['assetNo'];
-    _inventoryTaskId = json['inventoryTaskId'];
+    _distributionTime = json['distributionTime'];
+    _distributionTimeStamp = json['distributionTimeStamp'];
+    _inventoryNo = json['inventoryNo'];
     _labelNo = json['labelNo'];
     _toolingType = json['toolingType'];
     _usedArea = json['usedArea'];
@@ -256,36 +203,40 @@ class ItemList {
   int? _assetInventoryStatus;
   String? _assetName;
   String? _assetNo;
-  int? _inventoryTaskId;
+  String? _distributionTime;
+  int? _distributionTimeStamp;
+  String? _inventoryNo;
   String? _labelNo;
   String? _toolingType;
   String? _usedArea;
-  ItemList copyWith({
-    int? assetInventoryDetailId,
+  InventoryDetail copyWith({  int? assetInventoryDetailId,
     int? assetInventoryStatus,
     String? assetName,
     String? assetNo,
-    int? inventoryTaskId,
+    String? distributionTime,
+    int? distributionTimeStamp,
+    String? inventoryNo,
     String? labelNo,
     String? toolingType,
     String? usedArea,
-  }) =>
-      ItemList(
-        assetInventoryDetailId:
-            assetInventoryDetailId ?? _assetInventoryDetailId,
-        assetInventoryStatus: assetInventoryStatus ?? _assetInventoryStatus,
-        assetName: assetName ?? _assetName,
-        assetNo: assetNo ?? _assetNo,
-        inventoryTaskId: inventoryTaskId ?? _inventoryTaskId,
-        labelNo: labelNo ?? _labelNo,
-        toolingType: toolingType ?? _toolingType,
-        usedArea: usedArea ?? _usedArea,
-      );
+  }) => InventoryDetail(  assetInventoryDetailId: assetInventoryDetailId ?? _assetInventoryDetailId,
+    assetInventoryStatus: assetInventoryStatus ?? _assetInventoryStatus,
+    assetName: assetName ?? _assetName,
+    assetNo: assetNo ?? _assetNo,
+    distributionTime: distributionTime ?? _distributionTime,
+    distributionTimeStamp: distributionTimeStamp ?? _distributionTimeStamp,
+    inventoryNo: inventoryNo ?? _inventoryNo,
+    labelNo: labelNo ?? _labelNo,
+    toolingType: toolingType ?? _toolingType,
+    usedArea: usedArea ?? _usedArea,
+  );
   int? get assetInventoryDetailId => _assetInventoryDetailId;
   int? get assetInventoryStatus => _assetInventoryStatus;
   String? get assetName => _assetName;
   String? get assetNo => _assetNo;
-  int? get inventoryTaskId => _inventoryTaskId;
+  String? get distributionTime => _distributionTime;
+  int? get distributionTimeStamp => _distributionTimeStamp;
+  String? get inventoryNo => _inventoryNo;
   String? get labelNo => _labelNo;
   String? get toolingType => _toolingType;
   String? get usedArea => _usedArea;
@@ -296,10 +247,13 @@ class ItemList {
     map['assetInventoryStatus'] = _assetInventoryStatus;
     map['assetName'] = _assetName;
     map['assetNo'] = _assetNo;
-    map['inventoryTaskId'] = _inventoryTaskId;
+    map['distributionTime'] = _distributionTime;
+    map['distributionTimeStamp'] = _distributionTimeStamp;
+    map['inventoryNo'] = _inventoryNo;
     map['labelNo'] = _labelNo;
     map['toolingType'] = _toolingType;
     map['usedArea'] = _usedArea;
     return map;
   }
+
 }

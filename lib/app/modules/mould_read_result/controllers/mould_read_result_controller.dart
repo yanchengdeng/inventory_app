@@ -72,20 +72,20 @@ class MouldReadResultController extends GetxController {
       var rfidDataFromAndroid =
           (await platform.invokeMethod(START_READ_RFID_DATA));
       readDataContent.value = rfidDataFromAndroid;
-      isReadData.value = false;
-      if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
-        _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
-      }
-      _assertBindTaskInfo.value?.bindLabels?[0].labelNo = readDataContent.value;
+      // isReadData.value = false;
+      // if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
+      //   _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
+      // }
+      // _assertBindTaskInfo.value?.labelNo = readDataContent.value;
     } else {
       isReadData.value = true;
       var rfidDataFromAndroid =
           (await platform.invokeMethod(STOP_READ_RFID_DATA));
       readDataContent.value = rfidDataFromAndroid;
-      if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
-        _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
-      }
-      _assertBindTaskInfo.value?.bindLabels?[0].labelNo = readDataContent.value;
+      // if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
+      //   _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
+      // }
+      // _assertBindTaskInfo.value?.labelNo = readDataContent.value;
     }
   }
 
@@ -93,21 +93,21 @@ class MouldReadResultController extends GetxController {
   getGpsLagLng() async {
     var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
     gpsData.value = latLng;
-    if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
-      _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
-    }
-    _assertBindTaskInfo.value?.lat = double.parse(gpsData.value.split(',')[0]);
-    _assertBindTaskInfo.value?.lng = double.parse(gpsData.value.split(',')[1]);
+    // if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
+    //   _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
+    // }
+    // _assertBindTaskInfo.value?.lat = double.parse(gpsData.value.split(',')[0]);
+    // _assertBindTaskInfo.value?.lng = double.parse(gpsData.value.split(',')[1]);
   }
 
   /// 获取扫描label
   getScanLabel() async {
     var scanLabel = await platform.invokeMethod(GET_SCAN_LABEL) as String;
     readDataContent.value = scanLabel;
-    if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
-      _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
-    }
-    _assertBindTaskInfo.value?.bindLabels?[0].labelNo = readDataContent.value;
+    // if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
+    //   _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
+    // }
+    // _assertBindTaskInfo.value?.labelNo = readDataContent.value;
   }
 
   @override
@@ -139,34 +139,34 @@ class MouldReadResultController extends GetxController {
 
   void refreshImage(UploadImageInfo uploadImageInfo) {
     MouldList? mouldList = _assertBindTaskInfo.value;
-    if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
-      _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
-    }
-    if (uploadImageInfo.photoType == PHOTO_TYPE_ALL) {
-      if (_assertBindTaskInfo.value?.bindLabels?[0].overallPhoto == null) {
-        _assertBindTaskInfo.value?.bindLabels?[0].overallPhoto =
-            NameplatePhoto();
-      }
-      imageUrlAll.value = uploadImageInfo;
-      mouldList?.bindLabels?[0].overallPhoto?.fullPath =
-          uploadImageInfo.filePath;
-    } else if (uploadImageInfo.photoType == PHOTO_TYPE_MP) {
-      if (_assertBindTaskInfo.value?.bindLabels?[0].nameplatePhoto == null) {
-        _assertBindTaskInfo.value?.bindLabels?[0].nameplatePhoto =
-            NameplatePhoto();
-      }
-      imageUrlMp.value = uploadImageInfo;
-      mouldList?.bindLabels?[0].nameplatePhoto?.fullPath =
-          uploadImageInfo.filePath;
-    } else if (uploadImageInfo.photoType == PHOTO_TYPE_XQ) {
-      if (_assertBindTaskInfo.value?.bindLabels?[0].cavityPhoto == null) {
-        _assertBindTaskInfo.value?.bindLabels?[0].cavityPhoto =
-            NameplatePhoto();
-      }
-      imageUrlXq.value = uploadImageInfo;
-      mouldList?.bindLabels?[0].cavityPhoto?.fullPath =
-          uploadImageInfo.filePath;
-    }
+    // if (_assertBindTaskInfo.value?.bindLabels?.isEmpty ?? true) {
+    //   _assertBindTaskInfo.value?.bindLabels?.add(BindLabels());
+    // }
+    // if (uploadImageInfo.photoType == PHOTO_TYPE_ALL) {
+    //   if (_assertBindTaskInfo.value?.overallPhoto == null) {
+    //     _assertBindTaskInfo.value?.overallPhoto =
+    //         NameplatePhoto();
+    //   }
+    //   imageUrlAll.value = uploadImageInfo;
+    //   mouldList?.overallPhoto?.fullPath =
+    //       uploadImageInfo.filePath;
+    // } else if (uploadImageInfo.photoType == PHOTO_TYPE_MP) {
+    //   if (_assertBindTaskInfo.value?.nameplatePhoto == null) {
+    //     _assertBindTaskInfo.value?.nameplatePhoto =
+    //         NameplatePhoto();
+    //   }
+    //   imageUrlMp.value = uploadImageInfo;
+    //   mouldList?.nameplatePhoto?.fullPath =
+    //       uploadImageInfo.filePath;
+    // } else if (uploadImageInfo.photoType == PHOTO_TYPE_XQ) {
+    //   if (_assertBindTaskInfo.value?.cavityPhoto == null) {
+    //     _assertBindTaskInfo.value?.cavityPhoto =
+    //         NameplatePhoto();
+    //   }
+    //   imageUrlXq.value = uploadImageInfo;
+    //   mouldList?.cavityPhoto?.fullPath =
+    //       uploadImageInfo.filePath;
+    // }
     _assertBindTaskInfo.value = mouldList;
   }
 
@@ -184,94 +184,94 @@ class MouldReadResultController extends GetxController {
     _assertBindTaskInfo.value =
         await CacheUtils.to.getUnLoadedAssetBindTaskInfo(taskNo, assetNo);
     if (_assertBindTaskInfo.value?.bindLabels != null) {
-      if (_assertBindTaskInfo.value?.bindLabels?[0].nameplatePhoto != null) {
+      if (_assertBindTaskInfo.value?.nameplatePhoto != null) {
         imageUrlMp.value = UploadImageInfo(
             filePath: _assertBindTaskInfo
-                .value?.bindLabels?[0].nameplatePhoto?.fullPath);
+                .value?.nameplatePhoto?.fullPath);
       }
 
-      if (_assertBindTaskInfo.value?.bindLabels?[0].cavityPhoto != null) {
+      if (_assertBindTaskInfo.value?.cavityPhoto != null) {
         imageUrlXq.value = UploadImageInfo(
             filePath: _assertBindTaskInfo
-                .value?.bindLabels?[0].cavityPhoto?.fullPath);
+                .value?.cavityPhoto?.fullPath);
       }
 
-      if (_assertBindTaskInfo.value?.bindLabels?[0].overallPhoto != null) {
-        imageUrlAll.value = UploadImageInfo(
-            filePath: _assertBindTaskInfo
-                .value?.bindLabels?[0].overallPhoto?.fullPath);
-      }
-
-      gpsData.value =
-          '${_assertBindTaskInfo.value?.lat},${_assertBindTaskInfo.value?.lng}';
-
-      readDataContent.value =
-          _assertBindTaskInfo.value?.bindLabels?[0].labelNo ?? '';
+      // if (_assertBindTaskInfo.value?.bindLabels?[0].overallPhoto != null) {
+      //   imageUrlAll.value = UploadImageInfo(
+      //       filePath: _assertBindTaskInfo
+      //           .value?.bindLabels?[0].overallPhoto?.fullPath);
+      // }
+      //
+      // gpsData.value =
+      //     '${_assertBindTaskInfo.value?.lat},${_assertBindTaskInfo.value?.lng}';
+      //
+      // readDataContent.value =
+      //     _assertBindTaskInfo.value?.bindLabels?[0].labelNo ?? '';
     }
   }
 
   ///保存
   saveInfo(String taskType, String taskNo) async {
-    MouldData mouldData = CacheUtils.to.mouldBindTaskList;
+    // MouldData mouldData = CacheUtils.to.mouldBindTaskList;
+    //
+    // MouldList? mouldList = null;
+    //
+    // if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+    //   mouldList = mouldData
+    //       ?.where((element) => element.taskNo == taskNo)
+    //       .first
+    //       .mouldList
+    //       ?.where((element) =>
+    //           element.assetBindTaskId ==
+    //           _assertBindTaskInfo.value?.assetBindTaskId)
+    //       .first;
+    // } else {
+    //   mouldList = mouldData
+    //       ?.where((element) => element.taskNo == taskNo)
+    //       .first
+    //       .mouldList
+    //       ?.where((element) =>
+    //           element.labelReplaceTaskId ==
+    //           _assertBindTaskInfo.value?.labelReplaceTaskId)
+    //       .first;
+    // }
+    //
+    // if (mouldList != null) {
+    //   if (taskType == MOULD_TASK_TYPE_PAY.toString() &&
+    //       mouldList.toolingType == TOOL_TYPE_M) {
+    //     if (mouldList.bindLabels?[0].cavityPhoto != null &&
+    //         mouldList.bindLabels?[0].nameplatePhoto != null &&
+    //         mouldList.bindLabels?[0].overallPhoto != null) {
+    //       mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
+    //     } else {
+    //       mouldList.bindStatus = BIND_STATUS_REBIND;
+    //     }
+    //   } else if (taskType == MOULD_TASK_TYPE_PAY.toString() &&
+    //       mouldList.toolingType == TOOL_TYPE_G) {
+    //     if (mouldList.bindLabels?[0].nameplatePhoto != null &&
+    //         mouldList.bindLabels?[0].overallPhoto != null) {
+    //       mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
+    //     } else {
+    //       mouldList.bindStatus = BIND_STATUS_REBIND;
+    //     }
+    //   } else if (taskType == MOULD_TASK_TYPE_LABEL.toString()) {
+    //     if (mouldList.bindLabels?[0].nameplatePhoto != null) {
+    //       mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
+    //     } else {
+    //       mouldList.bindStatus = BIND_STATUS_REBIND;
+    //     }
+    //   } else {
+    //     mouldList.bindStatus = BIND_STATUS_REBIND;
+    //   }
+    // }
+    //
+    // mouldList?.lat = _assertBindTaskInfo.value?.lat;
+    // mouldList?.lng = _assertBindTaskInfo.value?.lng;
+    // mouldList?.bindLabels?[0].labelNo = readDataContent.value;
+    //
+    // // mouldList = _assertBindTaskInfo.value;
 
-    MouldList? mouldList = null;
-
-    if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
-      mouldList = mouldData.unfinishedTaskList
-          ?.where((element) => element.taskNo == taskNo)
-          .first
-          .mouldList
-          ?.where((element) =>
-              element.assetBindTaskId ==
-              _assertBindTaskInfo.value?.assetBindTaskId)
-          .first;
-    } else {
-      mouldList = mouldData.unfinishedTaskList
-          ?.where((element) => element.taskNo == taskNo)
-          .first
-          .mouldList
-          ?.where((element) =>
-              element.labelReplaceTaskId ==
-              _assertBindTaskInfo.value?.labelReplaceTaskId)
-          .first;
-    }
-
-    if (mouldList != null) {
-      if (taskType == MOULD_TASK_TYPE_PAY.toString() &&
-          mouldList.toolingType == TOOL_TYPE_M) {
-        if (mouldList.bindLabels?[0].cavityPhoto != null &&
-            mouldList.bindLabels?[0].nameplatePhoto != null &&
-            mouldList.bindLabels?[0].overallPhoto != null) {
-          mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
-        } else {
-          mouldList.bindStatus = BIND_STATUS_REBIND;
-        }
-      } else if (taskType == MOULD_TASK_TYPE_PAY.toString() &&
-          mouldList.toolingType == TOOL_TYPE_G) {
-        if (mouldList.bindLabels?[0].nameplatePhoto != null &&
-            mouldList.bindLabels?[0].overallPhoto != null) {
-          mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
-        } else {
-          mouldList.bindStatus = BIND_STATUS_REBIND;
-        }
-      } else if (taskType == MOULD_TASK_TYPE_LABEL.toString()) {
-        if (mouldList.bindLabels?[0].nameplatePhoto != null) {
-          mouldList.bindStatus = BIND_STATUS_WAITING_UPLOAD;
-        } else {
-          mouldList.bindStatus = BIND_STATUS_REBIND;
-        }
-      } else {
-        mouldList.bindStatus = BIND_STATUS_REBIND;
-      }
-    }
-
-    mouldList?.lat = _assertBindTaskInfo.value?.lat;
-    mouldList?.lng = _assertBindTaskInfo.value?.lng;
-    mouldList?.bindLabels?[0].labelNo = readDataContent.value;
-
-    // mouldList = _assertBindTaskInfo.value;
-
-    CacheUtils.to.saveMouldTask(mouldData, true);
+    // CacheUtils.to.saveMouldTask(mouldData, true);
     toastInfo(msg: "保存成功");
     Get.back();
   }

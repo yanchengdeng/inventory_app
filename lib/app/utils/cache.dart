@@ -24,7 +24,7 @@ class CacheUtils extends GetxController {
   static CacheUtils get to => Get.find();
 
   ///模具绑定信息
-  var _mouldBindTaskList = Rx<MouldData?>(null);
+  var _mouldBindTaskList = Rx<MouldBindTask?>(null);
 
   set mouldBindTaskList(value) => _mouldBindTaskList.value = value;
 
@@ -46,7 +46,7 @@ class CacheUtils extends GetxController {
 需要借助下发时间做进一步判断是否需要删除缓存
  */
 
-  Future<void> saveMouldTask(MouldData? data, bool isLocalSave) async {
+  Future<void> saveMouldTask(MouldBindTask? data, bool isLocalSave) async {
     var cacheMould = await StorageService.to.getString(STORAGE_TASK_MOULD_DATA);
     if (cacheMould.isEmpty) {
       List<CacheMouldBindData> list = [
@@ -106,7 +106,7 @@ class CacheUtils extends GetxController {
       _mouldBindTaskList.value = bindData.data!;
 
       Log.d(
-          "本地模具解析成功：${cacheMouldBindData.length}---${bindData.data?.finished}");
+          "本地模具解析成功：${cacheMouldBindData.length}---${bindData.data}");
     } else {
       Log.d("未找到模具数据，请检查网络数据");
     }
@@ -114,7 +114,7 @@ class CacheUtils extends GetxController {
 
   ///根据模具任务状态 获取对应集合数据
   List<MouldList> mouldBindTaskListForWaitBind(int position, int status) {
-    return mouldBindTaskList.unfinishedTaskList?[position]?.mouldList
+    return mouldBindTaskList?[position]?.mouldList
             ?.where((element) => element.bindStatus == status)
             ?.toList() ??
         List.empty();
@@ -130,7 +130,7 @@ class CacheUtils extends GetxController {
   Future<List<MouldList?>> getMouldTaskListByKeyOrStatus(String taskNo,
       String key, List<int> bindStatus, List<String> toolingType) async {
     await getMouldTask();
-    var unfinisedtask = await mouldBindTaskList.unfinishedTaskList
+    var unfinisedtask = await mouldBindTaskList
         .where((element) => element.taskNo == taskNo)
         ?.first;
 
@@ -141,7 +141,9 @@ class CacheUtils extends GetxController {
   ///更新模具任务
   updateMouldListState(String taskType, MouldList? mouldListItem) async {
     await getMouldTask();
-    var unfinisedtask = await mouldBindTaskList.unfinishedTaskList
+
+
+    var unfinisedtask = await mouldBindTaskList
         .where((element) => element.taskNo == mouldListItem?.taskNo)
         ?.first;
 
@@ -168,7 +170,7 @@ class CacheUtils extends GetxController {
   Future<MouldList> getUnLoadedAssetBindTaskInfo(
       String taskNo, String assetNo) async {
     await getMouldTask();
-    var task = mouldBindTaskList.unfinishedTaskList
+    var task = mouldBindTaskList
         ?.where((element) => element.taskNo == taskNo)
         ?.first;
     var mouldList = task?.mouldList;
@@ -178,7 +180,7 @@ class CacheUtils extends GetxController {
   ////////////////////////////////以下为资产盘点数据操作//////////////////////////////////////////////
 
   ///资产盘点未完成信息
-  var _inventoryList = Rx<InventroyData?>(null);
+  var _inventoryList = Rx<InventoryData?>(null);
 
   set inventoryList(value) => _inventoryList.value = value;
 
@@ -194,7 +196,7 @@ class CacheUtils extends GetxController {
 因为替换和盘点的labelReplaceTaskId\assetInventoryDetailId  和绑定的assetBindTaskId不一样，相同模具重复下发时的ID是不变的，
 需要借助下发时间做进一步判断是否需要删除缓存
  */
-  Future<void> saveInventoryTask(InventroyData? data, bool isLocalSave) async {
+  Future<void> saveInventoryTask(InventoryData? data, bool isLocalSave) async {
     var cacheMould = await StorageService.to.getString(STORAGE_INVENTORY_DATA);
     _inventoryList.value = data;
     if (cacheMould.isEmpty) {
@@ -247,15 +249,15 @@ class CacheUtils extends GetxController {
       _inventoryList.value = bindData.data!;
 
       Log.d(
-          "本地盘点任务 解析成功：${cacheMouldBindData.length}---${bindData.data?.finished}");
+          "本地盘点任务 解析成功：${cacheMouldBindData.length}---${bindData.data?.data?.length}");
     } else {
       Log.d("未找到盘点数据，请检查网络数据");
     }
   }
 
   ///根据模具任务状态 获取对应集合数据
-  List<ItemList> getInventoryListByStatus(int position, int status) {
-    return inventoryList.unfinishedList?[position]?.list
+  List<InventoryDetail> getInventoryListByStatus(int position, int status) {
+    return inventoryList[position]?.list
             ?.where((element) => element.assetInventoryStatus == status)
             ?.toList() ??
         List.empty();
@@ -268,11 +270,11 @@ class CacheUtils extends GetxController {
    * @param  toolingType  工业状态  支持多选查询
    */
 
-  Future<List<ItemList>> getInventoryTaskListByKeyOrStatus(String taskNo,
+  Future<List<InventoryDetail>> getInventoryTaskListByKeyOrStatus(String taskNo,
       String key, List<int> bindStatus, List<String> toolingType) async {
     await getInventoryTask();
 
-    var dataInfo = await inventoryList.unfinishedList
+    var dataInfo = await inventoryList
         .where((element) => element.taskNo == taskNo)
         .first;
     return dataInfo.list ?? List.empty();

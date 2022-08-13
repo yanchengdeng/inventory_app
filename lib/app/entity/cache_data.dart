@@ -8,13 +8,13 @@ import 'package:inventory_app/app/entity/mould_bind.dart';
 
 class CacheMouldBindData {
   String? userId;
-  MouldData? data;
+  MouldBindTask? data;
 
   CacheMouldBindData({this.userId, this.data});
 
   CacheMouldBindData.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
-    data = json['data'] != null ? new MouldData.fromJson(json['data']) : null;
+    data = json['data'] != null ? new MouldBindTask.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -34,14 +34,14 @@ class CacheMouldBindData {
 
 class CacheInventoryData {
   String? userId;
-  InventroyData? data;
+  InventoryData? data;
 
   CacheInventoryData({this.userId, this.data});
 
   CacheInventoryData.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
     data =
-        json['data'] != null ? new InventroyData.fromJson(json['data']) : null;
+        json['data'] != null ? new InventoryData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {

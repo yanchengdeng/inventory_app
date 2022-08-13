@@ -11,7 +11,7 @@ import '../utils/http.dart';
 
 class InventoryApi<T> {
   //获取未完成资产盘点列表
-  static Future<InventoryList> getInventoryList<T>() async {
+  static Future<InventoryData> getInventoryData<T>() async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'inventoryTask_list';
     Options options = Options();
@@ -19,11 +19,11 @@ class InventoryApi<T> {
 
     var response =
         await HttpUtil().get('/inventoryTask/list', options: options);
-    return InventoryList.fromJson(response);
+    return InventoryData.fromJson(response);
   }
 
   //获取已完成资产盘点列表
-  static Future<InventoryList> getInventoryFinishedList<T>(int page) async {
+  static Future<InventoryData> getInventoryFinishedList<T>(int page) async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'inventoryTask_finishedList';
     Options options = Options();
@@ -42,6 +42,6 @@ class InventoryApi<T> {
 
     var response = await HttpUtil()
         .post('/inventoryTask/finishedList', data: data, options: options);
-    return InventoryList.fromJson(response);
+    return InventoryData.fromJson(response);
   }
 }

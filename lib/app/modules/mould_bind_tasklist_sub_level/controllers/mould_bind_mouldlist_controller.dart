@@ -70,58 +70,58 @@ class MouldBindMouldlistController extends GetxController {
   uploadTask(MouldList? element, String taskType) async {
     Loading.show('上传中...');
     UploadBindLabels uploadBindLabels = UploadBindLabels();
-    if (element?.bindLabels?[0]?.nameplatePhoto?.fullPath != null) {
+    if (element?.nameplatePhoto?.fullPath != null) {
       ///有照片则上传照片
-      String? nameImageUrl = element?.bindLabels?[0].nameplatePhoto?.fullPath;
+      String? nameImageUrl = element?.nameplatePhoto?.fullPath;
       if (nameImageUrl != null && nameImageUrl.contains(APP_PACKAGE)) {
         String uuid = await FileApi.uploadFile(
-            element?.bindLabels?[0].nameplatePhoto?.fullPath ?? "");
-        element?.bindLabels?[0]?.nameplatePhoto?.fullPath == uuid;
+            element?.nameplatePhoto?.fullPath ?? "");
+        element?.nameplatePhoto?.fullPath == uuid;
         uploadBindLabels.nameplatePhoto = NameplatePhotoUpload();
         uploadBindLabels.nameplatePhoto?.fullPath = uuid;
       }
     }
 
-    if (element?.bindLabels?[0]?.cavityPhoto?.fullPath != null) {
+    if (element?.cavityPhoto?.fullPath != null) {
       ///有照片则上传照片
-      String? nameImageUrl = element?.bindLabels?[0].cavityPhoto?.fullPath;
+      String? nameImageUrl = element?.cavityPhoto?.fullPath;
       if (nameImageUrl != null && nameImageUrl.contains(APP_PACKAGE)) {
         String uuid = await FileApi.uploadFile(
-            element?.bindLabels?[0].cavityPhoto?.fullPath ?? "");
-        element?.bindLabels?[0]?.cavityPhoto?.fullPath == uuid;
+            element?.cavityPhoto?.fullPath ?? "");
+        element?.cavityPhoto?.fullPath == uuid;
 
         uploadBindLabels.cavityPhoto = NameplatePhotoUpload();
         uploadBindLabels.cavityPhoto?.fullPath = uuid;
       }
     }
 
-    if (element?.bindLabels?[0]?.overallPhoto?.fullPath != null) {
+    if (element?.overallPhoto?.fullPath != null) {
       ///有照片则上传照片
-      String? nameImageUrl = element?.bindLabels?[0].overallPhoto?.fullPath;
+      String? nameImageUrl = element?.overallPhoto?.fullPath;
       if (nameImageUrl != null && nameImageUrl.contains(APP_PACKAGE)) {
         String uuid = await FileApi.uploadFile(
-            element?.bindLabels?[0].overallPhoto?.fullPath ?? "");
-        element?.bindLabels?[0]?.overallPhoto?.fullPath == uuid;
+            element?.overallPhoto?.fullPath ?? "");
+        element?.overallPhoto?.fullPath == uuid;
         uploadBindLabels.overallPhoto = NameplatePhotoUpload();
         uploadBindLabels.overallPhoto?.fullPath = uuid;
       }
     }
 
-    uploadBindLabels.bindLabels = element?.bindLabels?[0].labelNo?.split(',');
-    if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
-      await MouldTaskApi.uploadForPayType(
-          element?.assetBindTaskId ?? 0, json.encode(uploadBindLabels));
-
-      element?.bindStatus = BIND_STATUS_UPLOADED;
-      await updateLableStatus(taskType, element);
-    } else {
-      await MouldTaskApi.uploadForLableReplaceType(
-          element?.labelReplaceTaskId ?? 0, json.encode(uploadBindLabels));
-
-      element?.bindStatus = BIND_STATUS_UPLOADED;
-
-      await updateLableStatus(taskType, element);
-    }
+    // uploadBindLabels.bindLabels = element?.bindLabels.toString();
+    // if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+    //   await MouldTaskApi.uploadForPayType(
+    //       element?.assetBindTaskId ?? 0, json.encode(uploadBindLabels));
+    //
+    //   element?.bindStatus = BIND_STATUS_UPLOADED;
+    //   await updateLableStatus(taskType, element);
+    // } else {
+    //   await MouldTaskApi.uploadForLableReplaceType(
+    //       element?.labelReplaceTaskId ?? 0, json.encode(uploadBindLabels));
+    //
+    //   element?.bindStatus = BIND_STATUS_UPLOADED;
+    //
+    //   await updateLableStatus(taskType, element);
+    // }
     Loading.dismiss();
   }
 

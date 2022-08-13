@@ -1,15 +1,11 @@
-package com.luojie.erapp.inventory_app
+package com.sgm.rfidapp
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Color
 import android.os.Build
-import android.text.TextUtils
-import android.widget.BaseAdapter
 import androidx.annotation.RequiresApi
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.luojie.erapp.inventory_app.data.BtDeviceInfo
+import com.sgm.rfidapp.data.BtDeviceInfo
 
 /**
  *@Describe ：纪要说明

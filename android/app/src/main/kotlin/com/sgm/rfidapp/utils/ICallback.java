@@ -1,4 +1,4 @@
-package com.luojie.erapp.inventory_app.utils;
+package com.sgm.rfidapp.utils;
 
 public interface ICallback<RESULT> {
 

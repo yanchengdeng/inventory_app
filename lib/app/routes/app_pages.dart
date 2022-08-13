@@ -24,9 +24,6 @@ import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/take_photo/bindings/take_photo_binding.dart';
 import '../modules/take_photo/views/take_photo_view.dart';
-import '../modules/testRFID/bindings/test_r_f_i_d_binding.dart';
-import '../modules/testRFID/views/test_r_f_i_d_view.dart';
-import '../store/store.dart';
 import 'observers.dart';
 
 part 'app_routes.dart';
@@ -95,10 +92,6 @@ class AppPages {
       page: () => InventoryTasklistSubLevelView(),
       binding: InventoryTasklistSubLevelBinding(),
     ),
-    GetPage(
-      name: _Paths.TEST_R_F_I_D,
-      page: () => TestRFIDView(),
-      binding: TestRFIDBinding(),
-    ),
+
   ];
 }

@@ -74,9 +74,14 @@ const PHOTO_TYPE_MP = 20;
 const PHOTO_TYPE_XQ = 30;
 
 ///app 名称  本地图片在改包下 以此判定图片展示方式
-const APP_PACKAGE = 'com.luojie.erapp';
+const APP_PACKAGE = 'com.sgm.rfidapp';
 
 ///模具保存key
 const SAVE_KEY_FOR_MOULD = "mould_key";
 ///盘点保存key
 const SAVE_KEY_FOR_INVENTORY = "inventory_key";
+
+
+///android 低层发出的读取数据类型  1标签 2二维码
+const  LABEL_RFID = 1;
+const LABEL_SCAN = 2;

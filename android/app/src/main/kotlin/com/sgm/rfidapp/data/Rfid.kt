@@ -12,23 +12,16 @@ import android.bluetooth.BluetoothDevice
 
 //蓝牙设备
 data class BtDeviceInfo(val macAddress : BluetoothDevice, val name: String, val rssi: Short,var  isSelected : Boolean )
+//1标签 2二维码
+enum class LABEL(val type : Int){
 
-enum class READ_STATUS(status : Int){
-    //未操作RFID
-    NO_HANDLE(0),
-    //蓝牙底座已连接
-    BLUE_TEETH_OK(1),
-    //已创建读写器
-    CREATE_OK(2),
-    //正在读写
-    READING_DATA(3),
     //停止读写
-    STOP_READING(4),
+    RFID(1),
     //扫描
-    SCAN_READ(5),
+    SCAN(2),
 
 }
 
 //设备状态  如果code 是 则data 返回的是读写的数据(rfid )
-data class RfidStatus(val code : READ_STATUS,val data : List<String>)
+data class RfidData(val type : Int,val data : List<String>)
 

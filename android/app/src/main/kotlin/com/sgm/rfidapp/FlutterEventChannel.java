@@ -5,8 +5,14 @@ import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.EventChannel;
 
+/**
+ * data : 2022/8/13
+ * time : 15:02
+ * desc : EventChannel 通信
+ * @author yanc
+ */
 public class FlutterEventChannel implements FlutterPlugin, EventChannel.StreamHandler {
-    public static final String CHANNEL_NAME = "event_channel_name";
+    public static final String CHANNEL_NAME = "event_channel_rfid";
     private EventChannel eventChannel;
     private EventChannel.EventSink eventSink;
  

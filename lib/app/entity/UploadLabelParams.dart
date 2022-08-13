@@ -126,13 +126,16 @@ class PhotoInfo {
     String? documentName,
     String? downloadType,
     int? fileSize,
+    int? photoType,
     String? fileSuffix,
     String? fullPath,
+
   }) {
     _docComments = docComments;
     _documentName = documentName;
     _downloadType = downloadType;
     _fileSize = fileSize;
+    _photoType = photoType;
     _fileSuffix = fileSuffix;
     _fullPath = fullPath;
   }
@@ -142,6 +145,7 @@ class PhotoInfo {
     _documentName = json['documentName'];
     _downloadType = json['downloadType'];
     _fileSize = json['fileSize'];
+    _photoType = json['photoType'];
     _fileSuffix = json['fileSuffix'];
     _fullPath = json['fullPath'];
   }
@@ -150,6 +154,7 @@ class PhotoInfo {
   String? _documentName;
   String? _downloadType;
   int? _fileSize;
+  int? _photoType;
   String? _fileSuffix;
   String? _fullPath;
 
@@ -158,6 +163,7 @@ class PhotoInfo {
     String? documentName,
     String? downloadType,
     int? fileSize,
+    int? photoType,
     String? fileSuffix,
     String? fullPath,
   }) =>
@@ -166,6 +172,7 @@ class PhotoInfo {
         documentName: documentName ?? _documentName,
         downloadType: downloadType ?? _downloadType,
         fileSize: fileSize ?? _fileSize,
+        photoType: photoType ??_photoType,
         fileSuffix: fileSuffix ?? _fileSuffix,
         fullPath: fullPath ?? _fullPath,
       );
@@ -177,6 +184,7 @@ class PhotoInfo {
   String? get downloadType => _downloadType;
 
   int? get fileSize => _fileSize;
+  int? get photoType => _photoType;
 
   String? get fileSuffix => _fileSuffix;
 
@@ -188,6 +196,7 @@ class PhotoInfo {
     map['documentName'] = _documentName;
     map['downloadType'] = _downloadType;
     map['fileSize'] = _fileSize;
+    map['photoType'] = _photoType;
     map['fileSuffix'] = _fileSuffix;
     map['fullPath'] = _fullPath;
     return map;

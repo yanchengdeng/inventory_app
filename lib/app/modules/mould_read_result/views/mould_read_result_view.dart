@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
 import 'dart:io';
-import '../../../entity/MouldBindTask.dart';
 import '../../../routes/app_pages.dart';
 import '../../../style/text_style.dart';
 import '../../../utils/common.dart';
@@ -64,9 +63,11 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('固定资产编号：${controller.assertBindTaskInfo.value.assetNo}',
+                      Text(
+                          '固定资产编号：${controller.assertBindTaskInfo.value.assetNo}',
                           style: textBoldNumberWhiteStyle()),
-                      Text('SGM车型：${controller.assertBindTaskInfo.value.vehicle}',
+                      Text(
+                          'SGM车型：${controller.assertBindTaskInfo.value.vehicle}',
                           style: textLitleWhiteTextStyle()),
                       Text('零件号：${controller.assertBindTaskInfo.value.moldNo}',
                           style: textLitleWhiteTextStyle()),
@@ -164,16 +165,14 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       ),
                       onTap: () => {
                         //未读到标签时自动切换  有则弹框提醒
-                        if (controller.readDataContent.value.isEmpty)
+                        if (controller.readDataContent.value.data?.length == 0)
                           {
                             if (controller.isRfidReadStatus.value)
                               {
-                                controller.getScanLabel(),
                                 controller.isRfidReadStatus.value = false,
                               }
                             else
                               {
-                                // controller.startReadRfidData(),
                                 controller.isRfidReadStatus.value = true,
                               }
                           }
@@ -183,16 +182,13 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                 content: '切换后，已读标签数据将被清除?',
                                 callback: () => {
                                       Get.back(),
-                                      controller.clearData(),
                                       if (controller.isRfidReadStatus.value)
                                         {
-                                          controller.getScanLabel(),
                                           controller.isRfidReadStatus.value =
                                               false,
                                         }
                                       else
                                         {
-                                          // controller.startReadRfidData(),
                                           controller.isRfidReadStatus.value =
                                               true,
                                         }
@@ -207,7 +203,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                     child: Divider(color: Colors.black26, height: 1)),
                 Container(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: Text(getLabels().toString(),
+                    child: Text(
+                        controller.readDataContent.value.data?.toString() ?? "",
                         style: textNormalListTextStyle())),
                 Obx(
                   () => Center(
@@ -252,22 +249,6 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
     );
   }
 
-  ///获取标签
-  String getLabels() {
-    // List<BindLabels> labels = controller.assertBindTaskInfo?.bindLabels;
-    // List<String> allLebles = List.empty();
-    // List<String> existLables = labels?[0].labelNo?.split(',') ?? List.empty();
-    // allLebles.addAll(existLables);
-    // List<String> readLabels = controller.readDataContent.value.split(',');
-    // allLebles.addAll(readLabels);
-    // StringBuffer allString = StringBuffer();
-    // allLebles.forEach((element) {
-    //   allString.writeln(element);
-    // });
-
-    return controller.readDataContent.value;
-  }
-
   Widget ImageContain() {
     /// 支付类型的  /// 支付类型 整体照片、铭牌照片、型腔照片
     /// 4.1资产图片分为整体照片、铭牌照片和型腔照片，每种类型上传一张，前两种照片需要在已读取标签前提下，识别到任一标签时才能拍照上传
@@ -284,11 +265,15 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                   child: Expanded(
                       flex: 1,
                       child: textImageWidget(
-                          '铭牌照片', controller.imageUrlMp.value?.fullPath)),
+                          '铭牌照片',
+                          controller.imageUrlMp.value.isEmpty
+                              ? controller.assertBindTaskInfo.value
+                                  .nameplatePhoto?.fullPath
+                              : controller.imageUrlMp.value)),
                   onTap: () => {
                     controller.getGpsLagLng(),
                     toastInfo(msg: '获取定位中...'),
-                    if ((controller.readDataContent.value).isEmpty)
+                    if (controller.readDataContent.value.data?.isEmpty == true)
                       {toastInfo(msg: "请先读取标签")}
                     else
                       {
@@ -312,11 +297,16 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '整体照片', controller.imageUrlAll.value?.fullPath)),
+                              '整体照片',
+                              controller.imageUrlAll.value.isEmpty
+                                  ? controller.assertBindTaskInfo.value
+                                      .overallPhoto?.fullPath
+                                  : controller.imageUrlAll.value)),
                       onTap: () => {
                         controller.getGpsLagLng(),
                         toastInfo(msg: '获取定位中...'),
-                        if ((controller.readDataContent.value).isEmpty)
+                        if (controller.readDataContent.value.data?.isEmpty ==
+                            true)
                           {toastInfo(msg: "请先读取标签")}
                         else
                           {
@@ -330,7 +320,11 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '铭牌照片', controller.imageUrlMp.value?.fullPath)),
+                              '铭牌照片',
+                              controller.imageUrlMp.value.isEmpty
+                                  ? controller.assertBindTaskInfo.value
+                                      .nameplatePhoto?.fullPath
+                                  : controller.imageUrlMp.value)),
                       onTap: () => {
                         Get.toNamed(Routes.TAKE_PHOTO,
                             arguments: {'photoType': PHOTO_TYPE_MP})
@@ -347,7 +341,11 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '型腔照片', controller.imageUrlXq.value?.fullPath)),
+                              '型腔照片',
+                              controller.imageUrlXq.value.isEmpty
+                                  ? controller.assertBindTaskInfo.value
+                                      .cavityPhoto?.fullPath
+                                  : controller.imageUrlXq.value)),
                       onTap: () => {
                         Get.toNamed(Routes.TAKE_PHOTO,
                             arguments: {'photoType': PHOTO_TYPE_XQ})
@@ -393,25 +391,9 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                           fit: BoxFit.fill,
                           height: SizeConstant.IAMGE_SIZE_HEIGHT,
                           width: SizeConstant.IAMGE_SIZE_HEIGHT,
-                        )
-              //   child: CachedNetworkImage(
-              //       imageUrl: imageUrl,
-              //       fit: BoxFit.fitWidth,
-              //       placeholder: (build, url) => Container(
-              //           alignment: AlignmentDirectional.center,
-              //           child: Icon(Icons.add_a_photo,
-              //               size: 80, color: Colors.black12)),
-              //       errorWidget: (build, url, error) => Container(
-              //           alignment: AlignmentDirectional.center,
-              //           child: Icon(Icons.add_a_photo,
-              //               size: 80, color: Colors.black12)),
-              //       height: SizeConstant.IAMGE_SIZE_HEIGHT,
-              //       width: SizeConstant.IAMGE_SIZE_HEIGHT),
-              )
+                        ))
         ],
       ),
     );
   }
-
-
 }

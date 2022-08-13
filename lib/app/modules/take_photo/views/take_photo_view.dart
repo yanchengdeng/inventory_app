@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
 import 'package:inventory_app/app/apis/apis.dart';
+import 'package:inventory_app/app/entity/UploadLabelParams.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import '../../../entity/cache_data.dart';
 import '../../mould_read_result/controllers/mould_read_result_controller.dart';
@@ -46,8 +47,8 @@ class TakePhotoView extends GetView<TakePhotoController> {
 
             final MouldReadResultController resultController =
                 Get.find<MouldReadResultController>();
-            // resultController.refreshImage(
-            //     UploadImageInfo(filePath: image.path, photoType: photoType));
+            resultController.refreshImage(
+                PhotoInfo(fullPath: image.path, photoType: photoType));
             Get.back();
           } catch (e) {
             Log.d("拍照异常${e}");

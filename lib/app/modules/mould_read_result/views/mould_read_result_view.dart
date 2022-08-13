@@ -1,9 +1,9 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
-import 'dart:io';
 import '../../../routes/app_pages.dart';
 import '../../../style/text_style.dart';
 import '../../../utils/common.dart';
@@ -146,10 +146,12 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       color: Colors.red,
                       size: 10,
                     ),
-                    Text('标签编号', style: textBoldNumberBlueStyle()),
+                    Text('标签编号 ', style: textBoldNumberBlueStyle()),
                     InkWell(
                       child: Text(
-                        "${controller.assertBindTaskInfo.value.lat},${controller.assertBindTaskInfo.value.lng}",
+                        controller.locationInfo.value.lat == null
+                            ? ""
+                            : "${controller.locationInfo.value.lat},${controller.locationInfo.value.lng}",
                         style: textSmallTextStyle(),
                       ),
                       onTap: () => {controller.getGpsLagLng()},
@@ -157,15 +159,18 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                     Spacer(flex: 1),
                     InkWell(
                       child: Obx(
-                        () => Text(
-                            controller.isRfidReadStatus.value
-                                ? '切换为PDA扫描'
-                                : '切换为RFID读取',
-                            style: textNormalTextBlueStyle()),
+                        () => Visibility(
+                          visible: controller.readLabelType.value == 0,
+                          child: Text(
+                              controller.isRfidReadStatus.value
+                                  ? '切换为PDA扫描'
+                                  : '切换为RFID读取',
+                              style: textNormalTextBlueStyle()),
+                        ),
                       ),
                       onTap: () => {
                         //未读到标签时自动切换  有则弹框提醒
-                        if (controller.readDataContent.value.data?.length == 0)
+                        if (controller.showAllLabels.length == 0)
                           {
                             if (controller.isRfidReadStatus.value)
                               {
@@ -181,7 +186,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                             CommonUtils.showCommonDialog(
                                 content: '切换后，已读标签数据将被清除?',
                                 callback: () => {
-                                      Get.back(),
+                                      controller.showAllLabels.clear(),
                                       if (controller.isRfidReadStatus.value)
                                         {
                                           controller.isRfidReadStatus.value =
@@ -191,7 +196,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                         {
                                           controller.isRfidReadStatus.value =
                                               true,
-                                        }
+                                        },
+                                      Get.back()
                                     })
                           }
                       },
@@ -203,18 +209,82 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                     child: Divider(color: Colors.black26, height: 1)),
                 Container(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: Text(
-                        controller.readDataContent.value.data?.toString() ?? "",
-                        style: textNormalListTextStyle())),
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) => Row(
+                              children: [
+                                Text(
+                                  '${controller.showAllLabels[index]}',
+                                  style: textNormalListTextStyle(),
+                                ),
+                                InkWell(
+                                    onTap: () {
+                                      if (controller.showAllLabels.length ==
+                                          1) {
+                                        if (controller.imageUrlAll.isNotEmpty ||
+                                            controller.imageUrlMp.isNotEmpty ||
+                                            controller.imageUrlXq.isNotEmpty) {
+                                          CommonUtils.showCommonDialog(
+                                              content: "删除所有标签，将会清空照片，是否继续？",
+                                              callback: () {
+                                                controller.showAllLabels
+                                                    .clear();
+                                                controller.imageUrlXq.value =
+                                                    "";
+                                                controller.imageUrlMp.value =
+                                                    "";
+                                                controller.imageUrlAll.value =
+                                                    "";
+                                                Get.back();
+                                              });
+                                        } else {
+                                          controller.showAllLabels
+                                              .removeAt(index);
+                                        }
+                                      } else {
+                                        controller.showAllLabels
+                                            .removeAt(index);
+                                      }
+                                    },
+                                    child: Container(
+                                      margin:
+                                          EdgeInsetsDirectional.only(start: 15),
+                                      child: Image(
+                                        image: AssetImage(
+                                            'images/icon_round_close.png'),
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    ))
+                              ],
+                            ),
+                        itemCount: controller.showAllLabels.length)),
                 Obx(
-                  () => Center(
-                    child: Visibility(
-                      visible: controller.isRfidReadStatus.value,
-                      child: ElevatedButton(
-                          onPressed: () => {controller.startReadRfidData()},
-                          child: Text(
-                              controller.isReadData.value ? '开始读取' : '结束读取')),
-                    ),
+                  () => Stack(
+                    children: [
+                      Center(
+                        child: Visibility(
+                            visible:
+                                controller.readLabelType.value == LABEL_SCAN ||
+                                    controller.isRfidReadStatus.value == false,
+                            child: Text(
+                              '请点击设备左侧或右侧按钮扫描',
+                              style: textNormalListTextStyle(),
+                            )),
+                      ),
+                      Center(
+                        child: Visibility(
+                          visible: controller.isRfidReadStatus.value &&
+                              controller.readLabelType.value != LABEL_SCAN,
+                          child: ElevatedButton(
+                              onPressed: () => {controller.startReadRfidData()},
+                              child: Text(controller.isReadData.value
+                                  ? '开始读取'
+                                  : '结束读取')),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -272,7 +342,6 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                               : controller.imageUrlMp.value)),
                   onTap: () => {
                     controller.getGpsLagLng(),
-                    toastInfo(msg: '获取定位中...'),
                     if (controller.readDataContent.value.data?.isEmpty == true)
                       {toastInfo(msg: "请先读取标签")}
                     else

@@ -94,12 +94,11 @@ public class LocationUtil {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         Log.i(TAG, "latitude : " + latitude + "  longitude : " + longitude);
-        callback.onResult(new LocationBean(latitude, longitude));
-//        getAddress(latitude, longitude, callback, context);
+        getAddress(latitude, longitude, callback, context);
     }
 
     public static void getAddress(double latitude, double longitude, final ICallback<LocationBean> callback, Context context) {
-        Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
+        Geocoder geocoder = new Geocoder(context, Locale.CHINA);
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             Address address = addresses != null && addresses.size() > 0 ? addresses.get(0) : null;
@@ -108,17 +107,21 @@ public class LocationUtil {
                 String countryCode = address.getCountryCode();
                 Log.i(TAG, "countryName : " + countryName + "  countryCode : " + countryCode);
                 if (callback != null) {
-                    callback.onResult(new LocationBean(latitude, longitude));
+                    if (address.getMaxAddressLineIndex() >= 1 ){
+                        callback.onResult(new LocationBean(latitude, longitude,addresses.get(0).getAddressLine(0)+addresses.get(0).getAddressLine(1)));
+                    }else{
+                        callback.onResult(new LocationBean(latitude, longitude,address.getAdminArea()));
+                    }
                 }
             } else {
                 if (callback != null) {
-                    callback.onError(new Throwable("address null"));
+                    callback.onResult(new LocationBean(latitude, longitude,""));
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
             if (callback != null) {
-                callback.onError(e);
+                callback.onResult(new LocationBean(latitude, longitude,""));
             }
         }
     }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/ReadLabelInfo.dart';
 import 'package:inventory_app/app/entity/UploadLabelParams.dart';
@@ -9,6 +10,7 @@ import 'package:inventory_app/app/values/constants.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
 
 import '../../../apis/file_api.dart';
+import '../../../entity/LocationInfo.dart';
 import '../../../entity/MouldBindTask.dart';
 import '../../home/controllers/home_controller.dart';
 
@@ -28,11 +30,13 @@ class MouldReadResultController extends GetxController {
   ///型腔照片
   var imageUrlXq = "".obs;
 
-  ///经纬度数据121.23312,1232.32
-  var gpsData = Rx<String>('');
+  var locationInfo = LocationInfo().obs;
 
   ///读取rfid数据
   var isReadData = Rx<bool>(true);
+
+  ///读取标签方式  0  两者  1  rfid  2 扫码
+  var readLabelType = 0.obs;
 
   ///RFID SDK 通信channel  只允许上下行 一次交互
   static const String READ_RFID_DATA_CHANNEL = 'mould_read_result/blue_teeth';
@@ -52,6 +56,12 @@ class MouldReadResultController extends GetxController {
   /// 停止rfid sdk 和 扫描sdk
   static const String STOP_RFID_AND_SCAN = 'stop_rfid_and_scan';
 
+  ///只初始化rfid
+  static const INIT_RFID_ONLY = 'init_rfid_and_only';
+
+  ///只初始化扫描
+  static const INIT_SCAN_ONLY = 'init_scan_and_only';
+
   ///flutter 与android 原生交互  只能一次发送一个回复 模式
   static const platform = MethodChannel(READ_RFID_DATA_CHANNEL);
 
@@ -65,6 +75,9 @@ class MouldReadResultController extends GetxController {
 
   ///读取数据
   var readDataContent = ReadLabelInfo().obs;
+
+  ///所有显示标签   已有标签+ 读取标签
+  var showAllLabels = [].obs;
 
   ///开始读 、停止读
   startReadRfidData() async {
@@ -86,17 +99,25 @@ class MouldReadResultController extends GetxController {
   /// 获取经纬度
   getGpsLagLng() async {
     var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
-    gpsData.value = latLng;
+    Log.d("获取定位信息：$latLng");
+    var location = jsonDecode(latLng);
+    locationInfo.value = LocationInfo.fromJson(location);
   }
 
   @override
   void onInit() {
     super.onInit();
-    platform.invokeMethod(INIT_RFID_AND_SCAN);
+
     _eventChannel.receiveBroadcastStream().listen((event) {
       var jsonLabels = jsonDecode(event);
       readDataContent.value = ReadLabelInfo.fromJson(jsonLabels);
-      print("yancheng-返回到fullter 上标签数据：--${readDataContent.value}");
+      readDataContent.value.data?.forEach((element) {
+        if (!showAllLabels.contains(element)) {
+          showAllLabels.add(element);
+        }
+      });
+
+      print("yancheng-返回到fullter 上标签数据：--${showAllLabels}");
     });
   }
 
@@ -123,6 +144,7 @@ class MouldReadResultController extends GetxController {
 
   ///获取编辑信息
   void getTaskInfo(taskNo, assetNo) async {
+    EasyLoading.show(status: "加载中...");
     await FileApi.getFileToken();
     assertBindTaskInfo.value = homeController.mouldBindList.value.data
             ?.where((element) => element.taskNo == taskNo)
@@ -132,7 +154,24 @@ class MouldReadResultController extends GetxController {
             ?.first ??
         MouldList();
 
+    ///默认添加已有标签
+    assertBindTaskInfo.value.bindLabels?.forEach((element) {
+      if (!showAllLabels.contains(element)) {
+        showAllLabels.add(element);
+      }
+    });
     Log.d("读取页数据：${assertBindTaskInfo.value.toJson()}");
+    if (assertBindTaskInfo.value.labelType == 0) {
+      readLabelType.value = 0;
+      await platform.invokeMethod(INIT_RFID_AND_SCAN);
+    } else if (assertBindTaskInfo.value.labelType == LABEL_RFID) {
+      readLabelType.value = LABEL_RFID;
+      await platform.invokeMethod(INIT_RFID_ONLY);
+    } else if (assertBindTaskInfo.value.labelType == LABEL_SCAN) {
+      readLabelType.value = LABEL_SCAN;
+      await platform.invokeMethod(INIT_SCAN_ONLY);
+    }
+    EasyLoading.dismiss();
   }
 
   ///保存

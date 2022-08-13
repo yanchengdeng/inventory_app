@@ -2,34 +2,34 @@ package com.sgm.rfidapp.utils;
 
 public class LocationBean {
 
-    private double latitude;
-    private double longitude;
+    private double lat;
+    private double lng;
 //    private String countryName;
 //    private String countryCode;
-//    private String address;
+    private String address;
 
-    public LocationBean(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public LocationBean(double latitude, double longitude,String address) {
+        this.lat = latitude;
+        this.lng = longitude;
 //        this.countryName = countryName;
 //        this.countryCode = countryCode;
-//        this.address = address;
+        this.address = address;
     }
 
     public double getLatitude() {
-        return latitude;
+        return lat;
     }
 
     public void setLatitude(double latitude) {
-        this.latitude = latitude;
+        this.lat = latitude;
     }
 
     public double getLongitude() {
-        return longitude;
+        return lng;
     }
 
     public void setLongitude(double longitude) {
-        this.longitude = longitude;
+        this.lng = longitude;
     }
 
 //    public String getCountryName() {
@@ -48,13 +48,13 @@ public class LocationBean {
 //        this.countryCode = countryCode;
 //    }
 //
-//    public String getAddress() {
-//        return address;
-//    }
-//
-//    public void setAddress(String address) {
-//        this.address = address;
-//    }
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 //
 //    @Override
 //    public String toString() {

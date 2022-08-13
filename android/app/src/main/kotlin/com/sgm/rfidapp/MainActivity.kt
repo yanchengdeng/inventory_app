@@ -48,6 +48,12 @@ class MainActivity : FlutterActivity() {
     ///初始化rfid 读取与扫描
     private val INIT_RFID_AND_SCAN = "init_rfid_and_scan"
 
+    ///只初始化rfid
+    private val INIT_RFID_ONLY = "init_rfid_and_only"
+
+    ///只初始化扫描
+    private val INIT_SCAN_ONLY = "init_scan_and_only"
+
     /// 停止rfid sdk 和 扫描sdk
     private val STOP_RFID_AND_SCAN = "stop_rfid_and_scan"
     //条形码读取
@@ -120,7 +126,7 @@ class MainActivity : FlutterActivity() {
                                 object : ICallback<LocationBean> {
                                     override fun onResult(location: LocationBean?) {
                                         location?.apply {
-                                            result.success("${location.latitude},${location.longitude}")
+                                            result.success(GsonUtils.toJson(location))
                                         }
                                     }
 
@@ -143,6 +149,16 @@ class MainActivity : FlutterActivity() {
                     initBarCodeReader()
                     initRfid()
                     Log.w("yancheng", "初始化 RFID 和扫描功能--")
+                }
+
+                INIT_RFID_ONLY -> {
+                    initRfid()
+                    Log.w("yancheng", "只初始化 RFID --")
+                }
+
+                INIT_SCAN_ONLY -> {
+                    initBarCodeReader()
+                    Log.w("yancheng", "只初始化 扫描功能--")
                 }
 
                 STOP_RFID_AND_SCAN -> {

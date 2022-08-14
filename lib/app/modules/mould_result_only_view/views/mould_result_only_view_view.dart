@@ -54,14 +54,16 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          '固定资产编号：${controller.mouldBindTaskFinished?.assetNo}',
+                          '固定资产编号：${controller.mouldBindTaskFinished.value.assetNo}',
                           style: textBoldNumberWhiteStyle()),
-                      Text('SGM车型：${controller.mouldBindTaskFinished?.vehicle}',
-                          style: textLitleWhiteTextStyle()),
-                      Text('零件号：${controller.mouldBindTaskFinished?.moldNo}',
+                      Text(
+                          'SGM车型：${controller.mouldBindTaskFinished.value.vehicle}',
                           style: textLitleWhiteTextStyle()),
                       Text(
-                          '工装&模具名称：${controller.mouldBindTaskFinished?.toolingName}',
+                          '零件号：${controller.mouldBindTaskFinished.value.moldNo}',
+                          style: textLitleWhiteTextStyle()),
+                      Text(
+                          '工装&模具名称：${controller.mouldBindTaskFinished.value.toolingName}',
                           style: textLitleWhiteTextStyle()),
                       Obx(() => (Visibility(
                           visible: controller.isShowAllInfo.value,
@@ -69,19 +71,19 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '工装&模具尺寸(mm)：${controller.mouldBindTaskFinished?.toolingSize}',
+                                  '工装&模具尺寸(mm)：${controller.mouldBindTaskFinished.value.toolingSize}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '工装&模具重量(kg)：${controller.mouldBindTaskFinished?.toolingWeight}',
+                                  '工装&模具重量(kg)：${controller.mouldBindTaskFinished.value.toolingWeight}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '使用单位：${controller.mouldBindTaskFinished?.usedUnits}',
+                                  '使用单位：${controller.mouldBindTaskFinished.value.usedUnits}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '制造单位：${controller.mouldBindTaskFinished?.manufactureUnits}',
+                                  '制造单位：${controller.mouldBindTaskFinished.value.manufactureUnits}',
                                   style: textLitleWhiteTextStyle()),
                               Text(
-                                  '工装模具寿命：${controller.mouldBindTaskFinished?.assetLifespan}',
+                                  '工装模具寿命：${controller.mouldBindTaskFinished.value.assetLifespan}',
                                   style: textLitleWhiteTextStyle()),
                             ],
                           )))),
@@ -122,37 +124,43 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
           color: Colors.white,
           height: 160,
         ),
-        Obx(
-          () => Container(
+        Obx(() => Container(
             padding: EdgeInsets.only(left: 16, right: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.star,
-                      color: Colors.red,
-                      size: 10,
-                    ),
-                    Text('标签编号', style: textBoldNumberBlueStyle()),
-                    Text(
-                      '(${controller.mouldBindTaskFinished?.lat ?? "0.0"}-${controller.mouldBindTaskFinished?.lng ?? "0.0"})',
-                      style: textNormalListTextStyle(),
-                    ),
-                  ],
-                ),
-                Container(
-                    padding: EdgeInsets.only(top: 5),
-                    child: Divider(color: Colors.black26, height: 1)),
-                Container(
-                    padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: Text(getLabels().toString(),
-                        style: textNormalListTextStyle()))
-              ],
-            ),
-          ),
-        ),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    color: Colors.red,
+                    size: 10,
+                  ),
+                  Text('标签编号', style: textBoldNumberBlueStyle()),
+                  Text(
+                    '(${controller.mouldBindTaskFinished.value.lat ?? "0.0"}-${controller.mouldBindTaskFinished.value.lng ?? "0.0"})',
+                    style: textNormalListTextStyle(),
+                  ),
+                ],
+              ),
+              Container(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Divider(color: Colors.black26, height: 1)),
+              Container(
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) => Row(
+                            children: [
+                              Text(
+                                '${controller.mouldBindTaskFinished.value.bindLabels?[index]}',
+                                style: textNormalListTextStyle(),
+                              ),
+                            ],
+                          ),
+                      itemCount: controller
+                          .mouldBindTaskFinished.value.bindLabels?.length)),
+            ]))),
         Divider(color: Colors.black12, thickness: 20.0),
         Obx(
           () => Container(
@@ -184,30 +192,16 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
     );
   }
 
-  ///获取标签
-  StringBuffer getLabels() {
-
-    StringBuffer stringBuffer = StringBuffer();
-
-    return stringBuffer;
-  }
-
   Widget ImageContain() {
-    ///todo  测试使用
-    const String testImage1 =
-        'https://tse1-mm.cn.bing.net/th/id/OET.0b6df5a84be84e00ac0af44d644eb044?w=272&h=272&c=7&rs=1&o=5&dpr=1.25&pid=1.9';
-    const String testImage2 =
-        'https://tse1-mm.cn.bing.net/th/id/OET.62d14dc593b346259a456c0dd83bd8b6?w=272&h=272&c=7&rs=1&o=5&dpr=1.25&pid=1.9';
-    const String testImage3 =
-        'https://tse1-mm.cn.bing.net/th/id/OET.2567873a1fd04be7852a03de23158a00?w=272&h=272&c=7&rs=1&o=5&dpr=1.25&pid=1.9';
-
-    List<String> labels =
-        controller.mouldBindTaskFinished ?? List.empty();
-
     ///标签类型 只显示 铭牌
     if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL.toString()) {
-      if (labels.isNotEmpty) {
-        return textImageWidget('铭牌照片', testImage1);
+      if (controller.mouldBindTaskFinished.value.nameplatePhoto?.fullPath
+              ?.isNotEmpty ==
+          true) {
+        return textImageWidget(
+            '铭牌照片',
+            controller.mouldBindTaskFinished.value.nameplatePhoto?.fullPath ??
+                "");
       } else {
         return Icon(Icons.hourglass_empty);
       }
@@ -217,13 +211,31 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
         children: [
           Row(
             children: [
-              Expanded(flex: 1, child: textImageWidget('整体照片', testImage1)),
-              Expanded(flex: 1, child: textImageWidget('铭牌照片', testImage2)),
+              Expanded(
+                  flex: 1,
+                  child: textImageWidget(
+                      '整体照片',
+                      controller.mouldBindTaskFinished.value.overallPhoto
+                              ?.fullPath ??
+                          "")),
+              Expanded(
+                  flex: 1,
+                  child: textImageWidget(
+                      '铭牌照片',
+                      controller.mouldBindTaskFinished.value.nameplatePhoto
+                              ?.fullPath ??
+                          "")),
             ],
           ),
           Row(
             children: [
-              Expanded(flex: 1, child: textImageWidget('型腔照片', testImage3)),
+              Expanded(
+                  flex: 1,
+                  child: textImageWidget(
+                      '型腔照片',
+                      controller.mouldBindTaskFinished.value.cavityPhoto
+                              ?.fullPath ??
+                          "")),
               Expanded(flex: 1, child: Text('')),
             ],
           ),
@@ -239,7 +251,7 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
         children: [
           Text(title, style: textNormalListTextStyle()),
           CachedNetworkImage(
-              imageUrl: imageUrl,
+              imageUrl: controller.getNetImageUrl(imageUrl),
               height: SizeConstant.IAMGE_SIZE_HEIGHT,
               width: SizeConstant.IAMGE_SIZE_HEIGHT)
         ],

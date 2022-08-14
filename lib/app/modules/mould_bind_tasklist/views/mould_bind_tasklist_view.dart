@@ -3,10 +3,8 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/MouldBindTask.dart';
 import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
-import 'package:inventory_app/app/utils/cache.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../../style/text_style.dart';
 import '../../../values/constants.dart';
 import '../controllers/mould_bind_tasklist_controller.dart';
@@ -97,7 +95,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                 Visibility(
                                                   visible: controller
                                                           .mouldTaskItems[index]
-                                                          ?.taskType ==
+                                                          .taskType ==
                                                       MOULD_TASK_TYPE_PAY,
                                                   child: Text(
                                                       'PO编号：${controller.mouldTaskItems[index].poNo}',

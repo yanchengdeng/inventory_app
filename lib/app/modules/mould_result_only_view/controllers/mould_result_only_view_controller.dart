@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:inventory_app/app/apis/apis.dart';
+import 'package:inventory_app/app/utils/logger.dart';
 import '../../../entity/MouldBindTask.dart';
 import '../../../services/storage.dart';
 import '../../../values/server.dart';
@@ -9,26 +10,23 @@ class MouldResultOnlyViewController extends GetxController {
   var isShowAllInfo = false.obs;
 
   ///已完成模具任务
-  var _mouldBindTaskFinished = Rx<MouldList>(MouldList());
-
-  set mouldBindTaskFinished(value) => _mouldBindTaskFinished.value = value;
-
-  get mouldBindTaskFinished => _mouldBindTaskFinished.value;
+  var mouldBindTaskFinished = MouldList().obs;
 
   void setMouldBindData(MouldList assertBindTaskInfo) async {
-    await FileApi.getFileToken();
-    _mouldBindTaskFinished.value = assertBindTaskInfo;
+   var  ImageToken =  await FileApi.getFileToken();
+   Log.d("ImageToken = ${ImageToken}");
+    mouldBindTaskFinished.value = assertBindTaskInfo;
   }
 
-  // ///获取网络图片展示地址
-  // String getNetImageUrl(String uriUuid) {
-  //   return SERVER_FILE_UPLOAD +
-  //       "/file/frontend/" +
-  //       Uri.encodeComponent(uriUuid) +
-  //       '?token=' +
-  //       StorageService.to.getString(STORAGE_FILE_TOKEN) +
-  //       "&mediaType=image";
-  // }
+  ///获取网络图片展示地址
+  String getNetImageUrl(String uriUuid) {
+    return SERVER_FILE_UPLOAD +
+        "/file/frontend/" +
+        Uri.encodeComponent(uriUuid) +
+        '?token=' +
+        StorageService.to.getString(STORAGE_FILE_TOKEN) +
+        "&mediaType=image";
+  }
 
   @override
   void onInit() {

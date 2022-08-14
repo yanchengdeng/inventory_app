@@ -1,5 +1,8 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/apis/apis.dart';
+import 'package:inventory_app/app/entity/UploadLabelParams.dart';
 import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
 import 'package:inventory_app/app/utils/loading.dart';
 import 'package:inventory_app/app/values/constants.dart';
@@ -74,19 +77,108 @@ class MouldBindMouldListController extends GetxController {
         ?.toList();
 
     if (mouldLists != null && mouldLists.length > 0) {
-      mouldLists.forEach((element) async {
-        await uploadTask(element, taskType);
+      Loading.show('上传中...');
+      mouldLists.forEach((element) {
+        uploadTask(element, taskType);
       });
     } else {
       toastInfo(msg: '暂无需要上传的任务');
     }
   }
 
+  /**
+   * {
+      "address": "上海市浦东新区曹路镇金穗路775号",
+      "bindLabels": [
+      "XP000000001",
+      "XP000000002"
+      ],
+      "cavityPhoto": {
+      "docComments": "小刘现场拍摄",
+      "documentName": "照片a",
+      "downloadType": "url",
+      "fileSize": 12344554,
+      "fileSuffix": "jpg",
+      "fullPath": "/path/to/file"
+      },
+      "labelType": 1,
+      "lat": 123.45678,
+      "lng": 123.45678,
+      "nameplatePhoto": {
+      "docComments": "小刘现场拍摄",
+      "documentName": "照片a",
+      "downloadType": "url",
+      "fileSize": 12344554,
+      "fileSuffix": "jpg",
+      "fullPath": "/path/to/file"
+      },
+      "overallPhoto": {
+      "docComments": "小刘现场拍摄",
+      "documentName": "照片a",
+      "downloadType": "url",
+      "fileSize": 12344554,
+      "fileSuffix": "jpg",
+      "fullPath": "/path/to/file"
+      }
+      }
+   */
   ///单个任务上传
   uploadTask(MouldList? element, String taskType) async {
-    Loading.show('上传中...');
+    var jsonMaps = HashMap();
+    jsonMaps['address'] = element?.address;
+    jsonMaps['bindLabels'] = element?.bindLabels;
+    jsonMaps['labelType'] = element?.labelType;
+    jsonMaps['lat'] = element?.lat;
+    jsonMaps['lng'] = element?.lng;
 
-    Loading.dismiss();
+    if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+      if (element?.nameplatePhoto?.fullPath?.contains(APP_PACKAGE) == true) {
+        element?.nameplatePhoto?.fileSuffix = 'jpg';
+        var nameplatePhotoUUID =
+            await FileApi.uploadFile(element?.nameplatePhoto?.fullPath ?? "");
+        element?.nameplatePhoto?.fullPath = nameplatePhotoUUID;
+      }
+      if (element?.cavityPhoto?.fullPath?.contains(APP_PACKAGE) == true) {
+        element?.cavityPhoto?.fileSuffix = 'jpg';
+        var cavityPhotoNetUUID =
+            await FileApi.uploadFile(element?.cavityPhoto?.fullPath ?? "");
+        element?.cavityPhoto?.fullPath = cavityPhotoNetUUID;
+      }
+
+      if (element?.overallPhoto?.fullPath?.contains(APP_PACKAGE) == true) {
+        element?.overallPhoto?.fileSuffix = 'jpg';
+        var overallPhotoUUID =
+            await FileApi.uploadFile(element?.overallPhoto?.fullPath ?? "");
+        element?.overallPhoto?.fullPath = overallPhotoUUID;
+      }
+
+      jsonMaps['nameplatePhoto'] = element?.nameplatePhoto;
+      jsonMaps['cavityPhoto'] = element?.cavityPhoto;
+      jsonMaps['overallPhoto'] = element?.overallPhoto;
+
+      await MouldTaskApi.uploadForPayType(
+          element?.assetBindTaskId ?? 0, jsonEncode(jsonMaps));
+
+      ///上传更新为已上传 状态
+      element?.bindStatus = BIND_STATUS_UPLOADED;
+      element?.bindStatusText = MOULD_BIND_STATUS[BIND_STATUS_UPLOADED];
+      updateLabelStatus(taskType, element);
+    } else {
+      if (element?.nameplatePhoto?.fullPath?.contains(APP_PACKAGE) == true) {
+        element?.nameplatePhoto?.fileSuffix = 'jpg';
+        var nameplatePhotoUUID =
+            await FileApi.uploadFile(element?.nameplatePhoto?.fullPath ?? "");
+        element?.nameplatePhoto?.fullPath = nameplatePhotoUUID;
+      }
+      jsonMaps['nameplatePhoto'] = element?.nameplatePhoto;
+      await MouldTaskApi.uploadForLableReplaceType(
+          element?.labelReplaceTaskId ?? 0, jsonEncode(jsonMaps));
+
+      ///上传更新为已上传 状态
+      element?.bindStatus = BIND_STATUS_UPLOADED;
+      element?.bindStatusText = MOULD_BIND_STATUS[BIND_STATUS_UPLOADED];
+      updateLabelStatus(taskType, element);
+    }
   }
 
   updateLabelStatus(String taskType, MouldList? element) {

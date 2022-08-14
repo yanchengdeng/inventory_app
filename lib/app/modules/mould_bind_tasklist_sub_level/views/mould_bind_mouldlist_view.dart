@@ -31,7 +31,6 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
             IconButton(
                 onPressed: () async => {
                       await controller.doUploadData(taskType),
-                      controller.mouldBindTaskListSearch,
                     },
                 icon: Icon(Icons.upload),
                 color: Colors.blue)
@@ -247,15 +246,14 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
   }
 
   String getLabelStr(List<String>? labels) {
-    if(labels != null && labels.length > 0){
-      if(labels.length == 1){
+    if (labels != null && labels.length > 0) {
+      if (labels.length == 1) {
         return labels[0];
-      }else{
-        return labels[0] +' ...';
+      } else {
+        return labels[0] + ' ...';
       }
-    }else{
+    } else {
       return " - ";
     }
-
   }
 }

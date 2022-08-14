@@ -1,6 +1,8 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' as get_multipart_file;
 
@@ -8,6 +10,7 @@ import 'package:get/get.dart' as get_multipart_file;
 import 'package:get/get_core/src/get_main.dart';
 import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/utils/logger.dart';
+import 'package:inventory_app/app/values/constants.dart';
 import '../entity/FileTokenResponseEntity.dart';
 import '../entity/cache_data.dart';
 import '../modules/mould_read_result/controllers/mould_read_result_controller.dart';
@@ -80,6 +83,11 @@ class FileApi<T> {
         options: options,
         data: formData);
     Log.d("返回的图片URL/uuid=$response");
+    //c5022939-fece-4fcf-ba7e-514bb64f14cb
+    if (response.toString().contains('-')) {
+      ///上传后 删除本地照片 FileSystemEntity
+      var fileEntity = await File(filePath).delete();
+    }
     return response.toString();
   }
 }

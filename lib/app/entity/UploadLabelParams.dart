@@ -128,8 +128,9 @@ class PhotoInfo {
     int? fileSize,
     int? photoType,
     String? fileSuffix,
-    String? fullPath,
 
+    /// 必传  目前为：jpg
+    String? fullPath,
   }) {
     _docComments = docComments;
     _documentName = documentName;
@@ -172,7 +173,7 @@ class PhotoInfo {
         documentName: documentName ?? _documentName,
         downloadType: downloadType ?? _downloadType,
         fileSize: fileSize ?? _fileSize,
-        photoType: photoType ??_photoType,
+        photoType: photoType ?? _photoType,
         fileSuffix: fileSuffix ?? _fileSuffix,
         fullPath: fullPath ?? _fullPath,
       );
@@ -188,6 +189,7 @@ class PhotoInfo {
   set photoType(int? photoType) => _photoType = photoType;
 
   String? get fileSuffix => _fileSuffix;
+  set fileSuffix(String? fileSuffix) => _fileSuffix = fileSuffix;
 
   String? get fullPath => _fullPath;
   set fullPath(String? fullPath) => _fullPath = fullPath;

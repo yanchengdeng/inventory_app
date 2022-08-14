@@ -80,10 +80,10 @@ class CacheUtils extends GetxController {
 
   Future<List<MouldList>> getMouldTaskListByKeyOrStatus(String taskNo,
       String key, List<int> bindStatus, List<String> toolingTypes) async {
-    var listSearch = mouldBindTask.value?.data
+    var listSearch = mouldBindTask.value.data
         ?.where((element) => element.taskNo == taskNo)
-        ?.first
-        ?.mouldList
+        .first
+        .mouldList
         ?.where((it) =>
             bindStatus.contains(it.bindStatus) &&
             toolingTypes.contains(it.toolingType) &&
@@ -94,7 +94,15 @@ class CacheUtils extends GetxController {
 
   ///更新模具任务
   updateMouldListState(String taskType, MouldList? mouldListItem) async {
-    await getMouldTask();
+    var mouldTask = await getMouldTask();
+    var mouldItem = mouldTask.data
+        ?.where((element) => element.taskNo == mouldListItem?.taskNo)
+        .first
+        .mouldList
+        ?.where((element) => element.assetNo == mouldListItem?.assetNo)
+        .first;
+    mouldItem = mouldListItem;
+    saveMouldTask(mouldTask, true);
   }
 
   ////////////////////////////////以下为资产盘点数据操作//////////////////////////////////////////////

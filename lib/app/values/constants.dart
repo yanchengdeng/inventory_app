@@ -35,7 +35,7 @@ const int MOULD_TASK_TYPE_LABEL = 1;
 /// 盘点全部状态
 const int INVENTORY_STATUS_ALL = -1;
 const int INVENTORY_STATUS_NOT = 0;
-const int INVENTORY_WAITING_UPLOAD = 3;
+const int INVENTORY_WAITING_UPLOAD = 2;///本地模拟使用
 const int INVENTORY_HAVE_UPLOADED = 1;
 
 const INVENTORY_STATUS = {

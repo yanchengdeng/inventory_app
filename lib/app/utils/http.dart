@@ -240,7 +240,7 @@ class HttpUtil {
     Map<String, dynamic>? queryParameters,
     Options? options,
     bool refresh = false,
-    bool noCache = !CACHE_ENABLE,
+    bool noCache = true,
     bool list = false,
     String cacheKey = '',
     bool cacheDisk = false,

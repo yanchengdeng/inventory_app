@@ -30,7 +30,7 @@ class CommonUtils {
       required VoidCallback? callback}) {
     Get.defaultDialog(
       title: "温馨提示",
-      content: Text('$content'),
+      content: Container(margin : EdgeInsetsDirectional.only(start: 10,end: 10),child: Text('$content')),
       confirm: ElevatedButton(
         onPressed: callback,
         child: Text(

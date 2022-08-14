@@ -250,7 +250,7 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
     return Container(
       child: Column(
         children: [
-          Text(title, style: textNormalListTextStyle()),
+          Container(margin: EdgeInsetsDirectional.only(top: 10,bottom: 10),child: Text(title, style: textNormalListTextStyle())),
           CachedNetworkImage(
               fit: BoxFit.fitWidth,
               imageUrl: controller.getNetImageUrl(imageUrl),

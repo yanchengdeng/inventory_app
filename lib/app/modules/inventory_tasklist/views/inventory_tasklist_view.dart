@@ -25,6 +25,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
   Widget build(BuildContext context) {
     homeController
         .getInventoryFinishedList(homeController.state.inventoryFinishedPage);
+    controller.getInventoryList();
     return Scaffold(
         appBar: AppBar(
           title: Text('资产盘点'),
@@ -41,8 +42,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                       children: [
                         Expanded(
                           child: selectTabView(
-                              text:
-                                  '未完成(${CacheUtils.to.inventoryData.value.data?.length})',
+                              text: '未完成(${controller.inventroyList.length})',
                               selected:
                                   homeController.state.selectedInventoryTab,
                               isLeft: true,
@@ -101,7 +101,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                    '${CacheUtils.to.inventoryData.value.data?[index].taskNo}',
+                                                    '${controller.inventroyList[index].taskNo}',
                                                     style:
                                                         textBoldNumberStyle()),
                                                 Row(
@@ -113,7 +113,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '盘点年份：${CacheUtils.to.inventoryData.value.data?[index].inventoryYear}',
+                                                            '盘点年份：${controller.inventroyList[index].inventoryYear}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -125,7 +125,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topEnd,
                                                         child: Text(
-                                                            '盘点类型：${CacheUtils.to.inventoryData.value.data?[index].inventoryTypeText}',
+                                                            '盘点类型：${controller.inventroyList[index].inventoryTypeText}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -141,7 +141,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topStart,
                                                         child: Text(
-                                                            '截止日期：${CacheUtils.to.inventoryData.value.data?[index].endDate}',
+                                                            '截止日期：${controller.inventroyList[index].endDate}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -153,7 +153,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                             AlignmentDirectional
                                                                 .topEnd,
                                                         child: Text(
-                                                            '盘点总数：${CacheUtils.to.inventoryData.value.data?[index].inventoryTotal}',
+                                                            '盘点总数：${controller.inventroyList[index].inventoryTotal}',
                                                             style:
                                                                 textNormalListTextStyle()),
                                                       ),
@@ -178,12 +178,15 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '未盘点',
-                                                                count: CacheUtils
-                                                                    .to
-                                                                    .getInventoryListByStatus(
-                                                                        index,
-                                                                        INVENTORY_STATUS_NOT)
-                                                                    .length,
+                                                                count: controller
+                                                                        .inventroyList[
+                                                                            index]
+                                                                        .list
+                                                                        ?.where((element) =>
+                                                                            element.assetInventoryStatus ==
+                                                                            INVENTORY_STATUS_NOT)
+                                                                        .length ??
+                                                                    0,
                                                                 callback: () {
                                                                   Get.toNamed(
                                                                       Routes
@@ -211,12 +214,15 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '待上传',
-                                                                count: CacheUtils
-                                                                    .to
-                                                                    .getInventoryListByStatus(
-                                                                        index,
-                                                                        INVENTORY_WAITING_UPLOAD)
-                                                                    .length,
+                                                                count: controller
+                                                                        .inventroyList[
+                                                                            index]
+                                                                        .list
+                                                                        ?.where((element) =>
+                                                                            element.assetInventoryStatus ==
+                                                                            INVENTORY_WAITING_UPLOAD)
+                                                                        .length ??
+                                                                    0,
                                                                 callback: () {
                                                                   Get.toNamed(
                                                                       Routes
@@ -244,12 +250,15 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                         child:
                                                             buildMouldStatusItem(
                                                                 status: '已上传',
-                                                                count: CacheUtils
-                                                                    .to
-                                                                    .getInventoryListByStatus(
-                                                                        index,
-                                                                        INVENTORY_HAVE_UPLOADED)
-                                                                    .length,
+                                                                count: controller
+                                                                        .inventroyList[
+                                                                            index]
+                                                                        .list
+                                                                        ?.where((element) =>
+                                                                            element.assetInventoryStatus ==
+                                                                            INVENTORY_HAVE_UPLOADED)
+                                                                        .length ??
+                                                                    0,
                                                                 callback: () {
                                                                   Get.toNamed(
                                                                       Routes

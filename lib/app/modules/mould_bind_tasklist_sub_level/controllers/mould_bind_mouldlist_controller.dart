@@ -5,6 +5,7 @@ import 'package:inventory_app/app/apis/apis.dart';
 import 'package:inventory_app/app/entity/UploadLabelParams.dart';
 import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
 import 'package:inventory_app/app/utils/loading.dart';
+import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/values/constants.dart';
 import '../../../entity/MouldBindTask.dart';
 import '../../../utils/cache.dart';
@@ -191,11 +192,24 @@ class MouldBindMouldListController extends GetxController {
     mouldItem = mouldListItem;
     CacheUtils.to.saveMouldTask(homeController.mouldBindList.value, true);
 
+
     ///重新取值 可实现刷新
     _mouldBindTaskListSearch.value = homeController.mouldBindList.value.data
             ?.where((element) => element.taskNo == mouldListItem?.taskNo)
             ?.first
             .mouldList ??
         List.empty();
+
+
+    ///全是已完成任务
+    Log.d("绑定任务都已上传 ，现在${homeController.mouldBindList.value.data?.length}个任务");
+    ///如果该模具里的绑定任务都是已经完成的上传 则本地删除任务
+    var mouldList =  homeController.mouldBindList.value.data?.where((element) => element.taskNo == mouldListItem?.taskNo).first?.mouldList;
+    if(mouldList?.where((element) => element.bindStatus == BIND_STATUS_UPLOADED)?.length == mouldList?.length){
+      homeController.mouldBindList.value.data?.removeWhere((element) => element.taskNo == mouldListItem?.taskNo);
+      Log.e("如果该任务下都已经上传 ，删除该模具任务现在还有${homeController.mouldBindList.value.data?.length}个任务");
+    }
+
+
   }
 }

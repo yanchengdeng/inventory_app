@@ -272,9 +272,15 @@ class MainActivity : FlutterActivity() {
 
 
     private val mEventListener: EventListener = object : EventListener {
-        override fun onDeviceConnected(o: Any) {}
-        override fun onDeviceDisconnected(o: Any) {}
-        override fun onReaderCreated(b: Boolean, rfidReader: RfidReader) {}
+        override fun onDeviceConnected(o: Any) {
+            Log.d("yancheng","onDeviceConnecteddevices连接")
+        }
+        override fun onDeviceDisconnected(o: Any) {
+            Log.d("yancheng","onDeviceDisconnecteddevices连接")
+        }
+        override fun onReaderCreated(b: Boolean, rfidReader: RfidReader) {
+            Log.d("yancheng","onReaderCreated"+rfidReader)
+        }
         override fun onRfidTriggered(trigger: Boolean) {
             if (mIsReadBtnClicked || !trigger) {
                 mIsReadBtnClicked = false

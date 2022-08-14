@@ -22,10 +22,13 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ActivityUtils
 import com.honeywell.rfidservice.EventListener
 import com.honeywell.rfidservice.RfidManager
 import com.honeywell.rfidservice.TriggerMode
 import com.honeywell.rfidservice.rfid.RfidReader
+import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.impl.LoadingPopupView
 import com.sgm.rfidapp.BlueAdapter
 import com.sgm.rfidapp.MainActivity
 import com.sgm.rfidapp.R
@@ -51,7 +54,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
 
     private var mRfidMgr = rfidMgr
     private val mHandler = Handler()
-    private var mWaitDialog : ProgressDialog? = null
+    private var mWaitDialog : LoadingPopupView? = null
 
     ///蓝牙adapter
     private lateinit var mBluetoothAdapter: BluetoothAdapter
@@ -64,7 +67,8 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
                     //开始扫描
                     tvScan.text = "搜索中..."
-//                    mWaitDialog = ProgressDialog.show(mContext,"","搜索蓝牙设备中...")
+                    mWaitDialog?.setTitle("搜索蓝牙设备中...")
+                    mWaitDialog?.show()
                 }
                 BluetoothDevice.ACTION_FOUND -> {
                     val device =
@@ -97,6 +101,11 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
 
     private fun closeWaitingDialog(){
         mWaitDialog?.dismiss()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        closeWaitingDialog()
         mWaitDialog = null
     }
 
@@ -111,6 +120,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
         mBtnCreateReader = findViewById(R.id.btn_create_reader)
         mTvInfo = findViewById(R.id.tv_info)
         tvScan = findViewById(R.id.tvScan)
+        mWaitDialog =  XPopup.Builder(ActivityUtils.getTopActivity()).asLoading("搜索中...")
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         recycleView.adapter = mAdapter
@@ -158,7 +168,8 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
                 return@setOnClickListener
             }
 
-            mWaitDialog = ProgressDialog.show(mContext,"","创建读写器...")
+            mWaitDialog?.setTitle("创建的读写器")
+            mWaitDialog?.show()
             mHandler.postDelayed({
                 mRfidMgr.createReader()
                 closeWaitingDialog()
@@ -254,7 +265,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
 
     private fun disconnect() {
         mRfidMgr.disconnect()
-        mRfidMgr.removeEventListener(mEventListener)
+//        mRfidMgr.removeEventListener(mEventListener)
     }
 
 

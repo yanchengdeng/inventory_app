@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
@@ -26,21 +27,32 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
 
     controller.getTaskInfo(taskNo, assetNo);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('读取结果'),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-              onPressed: () => {controller.saveInfo(taskType, taskNo, assetNo)},
-              icon: Icon(Icons.save_alt_sharp),
-              color: Colors.blue),
-        ],
-      ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [bottomInfoWidget(), topInfoWidget()],
+    return WillPopScope(
+      onWillPop: () async{
+        if(controller.showAllLabels.length == 0) {
+          await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+          return true;
+        }else{
+          controller.saveInfo(taskType, taskNo, assetNo);
+          return false;
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('读取结果'),
+          centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+                onPressed: () => {controller.saveInfo(taskType, taskNo, assetNo)},
+                icon: Icon(Icons.save_alt_sharp),
+                color: Colors.blue),
+          ],
+        ),
+        body: Container(
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [bottomInfoWidget(), topInfoWidget()],
+            ),
           ),
         ),
       ),

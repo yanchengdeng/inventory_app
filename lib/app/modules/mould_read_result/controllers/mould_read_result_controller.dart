@@ -245,7 +245,7 @@ class MouldReadResultController extends GetxController {
                     imageUrlMp.isNotEmpty &&
                     locationInfo.value.lat != null) {
                   assertBindTaskInfo.value.bindStatus =
-                      BIND_STATUS_WAITING_BIND;
+                      BIND_STATUS_WAITING_UPLOAD;
                   assertBindTaskInfo.value.bindStatusText =
                       MOULD_BIND_STATUS[BIND_STATUS_WAITING_UPLOAD];
                 }
@@ -276,7 +276,9 @@ class MouldReadResultController extends GetxController {
             toastInfo(msg: "保存成功");
             Get.back();
             Get.back();
+
           });
     }
   }
+
 }

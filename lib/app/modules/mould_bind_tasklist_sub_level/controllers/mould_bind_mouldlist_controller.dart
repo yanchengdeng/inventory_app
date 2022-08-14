@@ -89,7 +89,7 @@ class MouldBindMouldListController extends GetxController {
     Loading.dismiss();
   }
 
-  updateLableStatus(String taskType, MouldList? element) {
+  updateLabelStatus(String taskType, MouldList? element) {
     CacheUtils.to.updateMouldListState(taskType, element);
   }
 }

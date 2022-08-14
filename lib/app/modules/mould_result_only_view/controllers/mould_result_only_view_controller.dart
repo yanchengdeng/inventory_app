@@ -1,3 +1,4 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/apis/apis.dart';
 import 'package:inventory_app/app/utils/logger.dart';
@@ -13,8 +14,6 @@ class MouldResultOnlyViewController extends GetxController {
   var mouldBindTaskFinished = MouldList().obs;
 
   void setMouldBindData(MouldList assertBindTaskInfo) async {
-   var  ImageToken =  await FileApi.getFileToken();
-   Log.d("ImageToken = ${ImageToken}");
     mouldBindTaskFinished.value = assertBindTaskInfo;
   }
 
@@ -29,8 +28,15 @@ class MouldResultOnlyViewController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    EasyLoading.show(status: "加载中...");
+    await FileApi.getFileToken();
+    var info = Get.arguments;
+    MouldList? assertBindTaskInfo = MouldList.fromJson(info);
+    Log.d("message=${assertBindTaskInfo}");
+    mouldBindTaskFinished.value = assertBindTaskInfo;
+    EasyLoading.dismiss();
   }
 
   @override

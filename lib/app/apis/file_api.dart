@@ -7,13 +7,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' as get_multipart_file;
 
 ///MultiPartFile 存在于  get  和dio 两个木块 此种方法避免
-import 'package:get/get_core/src/get_main.dart';
 import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/utils/logger.dart';
-import 'package:inventory_app/app/values/constants.dart';
 import '../entity/FileTokenResponseEntity.dart';
-import '../entity/cache_data.dart';
-import '../modules/mould_read_result/controllers/mould_read_result_controller.dart';
 import '../utils/http.dart';
 import '../values/server.dart';
 import '../values/storage.dart';

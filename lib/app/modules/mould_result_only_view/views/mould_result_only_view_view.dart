@@ -193,8 +193,9 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
   }
 
   Widget ImageContain() {
-    ///标签类型 只显示 铭牌
-    if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL.toString()) {
+    ///标签类型 只显示 铭牌   如果是传整个json 过来 则无 taskType 直接用 是否有标签id 判断
+    if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL.toString() ||
+        controller.mouldBindTaskFinished.value.labelReplaceTaskId != 0) {
       if (controller.mouldBindTaskFinished.value.nameplatePhoto?.fullPath
               ?.isNotEmpty ==
           true) {
@@ -251,6 +252,7 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
         children: [
           Text(title, style: textNormalListTextStyle()),
           CachedNetworkImage(
+              fit: BoxFit.fitWidth,
               imageUrl: controller.getNetImageUrl(imageUrl),
               height: SizeConstant.IAMGE_SIZE_HEIGHT,
               width: SizeConstant.IAMGE_SIZE_HEIGHT)

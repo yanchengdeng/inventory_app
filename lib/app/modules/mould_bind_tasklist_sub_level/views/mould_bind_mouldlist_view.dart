@@ -47,24 +47,21 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                         controller.findByParams(
                             isFinish, taskNo, value, [bindStatus], []);
                       })),
-              Visibility(
-                visible: true,
-                child: Container(
-                  width: 200,
-                  height: 50,
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text('全部'),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: Text('工装类型'),
-                        flex: 1,
-                      )
-                    ],
-                  ),
+              Container(
+                width: 200,
+                height: 50,
+                alignment: Alignment.center,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text('全部'),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Text('工装类型'),
+                      flex: 1,
+                    )
+                  ],
                 ),
               ),
 

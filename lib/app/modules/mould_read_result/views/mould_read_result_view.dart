@@ -458,14 +458,13 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
   ///文字 图片混合组件
   Widget textImageWidget(String title, String? imageUrl) {
     return Container(
-      width: SizeConstant.IAMGE_SIZE_HEIGHT,
-      height: SizeConstant.IAMGE_SIZE_HEIGHT,
       child: Column(
         children: [
           Text(title, style: textNormalListTextStyle()),
           Container(
               height: SizeConstant.IAMGE_SIZE_HEIGHT,
               width: SizeConstant.IAMGE_SIZE_HEIGHT,
+              margin: EdgeInsetsDirectional.only(top: 10),
               decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.fromBorderSide(
@@ -481,7 +480,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                           fit: BoxFit.fill)
                       : CachedNetworkImage(
                           imageUrl: CommonUtils.getNetImageUrl(imageUrl),
-                          fit: BoxFit.fill,
+                          fit: BoxFit.contain,
                           height: SizeConstant.IAMGE_SIZE_HEIGHT,
                           width: SizeConstant.IAMGE_SIZE_HEIGHT,
                         ))

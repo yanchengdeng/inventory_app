@@ -181,7 +181,21 @@ class MouldBindMouldListController extends GetxController {
     }
   }
 
-  updateLabelStatus(String taskType, MouldList? element) {
-    CacheUtils.to.updateMouldListState(taskType, element);
+  updateLabelStatus(String taskType, MouldList? mouldListItem) {
+    var mouldItem = homeController.mouldBindList.value.data
+        ?.where((element) => element.taskNo == mouldListItem?.taskNo)
+        .first
+        .mouldList
+        ?.where((element) => element.assetNo == mouldListItem?.assetNo)
+        .first;
+    mouldItem = mouldListItem;
+    CacheUtils.to.saveMouldTask(homeController.mouldBindList.value, true);
+
+    ///重新取值 可实现刷新
+    _mouldBindTaskListSearch.value = homeController.mouldBindList.value.data
+            ?.where((element) => element.taskNo == mouldListItem?.taskNo)
+            ?.first
+            .mouldList ??
+        List.empty();
   }
 }

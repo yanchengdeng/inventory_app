@@ -229,9 +229,15 @@ class MouldReadResultController extends GetxController {
             if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
               if (assertBindTaskInfo.value.toolingType == TOOL_TYPE_M) {
                 if (showAllLabels.length > 0 &&
-                    imageUrlAll.isNotEmpty &&
-                    imageUrlMp.isNotEmpty &&
-                    imageUrlXq.isNotEmpty &&
+                    assertBindTaskInfo
+                            .value.nameplatePhoto?.fullPath?.isNotEmpty ==
+                        true &&
+                    assertBindTaskInfo
+                            .value.cavityPhoto?.fullPath?.isNotEmpty ==
+                        true &&
+                    assertBindTaskInfo
+                            .value.overallPhoto?.fullPath?.isNotEmpty ==
+                        true &&
                     locationInfo.value.lat != null) {
                   assertBindTaskInfo.value.bindStatus =
                       BIND_STATUS_WAITING_UPLOAD;
@@ -241,8 +247,12 @@ class MouldReadResultController extends GetxController {
               } else if (assertBindTaskInfo.value.toolingType == TOOL_TYPE_F ||
                   assertBindTaskInfo.value.toolingType == TOOL_TYPE_G) {
                 if (showAllLabels.length > 0 &&
-                    imageUrlAll.isNotEmpty &&
-                    imageUrlMp.isNotEmpty &&
+                    assertBindTaskInfo
+                            .value.nameplatePhoto?.fullPath?.isNotEmpty ==
+                        true &&
+                    assertBindTaskInfo
+                            .value.overallPhoto?.fullPath?.isNotEmpty ==
+                        true &&
                     locationInfo.value.lat != null) {
                   assertBindTaskInfo.value.bindStatus =
                       BIND_STATUS_WAITING_UPLOAD;
@@ -252,7 +262,9 @@ class MouldReadResultController extends GetxController {
               }
             } else {
               if (showAllLabels.length > 0 &&
-                  imageUrlMp.isNotEmpty &&
+                  assertBindTaskInfo
+                          .value.nameplatePhoto?.fullPath?.isNotEmpty ==
+                      true &&
                   locationInfo.value.lat != null) {
                 assertBindTaskInfo.value.bindStatus =
                     BIND_STATUS_WAITING_UPLOAD;
@@ -276,9 +288,7 @@ class MouldReadResultController extends GetxController {
             toastInfo(msg: "保存成功");
             Get.back();
             Get.back();
-
           });
     }
   }
-
 }

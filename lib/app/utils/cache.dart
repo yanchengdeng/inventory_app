@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
 import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/store/store.dart';
 import 'package:inventory_app/app/utils/logger.dart';
@@ -54,7 +55,7 @@ class CacheUtils extends GetxController {
       StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));
     } else {
       ///todo 网络获取 本地存在需要对比保存
-      mouldBindTask.value = data ?? MouldBindTask();
+      mouldBindTask.value = data ?? await getMouldTask();
     }
   }
 
@@ -92,19 +93,6 @@ class CacheUtils extends GetxController {
     return listSearch ?? List.empty();
   }
 
-  ///更新模具任务
-  updateMouldListState(String taskType, MouldList? mouldListItem) async {
-    var mouldTask = await getMouldTask();
-    var mouldItem = mouldTask.data
-        ?.where((element) => element.taskNo == mouldListItem?.taskNo)
-        .first
-        .mouldList
-        ?.where((element) => element.assetNo == mouldListItem?.assetNo)
-        .first;
-    mouldItem = mouldListItem;
-    saveMouldTask(mouldTask, true);
-  }
-
   ////////////////////////////////以下为资产盘点数据操作//////////////////////////////////////////////
 
   ///资产盘点未完成信息
@@ -128,12 +116,22 @@ class CacheUtils extends GetxController {
       StorageService.to.setString(getInventorySaveKey(), jsonEncode(data));
     } else {
       ///todo 网络获取 本地存在需要对比保存
-      inventoryData.value = data ?? InventoryData();
+      inventoryData.value = data ?? await getInventoryTask();
     }
   }
 
   /// 获取本地的盘点任务
-  Future<void> getInventoryTask() async {}
+  Future<InventoryData> getInventoryTask() async {
+    var cacheMould = await StorageService.to.getString(getInventorySaveKey());
+    if (cacheMould.isNotEmpty) {
+      Log.d("转移1${jsonDecode(cacheMould) is Map}");
+
+      inventoryData.value = InventoryData.fromJson(jsonDecode(cacheMould));
+      return inventoryData.value;
+    } else {
+      return InventoryData();
+    }
+  }
 
   ///todo 根据模具任务状态 获取对应集合数据
   List<InventoryDetail> getInventoryListByStatus(int position, int status) {

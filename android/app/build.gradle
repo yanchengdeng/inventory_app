@@ -26,6 +26,14 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('D:\\flutter_project\\inventory_app\\android\\app\\rfid.jks')
+            storePassword 'rfid123456'
+            keyAlias 'rfid'
+            keyPassword 'rfid123456'
+        }
+    }
     compileSdkVersion 31
 
     compileOptions {

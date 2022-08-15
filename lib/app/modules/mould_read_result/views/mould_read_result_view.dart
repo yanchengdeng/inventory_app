@@ -28,11 +28,11 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
     controller.getTaskInfo(taskNo, assetNo);
 
     return WillPopScope(
-      onWillPop: () async{
-        if(controller.showAllLabels.length == 0) {
-          await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+      onWillPop: () async {
+        if (controller.showAllLabels.length == 0) {
+          Get.back();
           return true;
-        }else{
+        } else {
           controller.saveInfo(taskType, taskNo, assetNo);
           return false;
         }
@@ -43,7 +43,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
           centerTitle: true,
           actions: <Widget>[
             IconButton(
-                onPressed: () => {controller.saveInfo(taskType, taskNo, assetNo)},
+                onPressed: () =>
+                    {controller.saveInfo(taskType, taskNo, assetNo)},
                 icon: Icon(Icons.save_alt_sharp),
                 color: Colors.blue),
           ],
@@ -471,9 +472,9 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       BorderSide(color: Colors.black12, width: 2)),
                   borderRadius:
                       BorderRadiusDirectional.all(Radius.circular(5.0))),
-              child: imageUrl == null
+              child: imageUrl == null || imageUrl.isEmpty == true
                   ? Icon(Icons.add_a_photo, size: 80, color: Colors.black12)
-                  : imageUrl.contains(APP_PACKAGE)
+                  : imageUrl.contains(APP_PACKAGE) == true
                       ? Image.file(File(imageUrl),
                           height: SizeConstant.IAMGE_SIZE_HEIGHT,
                           width: SizeConstant.IAMGE_SIZE_HEIGHT,

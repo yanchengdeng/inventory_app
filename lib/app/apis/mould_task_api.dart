@@ -13,7 +13,7 @@ import '../values/constants.dart';
  *
  * */
 class MouldTaskApi<T> {
-  //获取模具任务列表
+  ///获取未完成模具任务列表
   static Future<MouldBindTask> getMouldTaskList<T>() async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'mouldBindTask_list';
@@ -32,10 +32,10 @@ class MouldTaskApi<T> {
     return MouldBindTask.fromJson(response);
   }
 
-  //获取已完成资产盘点列表
+  ///获取已完成资产盘点列表
   static Future<MouldBindTask> getMouldBindListFinishedList<T>(int page) async {
     Map<String, dynamic> fileTokenMaps = HashMap();
-    fileTokenMaps['x-resource-code'] = '/mouldBindTask/finishedList';
+    fileTokenMaps['x-resource-code'] = 'mouldBindTask_finishedList';
     Options options = Options();
     options.headers = fileTokenMaps;
 

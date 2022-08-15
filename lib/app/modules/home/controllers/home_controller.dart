@@ -12,6 +12,7 @@ import '../../../entity/MouldBindTask.dart';
 import '../../../store/user.dart';
 import '../../../utils/cache.dart';
 import '../../../values/constants.dart';
+import '../../../values/server.dart';
 
 class HomeController extends GetxController {
   ///响应式变量
@@ -22,13 +23,13 @@ class HomeController extends GetxController {
 
   ///获取模具绑定列表
   getMouldTaskList() async {
-     mouldBindList.value = await MouldTaskApi.getMouldTaskList();
+    mouldBindList.value = await MouldTaskApi.getMouldTaskList();
     await CacheUtils.to.saveMouldTask(mouldBindList.value, false);
   }
 
   /// 获取资产盘点列表
   getInventoryList() async {
-     inventoryList.value = await InventoryApi.getInventoryData();
+    inventoryList.value = await InventoryApi.getInventoryData();
     await CacheUtils.to.saveInventoryTask(inventoryList.value, false);
   }
 
@@ -49,8 +50,7 @@ class HomeController extends GetxController {
         _inventoryFinishedList.value = [];
       }
 
-      inventoryFinishedList
-          .addAll(inventoryList.data ?? List.empty());
+      inventoryFinishedList.addAll(inventoryList.data ?? List.empty());
       _inventoryFinishedList.value = inventoryFinishedList;
     }
     return inventoryList;
@@ -73,35 +73,39 @@ class HomeController extends GetxController {
         _mouldTaskFinishedList.value = [];
       }
 
-      mouldTaskFinishedList
-          .addAll(mouldBindList.data ?? List.empty());
+      mouldTaskFinishedList.addAll(mouldBindList.data ?? List.empty());
       _mouldTaskFinishedList.value = mouldTaskFinishedList;
     }
     return mouldBindList;
   }
 
   @override
-  void onInit() async{
+  void onInit() async {
     super.onInit();
     EasyLoading.show(status: "获取中...");
-    var userResponseData = await UserStore.to.getProfile();
-    if(userResponseData?.state == API_RESPONSE_OK && userResponseData?.data != null){
-      state.userData.value = userResponseData?.data ?? UserData();
+    if (SERVER_ENV == Environment.SIT) {
+      ///SIT环境   x-user-code  不是必须参数
       getMouldTaskList();
       getInventoryList();
-    }else{
-      CommonUtils.logOut();
+    } else {
+      ///开发环境   x-user-code  是必须参数
+      var userResponseData = await UserStore.to.getProfile();
+      if (userResponseData?.state == API_RESPONSE_OK &&
+          userResponseData?.data != null) {
+        state.userData.value = userResponseData?.data ?? UserData();
+        getMouldTaskList();
+        getInventoryList();
+      } else {
+        CommonUtils.logOut();
+      }
     }
   }
 
   @override
-  void onReady()  {
+  void onReady() {
     super.onReady();
-
   }
 
   @override
-  void onClose() {
-  }
-
+  void onClose() {}
 }

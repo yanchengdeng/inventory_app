@@ -17,12 +17,10 @@ class HomeState {
   set selectedInventoryTab(value) => _selectedInventoryTab.value = value;
   get selectedInventoryTab => _selectedInventoryTab.value;
 
-
   var userData = UserData(duns: "", name: "", sgmUser: false, userCode: "").obs;
 
   ///已完成资产盘点页面
   var inventoryFinishedPage = 1;
-
 
   ///已完成模具任务页面
   var mouldTaskFinishedPage = 1;

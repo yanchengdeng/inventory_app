@@ -1,23 +1,28 @@
-enum Environment { DEVELOPMENT, PRODUCTION }
+enum Environment { DEVELOPMENT, SIT, PRODUCTION }
 
-const SERVER_ENV = Environment.DEVELOPMENT;
+///为当前环境
+const SERVER_ENV = Environment.SIT;
 
+///本地测试
 ///接口域名统一配置  token失效返回 585
-const SERVER_API_URL = 'http://47.102.199.31:59101/rfidapp/rest';
+/// const SERVER_API_URL = 'http://47.102.199.31:59101/rfidapp/rest';
+///文件服务域名统一配置
+/// const SERVER_FILE_UPLOAD = 'https://csapi-qa.saic-gm.com/cs';
 
-///接口域名统一配置 SIP测试 token失效返回 585
-/// const SERVER_API_URL =
-// /    'https://rfid-native-api.apps-qa.saic-gm.com/rfidapp/rest';
+///SIT 测试使用 统一改用改域名
+const SERVER_API_URL =
+    'https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest';
+
+const SERVER_FILE_UPLOAD =
+    'https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest';
 
 ///文件服务地址  异常返回 500  已废弃
 /// const SERVER_FILE_API_URL =
 ///    'https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest';
 
-///文件上传
+///文件上传   已废弃
 /// const SERVER_FILE_UPLOAD =
 ///    'https://rol-web-supplier-qa.apps.saic-gm.com/openfile';
-
-const SERVER_FILE_UPLOAD = 'https://csapi-qa.saic-gm.com/cs';
 
 ///返回结果为1 表示正确返回
 const SERVER_RESULT_OK = 1;

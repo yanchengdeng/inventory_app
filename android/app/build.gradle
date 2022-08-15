@@ -28,7 +28,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     signingConfigs {
         debug {
-            storeFile file('D:\\flutter_project\\inventory_app\\android\\app\\rfid.jks')
+            storeFile file('rfid.jks')
             storePassword 'rfid123456'
             keyAlias 'rfid'
             keyPassword 'rfid123456'

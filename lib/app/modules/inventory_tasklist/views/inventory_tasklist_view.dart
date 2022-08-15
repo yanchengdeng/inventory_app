@@ -392,11 +392,12 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
       await homeController.getInventoryList();
       toastInfo(msg: "最新任务已更新");
     } else {
-      homeController.state.inventoryFinishedPage = 1;
+      homeController.state.inventoryFinishedPage = 0;
       await homeController
           .getInventoryFinishedList(homeController.state.inventoryFinishedPage);
     }
     _refreshBindTaskController.refreshCompleted();
+    _refreshBindTaskController.loadComplete();
   }
 
   Future<void> _onLoadMore() async {

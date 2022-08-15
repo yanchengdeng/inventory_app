@@ -59,10 +59,10 @@ class MouldReadResultController extends GetxController {
   static const String STOP_RFID_AND_SCAN = 'stop_rfid_and_scan';
 
   ///只初始化rfid
-  static const INIT_RFID_ONLY = 'init_rfid_and_only';
+  // static const INIT_RFID_ONLY = 'init_rfid_and_only';
 
   ///只初始化扫描
-  static const INIT_SCAN_ONLY = 'init_scan_and_only';
+  // static const INIT_SCAN_ONLY = 'init_scan_and_only';
 
   ///flutter 与android 原生交互  只能一次发送一个回复 模式
   static const platform = MethodChannel(READ_RFID_DATA_CHANNEL);
@@ -129,9 +129,11 @@ class MouldReadResultController extends GetxController {
   }
 
   @override
-  void onClose() {
-    ///需要做处理 关闭读取rfid 和扫描
-    platform.invokeMethod(STOP_RFID_AND_SCAN);
+  void onClose() async {
+    ///需要做处理 关闭读取rfid 和扫描  读取生命周期维护放到android 生命周期中。目前为 app 退出或者 进程不存在会关闭
+    // platform.invokeMethod(STOP_RFID_AND_SCAN);
+    ///防止 离开页面没关闭rfid 读取
+    await platform.invokeMethod(STOP_READ_RFID_DATA);
   }
 
   void refreshImage(PhotoInfo uploadImageInfo) {
@@ -146,8 +148,9 @@ class MouldReadResultController extends GetxController {
 
   ///获取编辑信息
   void getTaskInfo(taskNo, assetNo) async {
-    EasyLoading.show(status: "加载中...");
-    await FileApi.getFileToken();
+    ///
+    // EasyLoading.show(status: "加载中...");
+    // await FileApi.getFileToken();
     assertBindTaskInfo.value = homeController.mouldBindList.value.data
             ?.where((element) => element.taskNo == taskNo)
             ?.first
@@ -165,14 +168,13 @@ class MouldReadResultController extends GetxController {
     Log.d("读取页数据：${assertBindTaskInfo.value.toJson()}");
     if (assertBindTaskInfo.value.labelType == 0) {
       readLabelType.value = 0;
-      await platform.invokeMethod(INIT_RFID_AND_SCAN);
     } else if (assertBindTaskInfo.value.labelType == LABEL_RFID) {
       readLabelType.value = LABEL_RFID;
-      await platform.invokeMethod(INIT_RFID_ONLY);
     } else if (assertBindTaskInfo.value.labelType == LABEL_SCAN) {
       readLabelType.value = LABEL_SCAN;
-      await platform.invokeMethod(INIT_SCAN_ONLY);
+      isRfidReadStatus.value = false;
     }
+    await platform.invokeMethod(INIT_RFID_AND_SCAN);
     EasyLoading.dismiss();
   }
 
@@ -222,7 +224,8 @@ class MouldReadResultController extends GetxController {
             }
 
             assertBindTaskInfo.value.bindLabels = showAllLabels.cast<String>();
-            if (readDataContent.value.data?.length != 0) {
+            if (readDataContent.value.data != null &&
+                readDataContent.value.data?.length != 0) {
               assertBindTaskInfo.value.labelType = readDataContent.value.type;
             }
 
@@ -287,7 +290,11 @@ class MouldReadResultController extends GetxController {
                 .saveMouldTask(homeController.mouldBindList.value, true);
             toastInfo(msg: "保存成功");
             Get.back();
+
+            ///弹出对话框
             Get.back();
+
+            ///返回上一个页面
           });
     }
   }

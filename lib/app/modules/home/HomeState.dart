@@ -19,9 +19,9 @@ class HomeState {
 
   var userData = UserData(duns: "", name: "", sgmUser: false, userCode: "").obs;
 
-  ///已完成资产盘点页面
-  var inventoryFinishedPage = 1;
+  ///已完成资产盘点页面  默认0 开始
+  var inventoryFinishedPage = 0;
 
   ///已完成模具任务页面
-  var mouldTaskFinishedPage = 1;
+  var mouldTaskFinishedPage = 0;
 }

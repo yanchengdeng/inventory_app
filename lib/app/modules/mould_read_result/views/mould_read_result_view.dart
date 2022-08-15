@@ -173,14 +173,11 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                     Spacer(flex: 1),
                     InkWell(
                       child: Obx(
-                        () => Visibility(
-                          visible: controller.readLabelType.value == 0,
-                          child: Text(
-                              controller.isRfidReadStatus.value
-                                  ? '切换为PDA扫描'
-                                  : '切换为RFID读取',
-                              style: textNormalTextBlueStyle()),
-                        ),
+                        () => Text(
+                            controller.isRfidReadStatus.value
+                                ? '切换为PDA扫描'
+                                : '切换为RFID读取',
+                            style: textNormalTextBlueStyle()),
                       ),
                       onTap: () => {
                         //未读到标签时自动切换  有则弹框提醒
@@ -283,19 +280,16 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                   () => Stack(
                     children: [
                       Center(
-                        child: Visibility(
-                            visible:
-                                controller.readLabelType.value == LABEL_SCAN ||
-                                    controller.isRfidReadStatus.value == false,
-                            child: Text(
-                              '请点击设备左侧或右侧按钮扫描',
-                              style: textNormalListTextStyle(),
-                            )),
-                      ),
+                          child: Visibility(
+                        visible: !controller.isRfidReadStatus.value,
+                        child: Text(
+                          '请点击设备左侧或右侧按钮扫描',
+                          style: textNormalListTextStyle(),
+                        ),
+                      )),
                       Center(
                         child: Visibility(
-                          visible: controller.isRfidReadStatus.value &&
-                              controller.readLabelType.value != LABEL_SCAN,
+                          visible: controller.isRfidReadStatus.value,
                           child: ElevatedButton(
                               onPressed: () => {controller.startReadRfidData()},
                               child: Text(controller.isReadData.value

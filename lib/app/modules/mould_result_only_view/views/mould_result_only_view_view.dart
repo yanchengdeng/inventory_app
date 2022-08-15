@@ -150,13 +150,13 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                   child: ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) => Row(
-                            children: [
-                              Text(
-                                '${controller.mouldBindTaskFinished.value.bindLabels?[index]}',
-                                style: textNormalListTextStyle(),
-                              ),
-                            ],
+                      itemBuilder: (context, index) => Container(
+                            padding:
+                                EdgeInsetsDirectional.only(top: 2, bottom: 2),
+                            child: Text(
+                              '${controller.mouldBindTaskFinished.value.bindLabels?[index]}',
+                              style: textNormalListTextStyle(),
+                            ),
                           ),
                       itemCount: controller
                           .mouldBindTaskFinished.value.bindLabels?.length)),
@@ -250,7 +250,9 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
     return Container(
       child: Column(
         children: [
-          Container(margin: EdgeInsetsDirectional.only(top: 10,bottom: 10),child: Text(title, style: textNormalListTextStyle())),
+          Container(
+              margin: EdgeInsetsDirectional.only(top: 10, bottom: 10),
+              child: Text(title, style: textNormalListTextStyle())),
           CachedNetworkImage(
               fit: BoxFit.fitWidth,
               imageUrl: controller.getNetImageUrl(imageUrl),

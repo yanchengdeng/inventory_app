@@ -157,13 +157,14 @@ class MouldBindMouldListController extends GetxController {
       jsonMaps['cavityPhoto'] = element?.cavityPhoto;
       jsonMaps['overallPhoto'] = element?.overallPhoto;
 
-      await MouldTaskApi.uploadForPayType(
+      bool isSuccess = await MouldTaskApi.uploadForPayType(
           element?.assetBindTaskId ?? 0, jsonEncode(jsonMaps));
-
-      ///上传更新为已上传 状态
-      element?.bindStatus = BIND_STATUS_UPLOADED;
-      element?.bindStatusText = MOULD_BIND_STATUS[BIND_STATUS_UPLOADED];
-      updateLabelStatus(taskType, element);
+      if (isSuccess) {
+        ///上传更新为已上传 状态
+        element?.bindStatus = BIND_STATUS_UPLOADED;
+        element?.bindStatusText = MOULD_BIND_STATUS[BIND_STATUS_UPLOADED];
+        updateLabelStatus(taskType, element);
+      }
     } else {
       if (element?.nameplatePhoto?.fullPath?.contains(APP_PACKAGE) == true) {
         element?.nameplatePhoto?.fileSuffix = 'jpg';
@@ -172,44 +173,57 @@ class MouldBindMouldListController extends GetxController {
         element?.nameplatePhoto?.fullPath = nameplatePhotoUUID;
       }
       jsonMaps['nameplatePhoto'] = element?.nameplatePhoto;
-      await MouldTaskApi.uploadForLableReplaceType(
+      bool isSuccess = await MouldTaskApi.uploadForLableReplaceType(
           element?.labelReplaceTaskId ?? 0, jsonEncode(jsonMaps));
 
-      ///上传更新为已上传 状态
-      element?.bindStatus = BIND_STATUS_UPLOADED;
-      element?.bindStatusText = MOULD_BIND_STATUS[BIND_STATUS_UPLOADED];
-      updateLabelStatus(taskType, element);
+      if (isSuccess) {
+        ///上传更新为已上传 状态
+        element?.bindStatus = BIND_STATUS_UPLOADED;
+        element?.bindStatusText = MOULD_BIND_STATUS[BIND_STATUS_UPLOADED];
+        updateLabelStatus(taskType, element);
+      }
     }
   }
 
-  updateLabelStatus(String taskType, MouldList? mouldListItem) {
-    var mouldItem = homeController.mouldBindList.value.data
+  updateLabelStatus(String taskType, MouldList? mouldListItem) async {
+    ///todo 暂时先去掉  待缓存逻辑确定后再放开
+    ///全是已完成任务
+    Log.d("绑定任务都已上传 ，现在${homeController.mouldBindList.value.data?.length}个任务");
+
+    ///如果该模具里的绑定任务都是已经完成的上传 则本地删除任务
+    var mouldList = homeController.mouldBindList.value.data
         ?.where((element) => element.taskNo == mouldListItem?.taskNo)
         .first
-        .mouldList
-        ?.where((element) => element.assetNo == mouldListItem?.assetNo)
-        .first;
-    mouldItem = mouldListItem;
-    CacheUtils.to.saveMouldTask(homeController.mouldBindList.value, true);
+        .mouldList;
+    if (mouldList
+            ?.where((element) => element.bindStatus == BIND_STATUS_UPLOADED)
+            .length ==
+        mouldList?.length) {
+      homeController.mouldBindList.value.data
+          ?.removeWhere((element) => element.taskNo == mouldListItem?.taskNo);
+      Log.e(
+          "该任务下都已经上传 ，删除该模具任务现在还有${homeController.mouldBindList.value.data?.length}个任务");
+      await CacheUtils.to
+          .saveMouldTask(homeController.mouldBindList.value, true);
 
+      ///返回到上一页
+      Get.back();
+    } else {
+      var mouldItem = homeController.mouldBindList.value.data
+          ?.where((element) => element.taskNo == mouldListItem?.taskNo)
+          .first
+          .mouldList
+          ?.where((element) => element.assetNo == mouldListItem?.assetNo)
+          .first;
+      mouldItem = mouldListItem;
+      CacheUtils.to.saveMouldTask(homeController.mouldBindList.value, true);
 
-    ///重新取值 可实现刷新
-    _mouldBindTaskListSearch.value = homeController.mouldBindList.value.data
-            ?.where((element) => element.taskNo == mouldListItem?.taskNo)
-            ?.first
-            .mouldList ??
-        List.empty();
-
-///todo 暂时先去掉  待缓存逻辑确定后再放开
-  /*  ///全是已完成任务
-    Log.d("绑定任务都已上传 ，现在${homeController.mouldBindList.value.data?.length}个任务");
-    ///如果该模具里的绑定任务都是已经完成的上传 则本地删除任务
-    var mouldList =  homeController.mouldBindList.value.data?.where((element) => element.taskNo == mouldListItem?.taskNo).first?.mouldList;
-    if(mouldList?.where((element) => element.bindStatus == BIND_STATUS_UPLOADED)?.length == mouldList?.length){
-      homeController.mouldBindList.value.data?.removeWhere((element) => element.taskNo == mouldListItem?.taskNo);
-      Log.e("如果该任务下都已经上传 ，删除该模具任务现在还有${homeController.mouldBindList.value.data?.length}个任务");
-    }*/
-
-
+      ///重新取值 可实现刷新
+      _mouldBindTaskListSearch.value = homeController.mouldBindList.value.data
+              ?.where((element) => element.taskNo == mouldListItem?.taskNo)
+              ?.first
+              .mouldList ??
+          List.empty();
+    }
   }
 }

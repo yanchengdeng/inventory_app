@@ -8,6 +8,9 @@
 ///接口返回正常code 码  1
 const int API_RESPONSE_OK = 1;
 
+///自定义异常code 码
+const int API_RESPINSE_ERROR = -1;
+
 ///模具任务状态  -1  默认全部状态
 const int BIND_STATUS_ALL = -1;
 const int BIND_STATUS_WAITING_BIND = 0;
@@ -35,7 +38,9 @@ const int MOULD_TASK_TYPE_LABEL = 1;
 /// 盘点全部状态
 const int INVENTORY_STATUS_ALL = -1;
 const int INVENTORY_STATUS_NOT = 0;
-const int INVENTORY_WAITING_UPLOAD = 2;///本地模拟使用
+
+///本地模拟使用
+const int INVENTORY_WAITING_UPLOAD = 2;
 const int INVENTORY_HAVE_UPLOADED = 1;
 
 const INVENTORY_STATUS = {
@@ -78,10 +83,10 @@ const APP_PACKAGE = 'com.sgm.rfidapp';
 
 ///模具保存key
 const SAVE_KEY_FOR_MOULD = "mould_key";
+
 ///盘点保存key
 const SAVE_KEY_FOR_INVENTORY = "inventory_key";
 
-
 ///android 低层发出的读取数据类型  1标签 2二维码
-const  LABEL_RFID = 1;
+const LABEL_RFID = 1;
 const LABEL_SCAN = 2;

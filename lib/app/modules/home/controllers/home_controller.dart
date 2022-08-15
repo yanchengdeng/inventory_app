@@ -13,6 +13,7 @@ import '../../../store/user.dart';
 import '../../../utils/cache.dart';
 import '../../../values/constants.dart';
 import '../../../values/server.dart';
+import '../../../widgets/toast.dart';
 
 class HomeController extends GetxController {
   ///响应式变量
@@ -21,16 +22,26 @@ class HomeController extends GetxController {
   var mouldBindList = MouldBindTask().obs;
   var inventoryList = InventoryData().obs;
 
-  ///获取模具绑定列表
+  ///获取未完成模具绑定列表
   getMouldTaskList() async {
     mouldBindList.value = await MouldTaskApi.getMouldTaskList();
-    await CacheUtils.to.saveMouldTask(mouldBindList.value, false);
+    if (mouldBindList.value.state == API_RESPONSE_OK &&
+        mouldBindList.value.data?.isNotEmpty == true) {
+      await CacheUtils.to.saveMouldTask(mouldBindList.value, false);
+    } else {
+      mouldBindList.value = await CacheUtils.to.getMouldTask();
+    }
   }
 
-  /// 获取资产盘点列表
+  /// 获取未完成资产盘点列表
   getInventoryList() async {
     inventoryList.value = await InventoryApi.getInventoryData();
-    await CacheUtils.to.saveInventoryTask(inventoryList.value, false);
+    if (inventoryList.value.state == API_RESPONSE_OK &&
+        inventoryList.value.data?.isNotEmpty == true) {
+      await CacheUtils.to.saveInventoryTask(inventoryList.value, false);
+    } else {
+      inventoryList.value = await CacheUtils.to.getInventoryTask();
+    }
   }
 
   ///已完成的盘点任务
@@ -46,12 +57,10 @@ class HomeController extends GetxController {
         await InventoryApi.getInventoryFinishedList(page);
 
     if (inventoryList.data?.isNotEmpty ?? false) {
-      if (page == 1) {
-        _inventoryFinishedList.value = [];
+      if (page == 0) {
+        _inventoryFinishedList.clear();
       }
-
-      inventoryFinishedList.addAll(inventoryList.data ?? List.empty());
-      _inventoryFinishedList.value = inventoryFinishedList;
+      _inventoryFinishedList.addAll(inventoryList.data ?? List.empty());
     }
     return inventoryList;
   }
@@ -68,13 +77,11 @@ class HomeController extends GetxController {
     MouldBindTask mouldBindList =
         await MouldTaskApi.getMouldBindListFinishedList(page);
 
-    if (mouldBindList.data?.isNotEmpty ?? false) {
-      if (page == 1) {
-        _mouldTaskFinishedList.value = [];
+    if (mouldBindList.data?.isNotEmpty == true) {
+      if (page == 0) {
+        _mouldTaskFinishedList.clear();
       }
-
-      mouldTaskFinishedList.addAll(mouldBindList.data ?? List.empty());
-      _mouldTaskFinishedList.value = mouldTaskFinishedList;
+      _mouldTaskFinishedList.addAll(mouldBindList.data ?? List.empty());
     }
     return mouldBindList;
   }

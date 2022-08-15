@@ -1,13 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get.dart' hide FormData;
+import 'package:get/get.dart' hide FormData, Response;
 import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/utils/utils.dart';
-
 import '../apis/pretty_dio_logger.dart';
 import '../store/store.dart';
 import '../values/values.dart';
@@ -25,6 +25,8 @@ class HttpUtil {
   static HttpUtil _instance = HttpUtil._internal();
   factory HttpUtil() => _instance;
 
+  ///自定义异常返回数据
+  var errorDIY = {"state": -1, "message": "未知异常", "data": []};
   late Dio dio;
   CancelToken cancelToken = new CancelToken();
 
@@ -101,6 +103,9 @@ class HttpUtil {
         Loading.dismiss();
         ErrorEntity eInfo = createErrorEntity(e);
         onError(eInfo);
+        return handler.resolve(new Response(
+            data: errorDIY,
+            requestOptions: RequestOptions(data: "", path: "")));
         return handler.next(e); //continue
         // 如果你想完成请求并返回一些自定义数据，可以resolve 一个`Response`,如`handler.resolve(response)`。
         // 这样请求将会被终止，上层then会被调用，then中返回的数据将是你的自定义response.
@@ -123,9 +128,9 @@ class HttpUtil {
         CommonUtils.logOut();
         break;
 
-      case FILE_SERVER_TOKEN_OUT_CODE:
-        EasyLoading.showError('上传已超时,重新上传');
-        break;
+      // case FILE_SERVER_TOKEN_OUT_CODE:
+      //   EasyLoading.showError('上传已超时,重新上传');
+      //   break;
       default:
         EasyLoading.showError('${eInfo.message}');
         break;
@@ -189,9 +194,9 @@ class HttpUtil {
       default:
         {
           ///网络问题：SocketException: Connection failed (OS Error: Network is unreachable, errno = 101), address = 47.102.199.31, port = 59101
-          if(error.message.contains('Network')){
-            return ErrorEntity(state: -1,message: '请检查网络');
-          }else {
+          if (error.message.contains('Network')) {
+            return ErrorEntity(state: -1, message: '请检查网络');
+          } else {
             return ErrorEntity(state: -1, message: error.message);
           }
         }
@@ -220,8 +225,7 @@ class HttpUtil {
     headers['contentType'] = 'application/json; charset=utf-8';
 
     if (UserStore.to.userData != null) {
-      headers['x-user-code'] =
-          UserStore.to.userData?.userCode;
+      headers['x-user-code'] = UserStore.to.userData?.userCode;
     } else {
       headers['x-user-code'] = 'spl01';
     }

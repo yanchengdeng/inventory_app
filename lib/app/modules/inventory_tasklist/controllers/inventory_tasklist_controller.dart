@@ -28,5 +28,8 @@ class InventoryTasklistController extends GetxController {
   @override
   void onClose() {
     Log.d("InventoryTasklistController--onClose()");
+
+    ///恢复选择状态
+    homeController.state.selectedInventoryTab = true;
   }
 }

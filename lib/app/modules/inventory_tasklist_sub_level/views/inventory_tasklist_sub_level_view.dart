@@ -65,21 +65,17 @@ class InventoryTasklistSubLevelView
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        getTextByStatus(controller
-                                            .inventoryTaskListSearch?[index]
-                                            ?.assetInventoryStatus),
-                                        Text(
-                                            '${controller.inventoryTaskListSearch?[index]?.assetNo}',
-                                            style: textNormalListTextStyle())
-                                      ],
-                                    ),
-                                    Spacer(flex: 1),
-                                  ]),
+                                  Row(
+                                    children: [
+                                      Text(
+                                          '${controller.inventoryTaskListSearch?[index]?.assetNo}',
+                                          style: textNormalListTextStyle()),
+                                      Spacer(),
+                                      getTextByStatus(controller
+                                          .inventoryTaskListSearch?[index]
+                                          ?.assetInventoryStatus)
+                                    ],
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 0.0, top: 8, right: 0, bottom: 8),
@@ -118,7 +114,9 @@ class InventoryTasklistSubLevelView
     if (status == INVENTORY_STATUS_NOT) {
       style = textLitleOrangeTextStyle();
     } else if (status == INVENTORY_WAITING_UPLOAD) {
-      style = textLitleBlackTextStyle();
+      style = textLitleRedTextStyle();
+    } else if (status == INVENTORY_WAITING_UPLOAD) {
+      style = textLitleGreenTextStyle();
     }
 
     return Text('${INVENTORY_STATUS[status]}', style: style);

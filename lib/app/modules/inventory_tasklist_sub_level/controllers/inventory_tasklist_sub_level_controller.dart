@@ -24,9 +24,12 @@ class InventoryTasklistSubLevelController extends GetxController {
       var mouldList = task?.list;
       _inventoryTaskListSearch.value = mouldList;
     } else {
-      _inventoryTaskListSearch.value = await CacheUtils.to
-          .getInventoryTaskListByKeyOrStatus(
-              taskNo, key, bindStatus, toolingType);
+      _inventoryTaskListSearch.value = await homeController
+              .inventoryList.value.data
+              ?.where((element) => element.taskNo == taskNo)
+              .first
+              .list ??
+          List.empty();
     }
   }
 

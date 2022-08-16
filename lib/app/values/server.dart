@@ -3,14 +3,14 @@ enum Environment { DEVELOPMENT, SIT, PRODUCTION }
 ///为当前环境
 const SERVER_ENV = Environment.DEVELOPMENT;
 
-///本地测试
+///=======================本地测试=======================================
 ///接口域名统一配置  token失效返回 585
 const SERVER_API_URL = 'http://47.102.199.31:59101/rfidapp/rest';
 
 ///文件服务域名统一配置
 const SERVER_FILE_UPLOAD = 'https://csapi-qa.saic-gm.com/cs';
 
-///SIT 测试使用 统一改用改域名
+///==========================SIT 测试使用 统一改用改域名========================
 const SERVER_API_URL1 =
     'https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest';
 

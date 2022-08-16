@@ -363,6 +363,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
   Future<void> _onRefresh() async {
     if (homeController.state.selectedMouldTab) {
       await homeController.getMouldTaskList();
+      controller.getMouldTaskItems();
       toastInfo(msg: "最新任务已更新");
     } else {
       homeController.state.mouldTaskFinishedPage = 0;

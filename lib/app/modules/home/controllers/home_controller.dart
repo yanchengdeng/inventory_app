@@ -25,8 +25,7 @@ class HomeController extends GetxController {
   ///获取未完成模具绑定列表
   getMouldTaskList() async {
     mouldBindList.value = await MouldTaskApi.getMouldTaskList();
-    if (mouldBindList.value.state == API_RESPONSE_OK &&
-        mouldBindList.value.data?.isNotEmpty == true) {
+    if (mouldBindList.value.state == API_RESPONSE_OK ) {
       await CacheUtils.to.saveMouldTask(mouldBindList.value, false);
     } else {
       mouldBindList.value = await CacheUtils.to.getMouldTask();

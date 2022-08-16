@@ -139,6 +139,11 @@ b.还有就是缓存问题，如果一台设备多个用户登录，用户使用
 3. 支付 和标签 上传成功时 接口返回的message 可以给出 信息表明上传成功 
 
 
+###  FLUTTER 打包问题
+1.对外提供包测试   使用 flutter build  APK  中的[D:\flutter_project\inventory_app\build\app\outputs\flutter-apk] debug_apk 
+可以完整演示
+
+
 
 
 

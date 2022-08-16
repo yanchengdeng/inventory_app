@@ -196,8 +196,8 @@ class MouldReadResultController extends GetxController {
           content: "本模具已绑定${showAllLabels.length}个标签，是否确认？",
           callback: () {
             if (locationInfo.value.lat != null) {
-              assertBindTaskInfo.value.lat = locationInfo.value.lat;
-              assertBindTaskInfo.value.lng = locationInfo.value.lng;
+              assertBindTaskInfo.value.lat = locationInfo.value.lat.toString();
+              assertBindTaskInfo.value.lng = locationInfo.value.lng.toString();
               assertBindTaskInfo.value.address = locationInfo.value.address;
             }
 

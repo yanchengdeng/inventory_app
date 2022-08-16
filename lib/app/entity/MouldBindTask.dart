@@ -192,8 +192,8 @@ class MouldList {
     String? distributionTime,
     int? labelReplaceTaskId,
     int? labelType,
-    double? lat,
-    double? lng,
+    String? lat,
+    String? lng,
     String? manufactureUnits,
     String? moldName,
     String? moldNo,
@@ -288,8 +288,8 @@ class MouldList {
   String? _distributionTime;
   int? _labelReplaceTaskId;
   int? _labelType;
-  double? _lat;
-  double? _lng;
+  String? _lat;
+  String? _lng;
   String? _manufactureUnits;
   String? _moldName;
   String? _moldNo;
@@ -317,8 +317,8 @@ class MouldList {
     String? distributionTime,
     int? labelReplaceTaskId,
     int? labelType,
-    double? lat,
-    double? lng,
+    String? lat,
+    String? lng,
     String? manufactureUnits,
     String? moldName,
     String? moldNo,
@@ -384,10 +384,10 @@ class MouldList {
   set labelType(int? labelType) => _labelType = labelType;
   // double? get lat => _lat;
   // double? get lng => _lng;
-  double? get lat => _lat;
-  set lat(double? lat) => _lat = lat;
-  double? get lng => _lng;
-  set lng(double? lng) => _lng = lng;
+  String? get lat => _lat;
+  set lat(String? lat) => _lat = lat;
+  String? get lng => _lng;
+  set lng(String? lng) => _lng = lng;
   String? get manufactureUnits => _manufactureUnits;
   String? get moldName => _moldName;
   String? get moldNo => _moldNo;

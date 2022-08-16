@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 /// data : [{"distributionTime":"2022-07-18 13:37:10","distributionTimeStamp":1658122630000,"endDate":"2022-07-19","finishedTime":"","inventoryTotal":1,"inventoryType":1,"inventoryTypeText":"年度盘点","list":[{"assetInventoryDetailId":769,"assetInventoryStatus":0,"assetName":"火星塞","assetNo":"PO218912-1657547716-F","distributionTime":"2022-07-18 13:37:10","distributionTimeStamp":1658122630000,"inventoryNo":"I20220713207","labelNo":"","toolingType":"F","usedArea":"上海浦东"}],"taskNo":"I20220713207"},{"distributionTime":"2022-07-11 21:55:09","distributionTimeStamp":1657547709000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":2,"inventoryTypeText":"临时盘点","list":[{"assetInventoryDetailId":62,"assetInventoryStatus":0,"assetName":"卤素头灯","assetNo":"PO195730-1657547708-M","distributionTime":"2022-07-11 21:55:09","distributionTimeStamp":1657547709000,"inventoryNo":"I20220711979","labelNo":"XP199_1657547709,XP199_1657547710,XP199_1657547711","toolingType":"M","usedArea":"上海浦东"}],"taskNo":"I20220711979"},{"distributionTime":"2022-07-11 21:55:02","distributionTimeStamp":1657547702000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":2,"inventoryTypeText":"临时盘点","list":[{"assetInventoryDetailId":60,"assetInventoryStatus":0,"assetName":"万向接头","assetNo":"PO169912-1657547700-G","distributionTime":"2022-07-11 21:55:02","distributionTimeStamp":1657547702000,"inventoryNo":"I20220711812","labelNo":"XP197_1657547702,XP197_1657547703,XP197_1657547704","toolingType":"G","usedArea":"上海嘉定"}],"taskNo":"I20220711812"},{"distributionTime":"2022-07-11 21:55:00","distributionTimeStamp":1657547700000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":1,"inventoryTypeText":"年度盘点","list":[{"assetInventoryDetailId":59,"assetInventoryStatus":0,"assetName":"爆震","assetNo":"PO152720-1657547698-F","distributionTime":"2022-07-11 21:55:00","distributionTimeStamp":1657547700000,"inventoryNo":"I20220711602","labelNo":"XP196_1657547700,XP196_1657547701,XP196_1657547702","toolingType":"F","usedArea":"上海金桥"}],"taskNo":"I20220711602"},{"distributionTime":"2022-07-11 21:54:58","distributionTimeStamp":1657547698000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":1,"inventoryTypeText":"年度盘点","list":[{"assetInventoryDetailId":58,"assetInventoryStatus":0,"assetName":"储液器和干燥器","assetNo":"PO197982-1657547696-M","distributionTime":"2022-07-11 21:54:58","distributionTimeStamp":1657547698000,"inventoryNo":"I20220711765","labelNo":"XP195_1657547698,XP195_1657547699,XP195_1657547700","toolingType":"M","usedArea":"上海金桥"}],"taskNo":"I20220711765"},{"distributionTime":"2022-07-11 21:54:49","distributionTimeStamp":1657547689000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":1,"inventoryTypeText":"年度盘点","list":[{"assetInventoryDetailId":54,"assetInventoryStatus":0,"assetName":"卤素头灯","assetNo":"PO139887-1657547688-G","distributionTime":"2022-07-11 21:54:49","distributionTimeStamp":1657547689000,"inventoryNo":"I20220711707","labelNo":"XP191_1657547689,XP191_1657547690,XP191_1657547691","toolingType":"G","usedArea":"上海嘉定"}],"taskNo":"I20220711707"},{"distributionTime":"2022-07-11 21:54:48","distributionTimeStamp":1657547688000,"endDate":"2022-07-31","finishedTime":"","inventoryTotal":1,"inventoryType":2,"inventoryTypeText":"临时盘点","list":[{"assetInventoryDetailId":53,"assetInventoryStatus":0,"assetName":"起动马达","assetNo":"PO186056-1657547686-G","distributionTime":"2022-07-11 21:54:48","distributionTimeStamp":1657547688000,"inventoryNo":"I20220711629","labelNo":"XP190_1657547688,XP190_1657547689,XP190_1657547690","toolingType":"G","usedArea":"上海嘉定"}],"taskNo":"I20220711629"}]
 /// message : ""
 /// state : 1
@@ -6,7 +8,8 @@ class InventoryData {
   InventoryData({
     List<InventoryFinishedList>? data,
     String? message,
-    int? state,}){
+    int? state,
+  }) {
     _data = data;
     _message = message;
     _state = state;
@@ -25,13 +28,16 @@ class InventoryData {
   List<InventoryFinishedList>? _data;
   String? _message;
   int? _state;
-  InventoryData copyWith({  List<InventoryFinishedList>? data,
+  InventoryData copyWith({
+    List<InventoryFinishedList>? data,
     String? message,
     int? state,
-  }) => InventoryData(  data: data ?? _data,
-    message: message ?? _message,
-    state: state ?? _state,
-  );
+  }) =>
+      InventoryData(
+        data: data ?? _data,
+        message: message ?? _message,
+        state: state ?? _state,
+      );
   List<InventoryFinishedList>? get data => _data;
   String? get message => _message;
   int? get state => _state;
@@ -45,7 +51,6 @@ class InventoryData {
     map['state'] = _state;
     return map;
   }
-
 }
 
 /// distributionTime : "2022-07-18 13:37:10"
@@ -69,7 +74,8 @@ class InventoryFinishedList {
     int? inventoryType,
     String? inventoryTypeText,
     List<InventoryDetail>? list,
-    String? taskNo,}){
+    String? taskNo,
+  }) {
     _distributionTime = distributionTime;
     _distributionTimeStamp = distributionTimeStamp;
     _endDate = endDate;
@@ -109,7 +115,8 @@ class InventoryFinishedList {
   String? _inventoryTypeText;
   List<InventoryDetail>? _list;
   String? _taskNo;
-  InventoryFinishedList copyWith({  String? distributionTime,
+  InventoryFinishedList copyWith({
+    String? distributionTime,
     int? distributionTimeStamp,
     String? endDate,
     String? finishedTime,
@@ -119,17 +126,19 @@ class InventoryFinishedList {
     String? inventoryTypeText,
     List<InventoryDetail>? list,
     String? taskNo,
-  }) => InventoryFinishedList(  distributionTime: distributionTime ?? _distributionTime,
-    distributionTimeStamp: distributionTimeStamp ?? _distributionTimeStamp,
-    endDate: endDate ?? _endDate,
-    finishedTime: finishedTime ?? _finishedTime,
-    inventoryYear : inventoryYear ??_inventoryYear,
-    inventoryTotal: inventoryTotal ?? _inventoryTotal,
-    inventoryType: inventoryType ?? _inventoryType,
-    inventoryTypeText: inventoryTypeText ?? _inventoryTypeText,
-    list: list ?? _list,
-    taskNo: taskNo ?? _taskNo,
-  );
+  }) =>
+      InventoryFinishedList(
+        distributionTime: distributionTime ?? _distributionTime,
+        distributionTimeStamp: distributionTimeStamp ?? _distributionTimeStamp,
+        endDate: endDate ?? _endDate,
+        finishedTime: finishedTime ?? _finishedTime,
+        inventoryYear: inventoryYear ?? _inventoryYear,
+        inventoryTotal: inventoryTotal ?? _inventoryTotal,
+        inventoryType: inventoryType ?? _inventoryType,
+        inventoryTypeText: inventoryTypeText ?? _inventoryTypeText,
+        list: list ?? _list,
+        taskNo: taskNo ?? _taskNo,
+      );
   String? get distributionTime => _distributionTime;
   int? get distributionTimeStamp => _distributionTimeStamp;
   String? get endDate => _endDate;
@@ -157,18 +166,20 @@ class InventoryFinishedList {
     map['taskNo'] = _taskNo;
     return map;
   }
-
 }
 
-/// assetInventoryDetailId : 769
+/// assetInventoryDetailId : 12283
 /// assetInventoryStatus : 0
 /// assetName : "火星塞"
-/// assetNo : "PO218912-1657547716-F"
-/// distributionTime : "2022-07-18 13:37:10"
-/// distributionTimeStamp : 1658122630000
-/// inventoryNo : "I20220713207"
-/// labelNo : ""
-/// toolingType : "F"
+/// address : "sagnsf"
+/// lat : 32.23
+/// lng : 43.3
+/// assetNo : "PO212870-1660533212-G"
+/// distributionTime : "2022-08-15 11:13:33"
+/// distributionTimeStamp : 1660533213000
+/// inventoryNo : "I20220815969"
+/// labelNo : "E20000201008017824209A89,00000000000C11BB01000005,0444970000000000000004BB"
+/// toolingType : "G"
 /// usedArea : "上海浦东"
 
 class InventoryDetail {
@@ -176,16 +187,23 @@ class InventoryDetail {
     int? assetInventoryDetailId,
     int? assetInventoryStatus,
     String? assetName,
+    String? address,
+    double? lat,
+    double? lng,
     String? assetNo,
     String? distributionTime,
     int? distributionTimeStamp,
     String? inventoryNo,
     String? labelNo,
     String? toolingType,
-    String? usedArea,}){
+    String? usedArea,
+  }) {
     _assetInventoryDetailId = assetInventoryDetailId;
     _assetInventoryStatus = assetInventoryStatus;
     _assetName = assetName;
+    _address = address;
+    _lat = lat;
+    _lng = lng;
     _assetNo = assetNo;
     _distributionTime = distributionTime;
     _distributionTimeStamp = distributionTimeStamp;
@@ -199,6 +217,9 @@ class InventoryDetail {
     _assetInventoryDetailId = json['assetInventoryDetailId'];
     _assetInventoryStatus = json['assetInventoryStatus'];
     _assetName = json['assetName'];
+    _address = json['address'];
+    _lat = json['lat'];
+    _lng = json['lng'];
     _assetNo = json['assetNo'];
     _distributionTime = json['distributionTime'];
     _distributionTimeStamp = json['distributionTimeStamp'];
@@ -210,6 +231,9 @@ class InventoryDetail {
   int? _assetInventoryDetailId;
   int? _assetInventoryStatus;
   String? _assetName;
+  String? _address;
+  double? _lat;
+  double? _lng;
   String? _assetNo;
   String? _distributionTime;
   int? _distributionTimeStamp;
@@ -217,9 +241,13 @@ class InventoryDetail {
   String? _labelNo;
   String? _toolingType;
   String? _usedArea;
-  InventoryDetail copyWith({  int? assetInventoryDetailId,
+  InventoryDetail copyWith({
+    int? assetInventoryDetailId,
     int? assetInventoryStatus,
     String? assetName,
+    String? address,
+    double? lat,
+    double? lng,
     String? assetNo,
     String? distributionTime,
     int? distributionTimeStamp,
@@ -227,25 +255,40 @@ class InventoryDetail {
     String? labelNo,
     String? toolingType,
     String? usedArea,
-  }) => InventoryDetail(  assetInventoryDetailId: assetInventoryDetailId ?? _assetInventoryDetailId,
-    assetInventoryStatus: assetInventoryStatus ?? _assetInventoryStatus,
-    assetName: assetName ?? _assetName,
-    assetNo: assetNo ?? _assetNo,
-    distributionTime: distributionTime ?? _distributionTime,
-    distributionTimeStamp: distributionTimeStamp ?? _distributionTimeStamp,
-    inventoryNo: inventoryNo ?? _inventoryNo,
-    labelNo: labelNo ?? _labelNo,
-    toolingType: toolingType ?? _toolingType,
-    usedArea: usedArea ?? _usedArea,
-  );
+  }) =>
+      InventoryDetail(
+        assetInventoryDetailId:
+            assetInventoryDetailId ?? _assetInventoryDetailId,
+        assetInventoryStatus: assetInventoryStatus ?? _assetInventoryStatus,
+        assetName: assetName ?? _assetName,
+        address: address ?? _address,
+        lat: lat ?? _lat,
+        lng: lng ?? _lng,
+        assetNo: assetNo ?? _assetNo,
+        distributionTime: distributionTime ?? _distributionTime,
+        distributionTimeStamp: distributionTimeStamp ?? _distributionTimeStamp,
+        inventoryNo: inventoryNo ?? _inventoryNo,
+        labelNo: labelNo ?? _labelNo,
+        toolingType: toolingType ?? _toolingType,
+        usedArea: usedArea ?? _usedArea,
+      );
   int? get assetInventoryDetailId => _assetInventoryDetailId;
   int? get assetInventoryStatus => _assetInventoryStatus;
+  set assetInventoryStatus(int? assetInventoryStatus) =>
+      _assetInventoryStatus = assetInventoryStatus;
+  set address(String? address) => _address = address;
+  set lat(double? lat) => _lat = lat;
+  set lng(double? lng) => _lng = lng;
   String? get assetName => _assetName;
+  String? get address => _address;
+  double? get lat => _lat;
+  double? get lng => _lng;
   String? get assetNo => _assetNo;
   String? get distributionTime => _distributionTime;
   int? get distributionTimeStamp => _distributionTimeStamp;
   String? get inventoryNo => _inventoryNo;
   String? get labelNo => _labelNo;
+  set labelNo(String? labelNo) => labelNo = _labelNo;
   String? get toolingType => _toolingType;
   String? get usedArea => _usedArea;
 
@@ -254,6 +297,9 @@ class InventoryDetail {
     map['assetInventoryDetailId'] = _assetInventoryDetailId;
     map['assetInventoryStatus'] = _assetInventoryStatus;
     map['assetName'] = _assetName;
+    map['address'] = _address;
+    map['lat'] = _lat;
+    map['lng'] = _lng;
     map['assetNo'] = _assetNo;
     map['distributionTime'] = _distributionTime;
     map['distributionTimeStamp'] = _distributionTimeStamp;
@@ -263,5 +309,4 @@ class InventoryDetail {
     map['usedArea'] = _usedArea;
     return map;
   }
-
 }

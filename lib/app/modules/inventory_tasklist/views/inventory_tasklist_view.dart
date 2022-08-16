@@ -236,7 +236,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                                               .INVENTORY_TASKLIST_SUB_LEVEL,
                                                                           arguments: {
                                                                             'taskNo':
-                                                                                '${CacheUtils.to.inventoryData.value.data?[index].taskNo}',
+                                                                                '${controller.inventroyList[index].taskNo}',
                                                                             'bindStatus':
                                                                                 INVENTORY_WAITING_UPLOAD,
                                                                             "isFinish":
@@ -274,7 +274,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                                               .INVENTORY_TASKLIST_SUB_LEVEL,
                                                                           arguments: {
                                                                             'taskNo':
-                                                                                '${CacheUtils.to.inventoryData.value.data?[index].taskNo}',
+                                                                                '${controller.inventroyList[index].taskNo}',
                                                                             'bindStatus':
                                                                                 INVENTORY_HAVE_UPLOADED,
                                                                             "isFinish":
@@ -292,7 +292,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                         .INVENTORY_TASKLIST_SUB_LEVEL,
                                                     arguments: {
                                                       'taskNo':
-                                                          '${CacheUtils.to.inventoryData.value.data?[index].taskNo}',
+                                                          '${controller.inventroyList[index].taskNo}',
                                                       'bindStatus':
                                                           INVENTORY_STATUS_ALL,
                                                       "isFinish": false

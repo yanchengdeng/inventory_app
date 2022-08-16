@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/inventory_task_handler_rfid/bindings/inventory_task_handler_binding.dart';
+import '../modules/inventory_task_handler_rfid/views/inventory_task_handler_view.dart';
 import '../modules/inventory_tasklist/bindings/inventory_tasklist_binding.dart';
 import '../modules/inventory_tasklist/views/inventory_tasklist_view.dart';
 import '../modules/inventory_tasklist_sub_level/bindings/inventory_tasklist_sub_level_binding.dart';
@@ -41,7 +43,6 @@ class AppPages {
       page: () => HomeView(),
       binding: HomeBinding(),
     ),
-
     GetPage(
       name: _Paths.SPLASH,
       page: () => SplashView(),
@@ -92,6 +93,10 @@ class AppPages {
       page: () => InventoryTasklistSubLevelView(),
       binding: InventoryTasklistSubLevelBinding(),
     ),
-
+    GetPage(
+      name: _Paths.INVENTORY_TASK_HANDLER,
+      page: () => InventoryTaskHandlerView(),
+      binding: InventoryTaskHandlerBinding(),
+    ),
   ];
 }

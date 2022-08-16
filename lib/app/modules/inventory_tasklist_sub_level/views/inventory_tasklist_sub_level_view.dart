@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/routes/app_pages.dart';
 import '../../../style/text_style.dart';
-import '../../../utils/cache.dart';
 import '../../../utils/logger.dart';
 import '../../../values/constants.dart';
 import '../../../widgets/input.dart';
@@ -23,6 +23,17 @@ class InventoryTasklistSubLevelView
         appBar: AppBar(
           title: Text('资产盘点'),
           centerTitle: true,
+          actions: [
+            Visibility(
+              visible: !isFinish,
+              child: IconButton(
+                  onPressed: () {
+                    controller.upload();
+                  },
+                  icon: Icon(Icons.upload),
+                  color: Colors.blue),
+            )
+          ],
         ),
         body: Container(
           child: Column(
@@ -104,6 +115,15 @@ class InventoryTasklistSubLevelView
                     ),
                   )))
             ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => {
+            Get.toNamed(Routes.INVENTORY_TASK_HANDLER,
+                arguments: {'taskNo': taskNo})
+          },
+          child: Container(
+            child: Text('盘点'),
           ),
         ));
   }

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/InventoryData.dart';
+import 'package:inventory_app/app/utils/cache.dart';
 
 import '../../../utils/logger.dart';
 import '../../home/controllers/home_controller.dart';
@@ -31,5 +32,12 @@ class InventoryTasklistController extends GetxController {
 
     ///恢复选择状态
     homeController.state.selectedInventoryTab = true;
+  }
+
+  @override
+  void refresh() async {
+    super.refresh();
+    homeController.inventoryList.value = await CacheUtils.to.getInventoryTask();
+    getInventoryList();
   }
 }

@@ -88,15 +88,6 @@ class MouldTaskApi<T> {
     Options options = Options();
     options.headers = fileTokenMaps;
 
-    ///"orderField": "",
-    // 	"orderType": "",
-    // 	"pageNum": 0,
-    // 	"pageSize": 5
-    // var data = {
-    //   'labelReplaceTaskId': labelReplaceTaskId,
-    //   'bodyParams': bodyParams,
-    // };
-
     var response = await HttpUtil().post(
         '/mould/labelReplaceBindUpload/${labelReplaceTaskId}',
         data: bodyParams,

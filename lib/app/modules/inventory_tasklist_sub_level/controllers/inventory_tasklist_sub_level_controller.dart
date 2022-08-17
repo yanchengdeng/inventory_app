@@ -75,8 +75,8 @@ class InventoryTasklistSubLevelController extends GetxController {
   }
 
   ///上传盘点任务
-  void upload() {
-    List<InventoryDetail?> waitForInventorys = inventoryTaskSearch.value
+  void upload() async {
+    List<InventoryDetail?> waitForInventorys = _inventoryTaskSearch.value
         .where((element) =>
             element?.assetInventoryStatus == INVENTORY_WAITING_UPLOAD)
         .toList();

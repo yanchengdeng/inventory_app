@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
+import 'package:inventory_app/app/widgets/toast.dart';
 import '../../../style/text_style.dart';
 import '../../../utils/logger.dart';
 import '../../../values/constants.dart';
@@ -24,17 +25,6 @@ class InventoryTasklistSubLevelView
         appBar: AppBar(
           title: Text('资产盘点'),
           centerTitle: true,
-          actions: [
-            Visibility(
-              visible: !isFinish,
-              child: IconButton(
-                  onPressed: () {
-                    controller.upload();
-                  },
-                  icon: Icon(Icons.upload),
-                  color: Colors.blue),
-            )
-          ],
         ),
         body: Container(
           child: Column(
@@ -125,15 +115,52 @@ class InventoryTasklistSubLevelView
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => {
-            Get.toNamed(Routes.INVENTORY_TASK_HANDLER,
-                arguments: {'taskNo': taskNo})
-          },
+        floatingActionButton: Visibility(
+          visible: !isFinish,
           child: Container(
-            child: Text('盘点'),
+            margin: EdgeInsetsDirectional.only(bottom: 30),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Spacer(),
+                FloatingActionButton(
+                  child: Text('RFID\n读取'),
+                  backgroundColor: Colors.orange,
+                  // 设置 tag1
+                  heroTag: 'tag1',
+                  onPressed: () {
+                    Get.toNamed(Routes.INVENTORY_TASK_HANDLER,
+                        arguments: {'taskNo': taskNo, 'isRFID': true});
+                  },
+                ),
+                Spacer(),
+                FloatingActionButton(
+                  child: Text('PDA\n扫描'),
+                  backgroundColor: Colors.green,
+                  // 设置 tag2
+                  heroTag: 'tag2',
+                  onPressed: () {
+                    Get.toNamed(Routes.INVENTORY_TASK_HANDLER,
+                        arguments: {'taskNo': taskNo, 'isRFID': false});
+                  },
+                ),
+                Spacer(),
+                FloatingActionButton(
+                  child: Text('数据\n上传'),
+                  // 设置 tag3
+                  heroTag: 'tag3',
+                  backgroundColor: Colors.blue,
+                  onPressed: () {
+                    controller.upload();
+                  },
+                ),
+                Spacer(),
+              ],
+            ),
           ),
-        ));
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.centerDocked);
   }
 
   /// 根据绑定状态输入不同颜色
@@ -142,9 +169,9 @@ class InventoryTasklistSubLevelView
     if (status == INVENTORY_STATUS_NOT) {
       style = textLitleOrangeTextStyle();
     } else if (status == INVENTORY_WAITING_UPLOAD) {
-      style = textLitleRedTextStyle();
-    } else if (status == INVENTORY_WAITING_UPLOAD) {
       style = textLitleGreenTextStyle();
+    } else if (status == INVENTORY_WAITING_UPLOAD) {
+      style = textLitleBlueTextStyle();
     }
 
     return Text('${INVENTORY_STATUS[status]}', style: style);

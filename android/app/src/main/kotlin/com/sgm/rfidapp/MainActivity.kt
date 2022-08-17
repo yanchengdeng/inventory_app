@@ -337,8 +337,6 @@ class MainActivity : FlutterActivity() {
     }
 
 
-
-
     /**
      * 关闭RFID 和扫描功能
      */

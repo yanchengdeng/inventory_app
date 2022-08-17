@@ -193,10 +193,8 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
           onPressed: () {
             controller.doUploadData(taskType);
           },
-          child: Text(
-            '上传',
-            style: textFloatButtonStyle(),
-          ),
+          backgroundColor: Colors.blue,
+          child: Text('数据\n上传'),
         ),
       ),
     );
@@ -210,9 +208,9 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
     } else if (status == BIND_STATUS_REBIND) {
       style = textLitleRedTextStyle();
     } else if (status == BIND_STATUS_UPLOADED) {
-      style = textLitleGreenTextStyle();
+      style = textLitleBlueTextStyle();
     } else if (status == BIND_STATUS_WAITING_UPLOAD) {
-      style = textLitleBrownTextStyle();
+      style = textLitleGreenTextStyle();
     }
 
     return Text('${MOULD_BIND_STATUS[status]}', style: style);

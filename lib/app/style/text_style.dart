@@ -99,7 +99,7 @@ TextStyle textLitleOrangeTextStyle() {
   return TextStyle(
     fontWeight: FontWeight.w400,
     color: Colors.orange,
-    fontSize: AppFontSize.FONT_SIZE_SUB_TITLE.toDouble(),
+    fontSize: AppFontSize.FONT_SIZE_FLOAT.toDouble(),
   );
 }
 
@@ -108,16 +108,7 @@ TextStyle textLitleRedTextStyle() {
   return TextStyle(
     fontWeight: FontWeight.w400,
     color: Colors.red,
-    fontSize: AppFontSize.FONT_SIZE_SUB_TITLE.toDouble(),
-  );
-}
-
-///常规字体样式
-TextStyle textLitleBrownTextStyle() {
-  return TextStyle(
-    fontWeight: FontWeight.w400,
-    color: Colors.deepOrange,
-    fontSize: AppFontSize.FONT_SIZE_SUB_TITLE.toDouble(),
+    fontSize: AppFontSize.FONT_SIZE_FLOAT.toDouble(),
   );
 }
 
@@ -125,7 +116,16 @@ TextStyle textLitleBrownTextStyle() {
 TextStyle textLitleGreenTextStyle() {
   return TextStyle(
     fontWeight: FontWeight.w400,
-    color: Colors.green,
-    fontSize: AppFontSize.FONT_SIZE_SUB_TITLE.toDouble(),
+    color: Color.fromARGB(255, 34, 255, 144),
+    fontSize: AppFontSize.FONT_SIZE_FLOAT.toDouble(),
+  );
+}
+
+///常规字体样式
+TextStyle textLitleBlueTextStyle() {
+  return TextStyle(
+    fontWeight: FontWeight.w400,
+    color: Color.fromARGB(255, 14, 134, 231),
+    fontSize: AppFontSize.FONT_SIZE_FLOAT.toDouble(),
   );
 }

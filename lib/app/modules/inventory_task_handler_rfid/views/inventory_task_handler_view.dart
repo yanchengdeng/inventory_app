@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:inventory_app/app/widgets/toast.dart';
 import '../../../style/text_style.dart';
 import '../../../values/constants.dart';
 import '../controllers/inventory_task_handler_controller.dart';
@@ -10,23 +11,17 @@ import '../controllers/inventory_task_handler_controller.dart';
  */
 class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
   var taskNo = Get.arguments['taskNo'];
+  var isRfidType = Get.arguments['isRFID'];
   @override
   Widget build(BuildContext context) {
     controller.findByParams(taskNo);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('读取盘点'),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-              onPressed: () => {controller.saveInfo(taskNo)},
-              icon: Icon(Icons.save_alt_sharp),
-              color: Colors.blue),
-        ],
-      ),
-      body: Obx(
-        () => Stack(alignment: AlignmentDirectional.bottomCenter, children: [
-          ListView.builder(
+        appBar: AppBar(
+          title: Text('读取盘点'),
+          centerTitle: true,
+        ),
+        body: Obx(
+          () => ListView.builder(
             itemBuilder: ((context, index) => Card(
                   elevation: CARD_ELEVATION,
                   shadowColor: Colors.grey,
@@ -54,36 +49,51 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
                 )),
             itemCount: controller.inventoryTaskHandle?.length,
           ),
-          Obx(
-            () => Stack(
-              children: [
-                Center(
-                    child: Visibility(
-                  visible: !controller.isRfidReadStatus.value,
-                  child: Text(
-                    '请点击设备左侧或右侧按钮扫描',
-                    style: textNormalListTextStyle(),
+        ),
+        floatingActionButton: Obx(() => Container(
+              margin: EdgeInsetsDirectional.only(bottom: 30),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Spacer(),
+                  Visibility(
+                    visible: !controller.isRfidReadStatus.value,
+                    child: FloatingActionButton(
+                      child: Text('PAD\n扫描'),
+                      backgroundColor: Colors.green,
+                      onPressed: () => {toastInfo(msg: '请点击设备左侧或右侧按钮扫描')},
+                    ),
                   ),
-                )),
-                Center(
-                  child: Visibility(
+                  Visibility(
                     visible: controller.isRfidReadStatus.value,
-                    child: ElevatedButton(
-                        onPressed: () => {
-                              if (controller.locationInfo.value.address == null)
-                                {controller.getGpsLagLng()}
-                              else
-                                {controller.startReadRfidData(taskNo)}
-                            },
-                        child: Text(
-                            controller.isReadData.value ? '开始读取' : '结束读取')),
+                    child: FloatingActionButton(
+                      child: Text(
+                          controller.isReadData.value ? '开始\n读取' : '结束\n读取'),
+                      backgroundColor: Colors.orange,
+                      // 设置 tag1
+                      heroTag: 'tag1',
+                      onPressed: () {
+                        if (controller.locationInfo.value.address == null) {
+                          controller.getGpsLagLng();
+                        } else {
+                          controller.startReadRfidData(taskNo);
+                        }
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ]),
-      ),
-    );
+                  Spacer(),
+                  FloatingActionButton(
+                    child: Text('离线\n保存'),
+                    // 设置 tag2
+                    heroTag: 'tag2',
+                    backgroundColor: Colors.blue,
+                    onPressed: () {
+                      controller.saveInfo(taskNo);
+                    },
+                  ),
+                  Spacer(),
+                ],
+              ),
+            )));
   }
 }

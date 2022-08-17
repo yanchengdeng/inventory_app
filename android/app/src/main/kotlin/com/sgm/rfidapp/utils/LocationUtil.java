@@ -115,7 +115,7 @@ public class LocationUtil {
                 }
             } else {
                 if (callback != null) {
-                    callback.onResult(new LocationBean(latitude, longitude,""));
+                    callback.onResult(new LocationBean(latitude, longitude,"未获取真实地址"));
                 }
             }
         } catch (IOException e) {

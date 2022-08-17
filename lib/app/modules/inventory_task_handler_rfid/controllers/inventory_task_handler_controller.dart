@@ -60,6 +60,8 @@ class InventoryTaskHandlerController extends GetxController {
   ///所有显示标签   已有标签+ 读取标签
   var showAllLabels = [].obs;
 
+  var taskNo = Get.arguments['taskNo'];
+
   ///查找查询数据
   findByParams(String taskNo) async {
     _inventoryTaskHandle.value = await homeController.inventoryList.value.data
@@ -136,6 +138,7 @@ class InventoryTaskHandlerController extends GetxController {
       if (rfidDataFromAndroid) {
         isReadData.value = true;
         findByParams(taskNo);
+        getGpsLagLng();
       }
     }
   }
@@ -153,11 +156,26 @@ class InventoryTaskHandlerController extends GetxController {
             showAllLabels.add(element);
           }
         });
+      } else {
+        ///扫描标签 先要定位
+        if (locationInfo.value.address != null) {
+          readDataContent.value.data?.forEach((element) {
+            if (!showAllLabels.contains(element)) {
+              showAllLabels.add(element);
+            } else {
+              toastInfo(msg: '');
+            }
+          });
+          findByParams(taskNo);
+        } else {
+          getGpsLagLng();
+        }
       }
 
       print("yancheng-返回到fullter 上标签数据：--${showAllLabels}");
     });
 
+    isRfidReadStatus.value = Get.arguments['isRFID'];
     await platform.invokeMethod(INIT_RFID_AND_SCAN);
   }
 

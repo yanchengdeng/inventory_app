@@ -16,7 +16,6 @@ abstract class Routes {
   static const TAKE_PHOTO = _Paths.TAKE_PHOTO;
   static const INVENTORY_TASKLIST_SUB_LEVEL =
       _Paths.INVENTORY_TASKLIST_SUB_LEVEL;
-  static const TEST_R_F_I_D = _Paths.TEST_R_F_I_D;
   static const INVENTORY_TASK_HANDLER = _Paths.INVENTORY_TASK_HANDLER;
 }
 
@@ -34,6 +33,5 @@ abstract class _Paths {
   static const MOULD_RESULT_ONLY_VIEW = '/mould-result-only-view';
   static const TAKE_PHOTO = '/take-photo';
   static const INVENTORY_TASKLIST_SUB_LEVEL = '/inventory-tasklist-sub-level';
-  static const TEST_R_F_I_D = '/test-r-f-i-d';
   static const INVENTORY_TASK_HANDLER = '/inventory-task-handler';
 }

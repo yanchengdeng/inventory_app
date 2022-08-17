@@ -36,23 +36,23 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                            '${controller.inventoryTaskListSearch?[index]?.assetName}',
+                            '${controller.inventoryTaskHandle?[index]?.assetName}',
                             style: textBoldNumberBlueStyle()),
                         Divider(
                           color: Colors.white54,
                           thickness: 1,
                         ),
                         Text(
-                            '固定资产编号:${controller.inventoryTaskListSearch?[index]?.assetNo}',
+                            '固定资产编号:${controller.inventoryTaskHandle?[index]?.assetNo}',
                             style: textNormalListTextStyle()),
                         Text(
-                            '标签编号:${controller.inventoryTaskListSearch?[index]?.labelNo}',
+                            '标签编号:${controller.inventoryTaskHandle?[index]?.labelNo}',
                             style: textNormalListTextStyle()),
                       ],
                     ),
                   ),
                 )),
-            itemCount: controller.inventoryTaskListSearch?.length,
+            itemCount: controller.inventoryTaskHandle?.length,
           ),
           Obx(
             () => Stack(

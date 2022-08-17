@@ -58,6 +58,15 @@ TextStyle textNormalTextBlueStyle() {
   );
 }
 
+///字体样式 用作 floatButton 样式
+TextStyle textFloatButtonStyle() {
+  return TextStyle(
+    fontWeight: FontWeight.w700,
+    color: Colors.white,
+    fontSize: AppFontSize.FONT_SIZE_FLOAT.toDouble(),
+  );
+}
+
 ///字体样式
 TextStyle textSmallTextStyle() {
   return TextStyle(

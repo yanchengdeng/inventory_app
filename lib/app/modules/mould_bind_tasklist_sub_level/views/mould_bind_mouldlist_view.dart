@@ -25,182 +25,181 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
     Get.put(MouldBindMouldListController());
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('模具绑定'),
-          centerTitle: true,
-          actions: [
-            Visibility(
-              visible: !isFinish,
-              child: IconButton(
-                  onPressed: () async => {
-                        await controller.doUploadData(taskType),
-                      },
-                  icon: Icon(Icons.upload),
-                  color: Colors.blue),
-            )
-          ],
-        ),
-        body: Container(
-          child: Column(
-            children: [
-              Container(
-                  margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: inputTextEdit(
-                      hintText: '搜资产编号、名称',
-                      inputOnSubmit: (value) {
-                        controller.findByParams(
-                            isFinish, taskNo, value, [bindStatus], []);
-                      })),
-              Container(
-                width: 200,
-                height: 50,
-                alignment: Alignment.center,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text('全部'),
-                      flex: 1,
-                    ),
-                    Expanded(
-                      child: Text('工装类型'),
-                      flex: 1,
-                    )
-                  ],
-                ),
+      appBar: AppBar(
+        title: Text('模具绑定'),
+        centerTitle: true,
+      ),
+      body: Container(
+        child: Column(
+          children: [
+            Container(
+                margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: inputTextEdit(
+                    hintText: '搜资产编号、名称',
+                    inputOnSubmit: (value) {
+                      controller.findByParams(
+                          isFinish, taskNo, value, [bindStatus], []);
+                    })),
+            Container(
+              width: 200,
+              height: 50,
+              alignment: Alignment.center,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text('全部'),
+                    flex: 1,
+                  ),
+                  Expanded(
+                    child: Text('工装类型'),
+                    flex: 1,
+                  )
+                ],
               ),
+            ),
 
-              ///https://github.com/peng8350/flutter_pulltorefresh/issues/572  这里需要加入Expanded 避免该issue
-              Obx(() => Container(
-                  child: controller.mouldBindTaskListSearch?.length == 0
-                      ? DefaultEmptyWidget()
-                      : Expanded(
-                          child: ListView.builder(
-                            itemBuilder: ((context, index) => Card(
-                                  elevation: CARD_ELEVATION,
-                                  shadowColor: Colors.grey,
-                                  child: InkWell(
-                                    child: Container(
-                                      padding: EdgeInsets.all(12),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                getTextByStatus(controller
-                                                        .mouldBindTaskListSearch[
-                                                            index]
-                                                        ?.bindStatus ??
-                                                    BIND_STATUS_WAITING_BIND),
-                                                Text(
-                                                    '${controller.mouldBindTaskListSearch?[index]?.assetNo}',
-                                                    style:
-                                                        textNormalListTextStyle())
-                                              ],
-                                            ),
-                                            Spacer(flex: 1),
-                                            Obx(
-                                              () => Visibility(
-                                                visible: controller
-                                                        .mouldBindTaskListSearch?[
-                                                            index]
-                                                        ?.bindStatus !=
-                                                    BIND_STATUS_UPLOADED,
-                                                child: ElevatedButton(
-                                                    onPressed: () => {
-                                                          ///其他状态直接打开编辑上传页
-                                                          Get.toNamed(
-                                                              Routes
-                                                                  .MOULD_READ_RESULT,
-                                                              arguments: {
-                                                                "taskType": Get
-                                                                        .arguments[
-                                                                    'taskType'],
-                                                                "taskNo": Get
-                                                                        .arguments[
-                                                                    'taskNo'],
-                                                                "assetNo": controller
-                                                                    .mouldBindTaskListSearch?[
-                                                                        index]
-                                                                    ?.assetNo
-                                                              })
-                                                        },
-                                                    child: Text('绑定')),
-                                              ),
-                                            ),
-                                          ]),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 0.0,
-                                                top: 8,
-                                                right: 0,
-                                                bottom: 8),
-                                            child: Divider(
-                                              color: Colors.grey,
-                                              height: 1,
+            ///https://github.com/peng8350/flutter_pulltorefresh/issues/572  这里需要加入Expanded 避免该issue
+            Obx(() => Container(
+                child: controller.mouldBindTaskListSearch?.length == 0
+                    ? DefaultEmptyWidget()
+                    : Expanded(
+                        child: ListView.builder(
+                          itemBuilder: ((context, index) => Card(
+                                elevation: CARD_ELEVATION,
+                                shadowColor: Colors.grey,
+                                child: InkWell(
+                                  child: Container(
+                                    padding: EdgeInsets.all(12),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              getTextByStatus(controller
+                                                      .mouldBindTaskListSearch[
+                                                          index]
+                                                      ?.bindStatus ??
+                                                  BIND_STATUS_WAITING_BIND),
+                                              Text(
+                                                  '${controller.mouldBindTaskListSearch?[index]?.assetNo}',
+                                                  style:
+                                                      textNormalListTextStyle())
+                                            ],
+                                          ),
+                                          Spacer(flex: 1),
+                                          Obx(
+                                            () => Visibility(
+                                              visible: controller
+                                                      .mouldBindTaskListSearch?[
+                                                          index]
+                                                      ?.bindStatus !=
+                                                  BIND_STATUS_UPLOADED,
+                                              child: ElevatedButton(
+                                                  onPressed: () => {
+                                                        ///其他状态直接打开编辑上传页
+                                                        Get.toNamed(
+                                                            Routes
+                                                                .MOULD_READ_RESULT,
+                                                            arguments: {
+                                                              "taskType": Get
+                                                                      .arguments[
+                                                                  'taskType'],
+                                                              "taskNo":
+                                                                  Get.arguments[
+                                                                      'taskNo'],
+                                                              "assetNo": controller
+                                                                  .mouldBindTaskListSearch?[
+                                                                      index]
+                                                                  ?.assetNo
+                                                            })
+                                                      },
+                                                  child: Text('绑定')),
                                             ),
                                           ),
-                                          Text(
-                                              '标签编号:${getLabelInfo(controller.mouldBindTaskListSearch?[index])}',
-                                              style: textNormalListTextStyle()),
-                                          Text(
-                                              '零件号:${controller.mouldBindTaskListSearch?[index]?.moldNo}',
-                                              style: textNormalListTextStyle()),
-                                          Text(
-                                              '零件名称：${controller.mouldBindTaskListSearch?[index]?.moldName}',
-                                              style: textNormalListTextStyle()),
-                                          Text(
-                                              'SGM车型:${controller.mouldBindTaskListSearch?[index]?.toolingName}',
-                                              style: textNormalListTextStyle()),
-                                          Text(
-                                              '备注：${controller.mouldBindTaskListSearch?[index]?.remark}',
-                                              style: textNormalListTextStyle())
-                                        ],
-                                      ),
+                                        ]),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 0.0,
+                                              top: 8,
+                                              right: 0,
+                                              bottom: 8),
+                                          child: Divider(
+                                            color: Colors.grey,
+                                            height: 1,
+                                          ),
+                                        ),
+                                        Text(
+                                            '标签编号:${getLabelInfo(controller.mouldBindTaskListSearch?[index])}',
+                                            style: textNormalListTextStyle()),
+                                        Text(
+                                            '零件号:${controller.mouldBindTaskListSearch?[index]?.moldNo}',
+                                            style: textNormalListTextStyle()),
+                                        Text(
+                                            '零件名称：${controller.mouldBindTaskListSearch?[index]?.moldName}',
+                                            style: textNormalListTextStyle()),
+                                        Text(
+                                            'SGM车型:${controller.mouldBindTaskListSearch?[index]?.toolingName}',
+                                            style: textNormalListTextStyle()),
+                                        Text(
+                                            '备注：${controller.mouldBindTaskListSearch?[index]?.remark}',
+                                            style: textNormalListTextStyle())
+                                      ],
                                     ),
-                                    onTap: () => {
-                                      if (controller
-                                              .mouldBindTaskListSearch?[index]
-                                              ?.bindStatus ==
-                                          BIND_STATUS_UPLOADED)
-                                        {
-                                          ///已上传（已完成和未完成模具中都有）
+                                  ),
+                                  onTap: () => {
+                                    if (controller
+                                            .mouldBindTaskListSearch?[index]
+                                            ?.bindStatus ==
+                                        BIND_STATUS_UPLOADED)
+                                      {
+                                        ///已上传（已完成和未完成模具中都有）
 
-                                          Get.toNamed(
-                                              Routes.MOULD_RESULT_ONLY_VIEW,
-                                              arguments: controller
+                                        Get.toNamed(
+                                            Routes.MOULD_RESULT_ONLY_VIEW,
+                                            arguments: controller
+                                                .mouldBindTaskListSearch?[index]
+                                                ?.toJson())
+                                      }
+                                    else
+                                      {
+                                        ///其他状态直接打开编辑上传页
+                                        Get.toNamed(Routes.MOULD_READ_RESULT,
+                                            arguments: {
+                                              "taskType":
+                                                  Get.arguments['taskType'],
+                                              "taskNo": Get.arguments['taskNo'],
+                                              "assetNo": controller
                                                   .mouldBindTaskListSearch?[
                                                       index]
-                                                  ?.toJson())
-                                        }
-                                      else
-                                        {
-                                          ///其他状态直接打开编辑上传页
-                                          Get.toNamed(Routes.MOULD_READ_RESULT,
-                                              arguments: {
-                                                "taskType":
-                                                    Get.arguments['taskType'],
-                                                "taskNo":
-                                                    Get.arguments['taskNo'],
-                                                "assetNo": controller
-                                                    .mouldBindTaskListSearch?[
-                                                        index]
-                                                    .assetNo
-                                              })
-                                        }
-                                    },
-                                  ),
-                                )),
-                            itemCount:
-                                controller.mouldBindTaskListSearch?.length,
-                          ),
-                        )))
-            ],
+                                                  .assetNo
+                                            })
+                                      }
+                                  },
+                                ),
+                              )),
+                          itemCount: controller.mouldBindTaskListSearch?.length,
+                        ),
+                      )))
+          ],
+        ),
+      ),
+      floatingActionButton: Visibility(
+        visible: !isFinish,
+        child: FloatingActionButton(
+          onPressed: () {
+            controller.doUploadData(taskType);
+          },
+          child: Text(
+            '上传',
+            style: textFloatButtonStyle(),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   /// 根据绑定状态输入不同颜色

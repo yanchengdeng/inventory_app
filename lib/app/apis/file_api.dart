@@ -42,7 +42,8 @@ class FileApi<T> {
 //     }
 
     FileTokenResponseEntity fileTokenResponseEntity =
-        FileTokenResponseEntity.fromJson(jsonDecode(response));
+        FileTokenResponseEntity.fromJson(
+            response is Map ? response : jsonDecode(response));
     if (fileTokenResponseEntity.data != null) {
       //保存文件服务token
       StorageService.to

@@ -45,7 +45,8 @@ class RouteObservers<R extends Route<dynamic>> extends RouteObserver<R> {
     }
 
     /// 离开盘点搜索页 回到上一页刷新
-    if (route.settings == Routes.INVENTORY_TASKLIST_SUB_LEVEL) {
+
+    if (route.settings.name == Routes.INVENTORY_TASKLIST_SUB_LEVEL) {
       var inventoryControll = Get.find<InventoryTasklistController>();
       inventoryControll.refresh();
     }

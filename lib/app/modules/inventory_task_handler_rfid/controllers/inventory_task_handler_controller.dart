@@ -14,11 +14,11 @@ import '../../home/controllers/home_controller.dart';
 
 class InventoryTaskHandlerController extends GetxController {
   ///资产盘点搜索列表
-  var _inventoryTaskListSearch = RxList<InventoryDetail?>(List.empty());
+  var _inventoryTaskHandle = RxList<InventoryDetail?>(List.empty());
 
-  set inventoryTaskListSearch(value) => _inventoryTaskListSearch.value = value;
+  set inventoryTaskHandle(value) => _inventoryTaskHandle.value = value;
 
-  get inventoryTaskListSearch => _inventoryTaskListSearch.value;
+  get inventoryTaskHandle => _inventoryTaskHandle.value;
 
   final homeController = Get.find<HomeController>();
 
@@ -62,8 +62,7 @@ class InventoryTaskHandlerController extends GetxController {
 
   ///查找查询数据
   findByParams(String taskNo) async {
-    _inventoryTaskListSearch.value = await homeController
-            .inventoryList.value.data
+    _inventoryTaskHandle.value = await homeController.inventoryList.value.data
             ?.where((element) => element.taskNo == taskNo)
             .first
             .list
@@ -177,9 +176,9 @@ class InventoryTaskHandlerController extends GetxController {
 
   ///本地保存
   saveInfo(String taskNo) {
-    if (_inventoryTaskListSearch.isNotEmpty) {
+    if (_inventoryTaskHandle.isNotEmpty) {
       if (locationInfo.value.address?.isNotEmpty == true) {
-        _inventoryTaskListSearch.forEach((elementSearch) {
+        _inventoryTaskHandle.forEach((elementSearch) {
           var cacheAssertDetail = homeController.inventoryList.value.data
               ?.where((element) => element.taskNo == taskNo)
               .first
@@ -188,14 +187,13 @@ class InventoryTaskHandlerController extends GetxController {
                   element.assetInventoryDetailId ==
                   elementSearch?.assetInventoryDetailId)
               .first;
-
           cacheAssertDetail?.assetInventoryStatus = INVENTORY_WAITING_UPLOAD;
           cacheAssertDetail?.lat = locationInfo.value.lat;
           cacheAssertDetail?.lng = locationInfo.value.lng;
           cacheAssertDetail?.address = locationInfo.value.address;
         });
         CacheUtils.to
-            .saveInventoryTask(homeController.inventoryList.value, false);
+            .saveInventoryTask(homeController.inventoryList.value, true);
         toastInfo(msg: '保存成功');
         Get.back();
       } else {

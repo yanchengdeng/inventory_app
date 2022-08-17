@@ -14,8 +14,13 @@ const SERVER_FILE_UPLOAD = 'https://csapi-qa.saic-gm.com/cs';
 const SERVER_API_URL1 =
     'https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest';
 
-const SERVER_FILE_UPLOAD1 =
-    'https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest';
+/**
+ * 文件上传有两种方式
+1.直接用文件服务器的地址。例如https://csapi-qa.saic-gm.com/cs/file/frontend/upload
+2.网关Nginx代理，{host}/FileUpload/file/frontend/upload
+ */
+
+const SERVER_FILE_UPLOAD1 = 'https://csapi-qa.saic-gm.com/cs';
 
 ///文件服务地址  异常返回 500  已废弃
 /// const SERVER_FILE_API_URL =

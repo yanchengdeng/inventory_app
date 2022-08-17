@@ -25,7 +25,7 @@ class HomeController extends GetxController {
   ///获取未完成模具绑定列表
   getMouldTaskList() async {
     mouldBindList.value = await MouldTaskApi.getMouldTaskList();
-    if (mouldBindList.value.state == API_RESPONSE_OK ) {
+    if (mouldBindList.value.state == API_RESPONSE_OK) {
       await CacheUtils.to.saveMouldTask(mouldBindList.value, false);
     } else {
       mouldBindList.value = await CacheUtils.to.getMouldTask();
@@ -89,22 +89,22 @@ class HomeController extends GetxController {
   void onInit() async {
     super.onInit();
     EasyLoading.show(status: "获取中...");
-    if (SERVER_ENV == Environment.SIT) {
-      ///SIT环境   x-user-code  不是必须参数
+    // if (SERVER_ENV == Environment.SIT) {
+    //   ///SIT环境   x-user-code  不是必须参数
+    //   getMouldTaskList();
+    //   getInventoryList();
+    // } else {
+    //   ///开发环境   x-user-code  是必须参数
+    var userResponseData = await UserStore.to.getProfile();
+    if (userResponseData?.state == API_RESPONSE_OK &&
+        userResponseData?.data != null) {
+      state.userData.value = userResponseData?.data ?? UserData();
       getMouldTaskList();
       getInventoryList();
     } else {
-      ///开发环境   x-user-code  是必须参数
-      var userResponseData = await UserStore.to.getProfile();
-      if (userResponseData?.state == API_RESPONSE_OK &&
-          userResponseData?.data != null) {
-        state.userData.value = userResponseData?.data ?? UserData();
-        getMouldTaskList();
-        getInventoryList();
-      } else {
-        CommonUtils.logOut();
-      }
+      CommonUtils.logOut();
     }
+    // }
   }
 
   @override

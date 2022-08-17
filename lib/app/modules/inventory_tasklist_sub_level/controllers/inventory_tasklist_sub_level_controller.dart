@@ -14,11 +14,12 @@ import '../../home/controllers/home_controller.dart';
 
 class InventoryTasklistSubLevelController extends GetxController {
   ///资产盘点搜索列表
-  var _inventoryTaskListSearch = RxList<InventoryDetail?>(List.empty());
 
-  set inventoryTaskListSearch(value) => _inventoryTaskListSearch.value = value;
+  var _inventoryTaskSearch = RxList<InventoryDetail?>(List.empty());
 
-  get inventoryTaskListSearch => _inventoryTaskListSearch.value;
+  set inventoryTaskSearch(value) => _inventoryTaskSearch.value = value;
+
+  get inventoryTaskSearch => _inventoryTaskSearch.value;
 
   final homeController = Get.find<HomeController>();
 
@@ -33,11 +34,10 @@ class InventoryTasklistSubLevelController extends GetxController {
           ?.where((element) => element.taskNo == taskNo)
           ?.first;
       var mouldList = task?.list;
-      _inventoryTaskListSearch.value = mouldList;
+      inventoryTaskSearch = mouldList;
     } else {
-      _inventoryTaskListSearch.value = await homeController
-              .inventoryList.value.data
-              ?.where((element) => element.taskNo == taskNo)
+      inventoryTaskSearch = await homeController.inventoryList.value.data
+              ?.where((element) => element.taskNo == this.taskNo)
               .first
               .list ??
           List.empty();
@@ -58,19 +58,25 @@ class InventoryTasklistSubLevelController extends GetxController {
   void onClose() {}
 
   @override
-  void refresh() async {
+  void refresh() {
     super.refresh();
-    _inventoryTaskListSearch.value = await homeController
-            .inventoryList.value.data
+
+    ///强制清空再取  达到强制刷新效果
+    _inventoryTaskSearch.value = List.empty();
+    _inventoryTaskSearch.value = homeController.inventoryList.value.data
             ?.where((element) => element.taskNo == this.taskNo)
             .first
             .list ??
         List.empty();
+
+    inventoryTaskSearch.forEach((element) {
+      Log.d("刷新的盘点数据：${element?.toJson()}");
+    });
   }
 
   ///上传盘点任务
   void upload() {
-    List<InventoryDetail?> waitForInventorys = _inventoryTaskListSearch
+    List<InventoryDetail?> waitForInventorys = inventoryTaskSearch.value
         .where((element) =>
             element?.assetInventoryStatus == INVENTORY_WAITING_UPLOAD)
         .toList();
@@ -139,12 +145,17 @@ class InventoryTasklistSubLevelController extends GetxController {
         ///返回到上一页
         Get.back();
       } else {
-        _inventoryTaskListSearch.value = await homeController
+        List<InventoryDetail> originTasks = await homeController
                 .inventoryList.value.data
                 ?.where((element) => element.taskNo == this.taskNo)
                 .first
                 .list ??
             List.empty();
+
+        inventoryTaskSearch = originTasks;
+
+        CacheUtils.to
+            .saveInventoryTask(homeController.inventoryList.value, true);
       }
     }
   }

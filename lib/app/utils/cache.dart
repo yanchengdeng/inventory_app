@@ -173,6 +173,8 @@ class CacheUtils extends GetxController {
   var inventoryData = InventoryData().obs;
 
   /**
+   * isLocalSave :  是否来自本地保存
+   * 
    * 本地有和服务端的相同的 assetBindTaskId\labelReplaceTaskId\assetInventoryDetailId
       这些id 则用本地缓存的（缓存信息里包含用户操作数据，比服务端丰富），没有这些id 则视为新增的id任务
 
@@ -198,8 +200,6 @@ class CacheUtils extends GetxController {
   Future<InventoryData> getInventoryTask() async {
     var cacheMould = await StorageService.to.getString(getInventorySaveKey());
     if (cacheMould.isNotEmpty) {
-      Log.d("转移1${jsonDecode(cacheMould) is Map}");
-
       inventoryData.value = InventoryData.fromJson(jsonDecode(cacheMould));
       return inventoryData.value;
     } else {

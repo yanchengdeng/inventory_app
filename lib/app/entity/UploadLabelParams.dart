@@ -181,8 +181,10 @@ class PhotoInfo {
   String? get docComments => _docComments;
 
   String? get documentName => _documentName;
+  set documentName(String? documentName) => _documentName = documentName;
 
   String? get downloadType => _downloadType;
+  set downloadType(String? downloadType) => _downloadType = downloadType;
 
   int? get fileSize => _fileSize;
   int? get photoType => _photoType;

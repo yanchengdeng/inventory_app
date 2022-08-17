@@ -4,6 +4,7 @@ import 'package:inventory_app/app/routes/app_pages.dart';
 import '../../../style/text_style.dart';
 import '../../../utils/logger.dart';
 import '../../../values/constants.dart';
+import '../../../widgets/empty.dart';
 import '../../../widgets/input.dart';
 import '../controllers/inventory_tasklist_sub_level_controller.dart';
 
@@ -66,54 +67,61 @@ class InventoryTasklistSubLevelView
 
               ///https://github.com/peng8350/flutter_pulltorefresh/issues/572  这里需要加入Expanded 避免该issue
               Obx(() => Container(
-                      child: Expanded(
-                    child: ListView.builder(
-                      itemBuilder: ((context, index) => Card(
-                            elevation: CARD_ELEVATION,
-                            shadowColor: Colors.grey,
-                            child: Container(
-                              padding: EdgeInsets.all(12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                          '${controller.inventoryTaskListSearch?[index]?.assetNo}',
-                                          style: textNormalListTextStyle()),
-                                      Spacer(),
-                                      getTextByStatus(controller
-                                          .inventoryTaskListSearch?[index]
-                                          ?.assetInventoryStatus)
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 0.0, top: 8, right: 0, bottom: 8),
-                                    child: Divider(
-                                      color: Colors.grey,
-                                      height: 1,
+                  child: controller.inventoryTaskSearch.length == 0
+                      ? DefaultEmptyWidget()
+                      : Expanded(
+                          child: ListView.builder(
+                            itemBuilder: ((context, index) => Card(
+                                  elevation: CARD_ELEVATION,
+                                  shadowColor: Colors.grey,
+                                  child: Container(
+                                    padding: EdgeInsets.all(12),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Obx(() => Text(
+                                                '${controller.inventoryTaskSearch[index].assetNo}',
+                                                style:
+                                                    textNormalListTextStyle())),
+                                            Spacer(),
+                                            getTextByStatus(controller
+                                                .inventoryTaskSearch[index]
+                                                .assetInventoryStatus)
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 0.0,
+                                              top: 8,
+                                              right: 0,
+                                              bottom: 8),
+                                          child: Divider(
+                                            color: Colors.grey,
+                                            height: 1,
+                                          ),
+                                        ),
+                                        Text(
+                                            '资产名称:${controller.inventoryTaskSearch[index].assetName}',
+                                            style: textNormalListTextStyle()),
+                                        Text(
+                                            '标签编号:${controller.inventoryTaskSearch[index].labelNo}',
+                                            style: textNormalListTextStyle()),
+                                        Text(
+                                            'SGM车型：${controller.inventoryTaskSearch[index].toolingType}',
+                                            style: textNormalListTextStyle()),
+                                        Text(
+                                            '工装模具存使用地:${controller.inventoryTaskSearch[index].usedArea}',
+                                            style: textNormalListTextStyle())
+                                      ],
                                     ),
                                   ),
-                                  Text(
-                                      '资产名称:${controller.inventoryTaskListSearch?[index]?.assetName}',
-                                      style: textNormalListTextStyle()),
-                                  Text(
-                                      '标签编号:${controller.inventoryTaskListSearch?[index]?.labelNo}',
-                                      style: textNormalListTextStyle()),
-                                  Text(
-                                      'SGM车型：${controller.inventoryTaskListSearch?[index]?.toolingType}',
-                                      style: textNormalListTextStyle()),
-                                  Text(
-                                      '工装模具存使用地:${controller.inventoryTaskListSearch?[index]?.usedArea}',
-                                      style: textNormalListTextStyle())
-                                ],
-                              ),
-                            ),
-                          )),
-                      itemCount: controller.inventoryTaskListSearch?.length,
-                    ),
-                  )))
+                                )),
+                            itemCount: controller.inventoryTaskSearch.length,
+                          ),
+                        )))
             ],
           ),
         ),
@@ -129,7 +137,7 @@ class InventoryTasklistSubLevelView
   }
 
   /// 根据绑定状态输入不同颜色
-  getTextByStatus(int status) {
+  getTextByStatus(int? status) {
     var style = textLitleBlackTextStyle();
     if (status == INVENTORY_STATUS_NOT) {
       style = textLitleOrangeTextStyle();

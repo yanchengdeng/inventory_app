@@ -133,21 +133,31 @@ class MouldBindMouldListController extends GetxController {
     jsonMaps['lng'] = element?.lng;
 
     if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
-      if (element?.nameplatePhoto?.fullPath?.contains(APP_PACKAGE) == true) {
+      if (element?.nameplatePhoto?.fullPath != null &&
+          element?.nameplatePhoto?.fullPath?.contains(APP_PACKAGE) == true) {
         element?.nameplatePhoto?.fileSuffix = 'jpg';
+        element?.nameplatePhoto?.downloadType = 'url';
+        element?.nameplatePhoto?.documentName =
+            element.nameplatePhoto?.fullPath;
         var nameplatePhotoUUID =
             await FileApi.uploadFile(element?.nameplatePhoto?.fullPath ?? "");
         element?.nameplatePhoto?.fullPath = nameplatePhotoUUID;
       }
-      if (element?.cavityPhoto?.fullPath?.contains(APP_PACKAGE) == true) {
+      if (element?.cavityPhoto?.fullPath != null &&
+          element?.cavityPhoto?.fullPath?.contains(APP_PACKAGE) == true) {
+        element?.cavityPhoto?.documentName = element.cavityPhoto?.fullPath;
         element?.cavityPhoto?.fileSuffix = 'jpg';
+        element?.cavityPhoto?.downloadType = 'url';
         var cavityPhotoNetUUID =
             await FileApi.uploadFile(element?.cavityPhoto?.fullPath ?? "");
         element?.cavityPhoto?.fullPath = cavityPhotoNetUUID;
       }
 
-      if (element?.overallPhoto?.fullPath?.contains(APP_PACKAGE) == true) {
+      if (element?.overallPhoto?.fullPath != null &&
+          element?.overallPhoto?.fullPath?.contains(APP_PACKAGE) == true) {
         element?.overallPhoto?.fileSuffix = 'jpg';
+        element?.overallPhoto?.downloadType = 'url';
+        element?.overallPhoto?.documentName = element.overallPhoto?.fullPath;
         var overallPhotoUUID =
             await FileApi.uploadFile(element?.overallPhoto?.fullPath ?? "");
         element?.overallPhoto?.fullPath = overallPhotoUUID;
@@ -168,6 +178,9 @@ class MouldBindMouldListController extends GetxController {
     } else {
       if (element?.nameplatePhoto?.fullPath?.contains(APP_PACKAGE) == true) {
         element?.nameplatePhoto?.fileSuffix = 'jpg';
+        element?.nameplatePhoto?.documentName =
+            element.nameplatePhoto?.fullPath;
+        element?.nameplatePhoto?.downloadType = 'url';
         var nameplatePhotoUUID =
             await FileApi.uploadFile(element?.nameplatePhoto?.fullPath ?? "");
         element?.nameplatePhoto?.fullPath = nameplatePhotoUUID;

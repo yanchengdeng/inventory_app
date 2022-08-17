@@ -148,6 +148,7 @@ class InventoryFinishedList {
   int? get inventoryType => _inventoryType;
   String? get inventoryTypeText => _inventoryTypeText;
   List<InventoryDetail>? get list => _list;
+  set list(List<InventoryDetail>? list) => list = _list;
   String? get taskNo => _taskNo;
 
   Map<String, dynamic> toJson() {
@@ -288,7 +289,7 @@ class InventoryDetail {
   int? get distributionTimeStamp => _distributionTimeStamp;
   String? get inventoryNo => _inventoryNo;
   String? get labelNo => _labelNo;
-  set labelNo(String? labelNo) => labelNo = _labelNo;
+  set labelNo(String? labelNo) => _labelNo = labelNo;
   String? get toolingType => _toolingType;
   String? get usedArea => _usedArea;
 

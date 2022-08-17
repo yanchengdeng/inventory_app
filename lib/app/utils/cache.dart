@@ -9,6 +9,7 @@ import 'package:inventory_app/app/values/constants.dart';
 
 import '../entity/InventoryData.dart';
 import '../entity/MouldBindTask.dart';
+import '../values/values.dart';
 
 /**
  * 缓存跟着账号走  和产品确认账号的来源？？？
@@ -68,66 +69,70 @@ class CacheUtils extends GetxController {
         //     in homeController.mouldBindList.value.data ?? List.empty()) {
         //   Log.d("taskCache========== 对比${taskCache['taskNo']}");
         // }
-
-        /// 服务端下有下发taskNo  本地没有taskNo  则本地添加
-        List<String?>? cacheTasks = homeController.mouldBindList.value.data
-            ?.map((e) => e.taskNo)
-            .toList();
-        if (cacheTasks?.isNotEmpty == true) {
-          var mouldTaskItems = data.data?.where(
-              (element) => cacheTasks?.contains(element.taskNo) == false);
-          if (mouldTaskItems != null && mouldTaskItems.isNotEmpty) {
-            homeController.mouldBindList.value.data?.addAll(mouldTaskItems);
+        if (SERVER_ENV == Environment.DEVELOPMENT) {
+          /// 服务端下有下发taskNo  本地没有taskNo  则本地添加
+          List<String?>? cacheTasks = homeController.mouldBindList.value.data
+              ?.map((e) => e.taskNo)
+              .toList();
+          if (cacheTasks?.isNotEmpty == true) {
+            var mouldTaskItems = data.data?.where(
+                (element) => cacheTasks?.contains(element.taskNo) == false);
+            if (mouldTaskItems != null && mouldTaskItems.isNotEmpty) {
+              homeController.mouldBindList.value.data?.addAll(mouldTaskItems);
+            }
           }
-        }
 
-        /// 本地有taskNo  服务端没有taskNo  则 删除本地taskNo
-        List<String?>? netTasks = data.data?.map((e) => e.taskNo).toList();
-        var localTaskItems = homeController.mouldBindList.value.data
-            ?.where((element) => netTasks?.contains(element.taskNo) == false);
+          /// 本地有taskNo  服务端没有taskNo  则 删除本地taskNo
+          List<String?>? netTasks = data.data?.map((e) => e.taskNo).toList();
+          var localTaskItems = homeController.mouldBindList.value.data
+              ?.where((element) => netTasks?.contains(element.taskNo) == false);
 
-        localTaskItems?.forEach((element) {
-          homeController.mouldBindList.value.data?.remove(element);
-        });
-
-        ///如果是相同的taskNo 下的任务
-        ///则比对 labelReplaceTaskId  和下发时间 一起判断  ： 相同labelReplaceTaskId  下发时间不一致则用服务端取代本地
-        ///assetBindTaskId  支付任务绑定    不需要下发时间来判断是否缓存
-        ///
-        ///
-        ///
-        ///
-        ///先取出服务下发的所有的 标签任务和
-        List<MouldList> mouldListsLabelsFromNet = [];
-
-        ///支付绑定任务
-        List<MouldList> mouldListsPaysFromNet = [];
-        data.data?.forEach((taskElement) {
-          taskElement.mouldList?.forEach((elementItem) {
-            if (elementItem.labelReplaceTaskId! > 0 &&
-                taskElement.taskType == MOULD_TASK_TYPE_LABEL) {
-              mouldListsLabelsFromNet.add(elementItem);
-            }
-
-            if (elementItem.assetBindTaskId! > 0 &&
-                taskElement.taskType == MOULD_TASK_TYPE_PAY) {
-              mouldListsPaysFromNet.add(elementItem);
-            }
+          localTaskItems?.forEach((element) {
+            homeController.mouldBindList.value.data?.remove(element);
           });
-        });
 
-        ///开始对比 服务端有任务id 本地没有则本地删除，本地有  服务端没有 则本地删除
-        // mouldListsLabelsFromNet.forEach((elementLable) {
-        //   homeController.mouldBindList.value.data
-        //       ?.where((element1) => element1.taskNo == elementLable.taskNo)
-        //       .first
-        //       .mouldList
-        //       ?.addIf(, elementLable);
-        // });
+          ///如果是相同的taskNo 下的任务
+          ///则比对 labelReplaceTaskId  和下发时间 一起判断  ： 相同labelReplaceTaskId  下发时间不一致则用服务端取代本地
+          ///assetBindTaskId  支付任务绑定    不需要下发时间来判断是否缓存
+          ///
+          ///
+          ///
+          ///
+          ///先取出服务下发的所有的 标签任务和
+          List<MouldList> mouldListsLabelsFromNet = [];
 
-        //  homeController.mouldBindList.value = data;
-        // StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));
+          ///支付绑定任务
+          List<MouldList> mouldListsPaysFromNet = [];
+          data.data?.forEach((taskElement) {
+            taskElement.mouldList?.forEach((elementItem) {
+              if (elementItem.labelReplaceTaskId! > 0 &&
+                  taskElement.taskType == MOULD_TASK_TYPE_LABEL) {
+                mouldListsLabelsFromNet.add(elementItem);
+              }
 
+              if (elementItem.assetBindTaskId! > 0 &&
+                  taskElement.taskType == MOULD_TASK_TYPE_PAY) {
+                mouldListsPaysFromNet.add(elementItem);
+              }
+            });
+          });
+
+          ///开始对比 服务端有任务id 本地没有则本地删除，本地有  服务端没有 则本地删除
+          // mouldListsLabelsFromNet.forEach((elementLable) {
+          //   homeController.mouldBindList.value.data
+          //       ?.where((element1) => element1.taskNo == elementLable.taskNo)
+          //       .first
+          //       .mouldList
+          //       ?.addIf(, elementLable);
+          // });
+
+          //  homeController.mouldBindList.value = data;
+          // StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));
+
+        } else {
+          homeController.mouldBindList.value = data;
+          StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));
+        }
       } else {
         homeController.mouldBindList.value = MouldBindTask();
       }
@@ -192,7 +197,15 @@ class CacheUtils extends GetxController {
       StorageService.to.setString(getInventorySaveKey(), jsonEncode(data));
     } else {
       ///todo 网络获取 本地存在需要对比保存
-      inventoryData.value = data ?? await getInventoryTask();
+      if (data != null && data.data?.isNotEmpty == true) {
+        if (SERVER_ENV == Environment.DEVELOPMENT) {
+          inventoryData.value = data;
+        } else {
+          inventoryData.value = data;
+        }
+      } else {
+        inventoryData.value = InventoryData();
+      }
     }
   }
 

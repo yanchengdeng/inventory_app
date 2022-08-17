@@ -158,7 +158,8 @@ class InventoryTaskHandlerController extends GetxController {
         });
       } else {
         ///扫描标签 先要定位
-        if (locationInfo.value.address != null) {
+        if (locationInfo.value.address != null &&
+            readDataContent.value.type == LABEL_SCAN) {
           readDataContent.value.data?.forEach((element) {
             if (!showAllLabels.contains(element)) {
               showAllLabels.add(element);
@@ -218,7 +219,7 @@ class InventoryTaskHandlerController extends GetxController {
         getGpsLagLng();
       }
     } else {
-      toastInfo(msg: '暂无可盘点上传数据');
+      // toastInfo(msg: '暂无可保存数据');
     }
   }
 }

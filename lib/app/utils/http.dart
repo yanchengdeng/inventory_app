@@ -117,6 +117,9 @@ class HttpUtil {
 
   /*
    * error统一处理
+   * ///  405 ： 用户没有系统权限访问
+/// 401 : DP没有开通访问中台权限
+/// 584： 错误信息提示
    */
 
   // 错误处理
@@ -130,9 +133,15 @@ class HttpUtil {
         CommonUtils.logOut();
         break;
 
-      // case FILE_SERVER_TOKEN_OUT_CODE:
-      //   EasyLoading.showError('上传已超时,重新上传');
-      //   break;
+      case USER_NO_RIGHT_TO_SYSTEM:
+        EasyLoading.showError('用户没有系统权限访问');
+        break;
+      case DP_NO_RIGHT:
+        EasyLoading.showError('DP没有开通访问中台权限');
+        break;
+      case NORMAL_MESSAGE_TIP:
+        EasyLoading.showError('${eInfo.message}');
+        break;
       default:
         EasyLoading.showError('${eInfo.message}');
         break;

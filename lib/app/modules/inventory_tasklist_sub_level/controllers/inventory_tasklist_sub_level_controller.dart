@@ -110,9 +110,9 @@ class InventoryTasklistSubLevelController extends GetxController {
     jsonMaps['lat'] = element?.lat;
     jsonMaps['lng'] = element?.lng;
 
-    bool isSuccess =
+    int resultCode =
         await InventoryApi.uploadInventoryTask(jsonEncode(jsonMaps));
-    if (isSuccess) {
+    if (resultCode == API_RESPONSE_OK) {
       element?.assetInventoryStatus = INVENTORY_HAVE_UPLOADED;
 
       List<InventoryDetail?>? allFinished = homeController
@@ -144,6 +144,27 @@ class InventoryTasklistSubLevelController extends GetxController {
 
         ///返回到上一页
         Get.back();
+      } else if (resultCode == -1) {
+        toastInfo(msg: '${element?.assetNo}已从任务中移除模具所在的盘点单');
+        homeController.inventoryList.value.data
+            ?.where((element) => element.taskNo == this.taskNo)
+            .first
+            .list
+            ?.removeWhere((element1) => element1.assetNo == element?.assetNo);
+
+        CacheUtils.to
+            .saveInventoryTask(homeController.inventoryList.value, true);
+      } else if (resultCode == -2) {
+        toastInfo(msg: '${element?.assetNo}已从任务中移除模具所在的盘点单');
+
+        homeController.inventoryList.value.data
+            ?.where((element) => element.taskNo == this.taskNo)
+            .first
+            .list
+            ?.removeWhere((element1) => element1.assetNo == element?.assetNo);
+
+        CacheUtils.to
+            .saveInventoryTask(homeController.inventoryList.value, true);
       } else {
         List<InventoryDetail> originTasks = await homeController
                 .inventoryList.value.data

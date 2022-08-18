@@ -117,14 +117,28 @@ class CacheUtils extends GetxController {
             });
           });
 
+          ///本地 的 支付任务id 和标签也取出来
+          ///
+          List<MouldList> mouldListsLabelsFromCache = [];
+
+          ///支付绑定任务
+          List<MouldList> mouldListsPaysFromCache = [];
+          homeController.mouldBindList.value.data?.forEach((taskElement) {
+            taskElement.mouldList?.forEach((elementItem) {
+              if (elementItem.labelReplaceTaskId! > 0 &&
+                  taskElement.taskType == MOULD_TASK_TYPE_LABEL) {
+                mouldListsLabelsFromCache.add(elementItem);
+              }
+
+              if (elementItem.assetBindTaskId! > 0 &&
+                  taskElement.taskType == MOULD_TASK_TYPE_PAY) {
+                mouldListsPaysFromCache.add(elementItem);
+              }
+            });
+          });
+
           ///开始对比 服务端有任务id 本地没有则本地删除，本地有  服务端没有 则本地删除
-          // mouldListsLabelsFromNet.forEach((elementLable) {
-          //   homeController.mouldBindList.value.data
-          //       ?.where((element1) => element1.taskNo == elementLable.taskNo)
-          //       .first
-          //       .mouldList
-          //       ?.addIf(, elementLable);
-          // });
+          ///方法交集处理
 
           //  homeController.mouldBindList.value = data;
           // StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));

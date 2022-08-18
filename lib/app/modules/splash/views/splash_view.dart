@@ -68,7 +68,7 @@ class SplashView extends GetView<SplashController> {
             Loading.show('登陆中...');
             // }
           },
-          onLoadStop: (_controller, url) {
+          onLoadStop: (_controller, url) async {
             print("地址onLoadStop：$url");
             Loading.dismiss();
             String loadUrl = "${url?.toString()}";
@@ -76,7 +76,7 @@ class SplashView extends GetView<SplashController> {
               var listSplits = loadUrl.split(SPLIT_URL);
               if (listSplits.length == 2) {
                 ///保存token
-                UserStore.to.setToken(listSplits[1]);
+              await  UserStore.to.setToken(listSplits[1]);
                 toastInfo(msg: '登陆成功');
                 _controller.clearCache();
                 pageLoaded.complete();

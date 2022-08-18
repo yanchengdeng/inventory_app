@@ -38,12 +38,24 @@ class CacheUtils extends GetxController {
    * 本地有和服务端的相同的 assetBindTaskId\labelReplaceTaskId\assetInventoryDetailId
       这些id 则用本地缓存的（缓存信息里包含用户操作数据，比服务端丰富），没有这些id 则视为新增的id任务
 
-      本地没有 服务器有，  本地增加
-      本地有   服务器没有， 本地删除
-      服务器和本地都有的情况下比对下发时间DISTRIBUTION_DATE：下发时间一致，不动；下发时间不一致，清空对应模具信息再缓存
-      因为替换和盘点的labelReplaceTaskId\assetInventoryDetailId  
-      和绑定的assetBindTaskId不一样，相同模具重复下发时的ID是不变的，
-      需要借助下发时间做进一步判断是否需要删除缓存
+
+    本地没有 服务器有，  本地增加
+本地有   服务器没有， 本地删除
+支付任务绑定 assetBindTaskId  只比对id
+标签替换任务 labelReplaceTaskId  如果相同 哈需要比对 下发时间，如果下发时间不一致则删除本地 取网络
+盘点任务  assetInventoryDetailId   同标签绑定任务一样，需要验证下发时间是否一致
+
+    代码逻辑：
+    1.  第一级任务列表 taskNo  取 并集  如果并集在缓存中，则使用缓存，没在则添加服务下发tasK进入缓存（新任务）
+2.第二级 子任务 ：
+ 支付任务标签  assetBindTaskId 取并集 只比对id  缓存有使用缓存 没有使用服务下发
+ 标签替换和盘点  除了比对id  还需要对比下发时间 
+
+
+@param: data  网络数据
+@param : isLocalSave 是否本地修改保存
+
+
    */
 
   Future<void> saveMouldTask(MouldBindTask? data, bool isLocalSave) async {
@@ -54,54 +66,40 @@ class CacheUtils extends GetxController {
       homeController.mouldBindList.value = data ?? MouldBindTask();
       StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));
     } else {
-      ///todo 网络获取 本地存在需要对比保存
+      /// 网络获取 本地存在需要对比保存
       if (data != null && data.data?.isNotEmpty == true) {
-        // ///本地数据
-        // homeController.mouldBindList.value = data;
-        // ////网络数据
-        // data;
-        //
-        // for (var task in data.data ?? List.empty()) {
-        //   Log.d("task 对比：${task['taskNo']}");
-        // }
-
-        // for (var taskCache
-        //     in homeController.mouldBindList.value.data ?? List.empty()) {
-        //   Log.d("taskCache========== 对比${taskCache['taskNo']}");
-        // }
         if (SERVER_ENV == Environment.DEVELOPMENT) {
-          /// 服务端下有下发taskNo  本地没有taskNo  则本地添加
-          List<String?>? cacheTasks = homeController.mouldBindList.value.data
+          /// 服务端下发的taskNos
+          List<String?>? netTaskNos = data.data?.map((e) => e.taskNo).toList();
+
+          /// 本地缓存taskNos
+          List<String?>? cacheTaskNos = homeController.mouldBindList.value.data
               ?.map((e) => e.taskNo)
               .toList();
-          if (cacheTasks?.isNotEmpty == true) {
-            var mouldTaskItems = data.data?.where(
-                (element) => cacheTasks?.contains(element.taskNo) == false);
-            if (mouldTaskItems != null && mouldTaskItems.isNotEmpty) {
-              homeController.mouldBindList.value.data?.addAll(mouldTaskItems);
-            }
-          }
 
-          /// 本地有taskNo  服务端没有taskNo  则 删除本地taskNo
-          List<String?>? netTasks = data.data?.map((e) => e.taskNo).toList();
-          var localTaskItems = homeController.mouldBindList.value.data
-              ?.where((element) => netTasks?.contains(element.taskNo) == false);
+          ///服务端下有下发taskNo  本地没有taskNo  则本地添加
+          // Iterable<MouldTaskItem> extraNetTaskNos = data.data?.where(
+          //         (element) => cacheTaskNos?.contains(element.taskNo) ?? false) ??
+          //     List.empty();
 
-          localTaskItems?.forEach((element) {
-            homeController.mouldBindList.value.data?.remove(element);
-          });
+          // homeController.mouldBindList.value.data
+          //     ?.addAllIf(extraNetTaskNos.isNotEmpty, extraNetTaskNos);
 
-          ///如果是相同的taskNo 下的任务
-          ///则比对 labelReplaceTaskId  和下发时间 一起判断  ： 相同labelReplaceTaskId  下发时间不一致则用服务端取代本地
-          ///assetBindTaskId  支付任务绑定    不需要下发时间来判断是否缓存
+          ///本地有taskNo  服务端没有taskNo  则 删除本地taskNo
+          /// homeController.mouldBindList.value.data?.removeWhere(
+          /// (element) => netTaskNos?.contains(element.taskNo) ?? false);
+
+          ///第二级 子任务 ：
+          ///  支付任务标签  assetBindTaskId 取并集 只比对id  缓存有使用缓存 没有使用服务下发
+          ///标签替换和盘点  除了比对id  还需要对比下发时间
           ///
           ///
-          ///
-          ///
-          ///先取出服务下发的所有的 标签任务和
+          ///  以服务端下发的id 为准
+          ///先取出服务下发的所有的
+          /// 标签任务 比对id  如果下发时间不一致 则取服务端下发的id
           List<MouldList> mouldListsLabelsFromNet = [];
 
-          ///支付绑定任务
+          ///支付绑定任务  只需要比对 id
           List<MouldList> mouldListsPaysFromNet = [];
           data.data?.forEach((taskElement) {
             taskElement.mouldList?.forEach((elementItem) {
@@ -117,35 +115,72 @@ class CacheUtils extends GetxController {
             });
           });
 
-          ///本地 的 支付任务id 和标签也取出来
-          ///
-          List<MouldList> mouldListsLabelsFromCache = [];
+          ///////////////////////////支付任务标签替换规则： 只比对assetBindTaskId ： 本地有 服务端无则删除  本地无 服务端有则添加 ，其他不变 ///////////////////////////////////////////////////
+          mouldListsPaysFromNet.forEach((payLabel) {
+            var mouldList = homeController.mouldBindList.value.data
+                ?.where((element) => element.taskNo == payLabel.taskNo)
+                .first
+                .mouldList;
 
-          ///支付绑定任务
-          List<MouldList> mouldListsPaysFromCache = [];
-          homeController.mouldBindList.value.data?.forEach((taskElement) {
-            taskElement.mouldList?.forEach((elementItem) {
-              if (elementItem.labelReplaceTaskId! > 0 &&
-                  taskElement.taskType == MOULD_TASK_TYPE_LABEL) {
-                mouldListsLabelsFromCache.add(elementItem);
-              }
+            ///删除本地支付标签id   不在网路下发中的
+            mouldList?.removeWhere((mouldItem) => !mouldListsPaysFromNet
+                .map((e) => e.assetBindTaskId)
+                .contains(mouldItem.assetBindTaskId));
 
-              if (elementItem.assetBindTaskId! > 0 &&
-                  taskElement.taskType == MOULD_TASK_TYPE_PAY) {
-                mouldListsPaysFromCache.add(elementItem);
-              }
-            });
+            /// 是否存在  ：本地不存在  服务有下发的id任务
+            var extraPayLabel = mouldList
+                ?.map((e) => e.assetBindTaskId)
+                .contains(payLabel.assetBindTaskId);
+
+            ///本地未包该服务下发的支付任务  则添加到本地缓存
+            if (extraPayLabel == false) {
+              mouldList?.add(payLabel);
+            }
           });
 
-          ///开始对比 服务端有任务id 本地没有则本地删除，本地有  服务端没有 则本地删除
-          ///方法交集处理
+          ///////////////标签替换任务替换规则：  比对：labelReplaceTaskId 如果 id 相同，再比对下发时间 ，下发时间不同则用服务端取代本地//////////////////
+          mouldListsLabelsFromNet.forEach((repalceLabel) {
+            var mouldList = homeController.mouldBindList.value.data
+                ?.where((element) => element.taskNo == repalceLabel.taskNo)
+                .first
+                .mouldList;
 
-          //  homeController.mouldBindList.value = data;
-          // StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));
+            ///本地不存在服务下发的标签id   删除本地标签id
+            mouldList?.removeWhere((element) => !mouldListsLabelsFromNet
+                .map((e) => e.labelReplaceTaskId)
+                .contains(element.labelReplaceTaskId));
 
+            /// 添加网路存在标签id  本地不存在
+            var existLabelReplace = mouldList
+                ?.map((e) => e.labelReplaceTaskId)
+                .contains(repalceLabel.labelReplaceTaskId);
+
+            ///不存在 添加
+            if (existLabelReplace == false) {
+              mouldList?.add(repalceLabel);
+            } else {
+              ///存在  则比对下发时间
+              var distributionTimeCache = mouldList
+                  ?.where((element) =>
+                      element.labelReplaceTaskId ==
+                      repalceLabel.labelReplaceTaskId)
+                  .first
+                  .distributionTime;
+
+              if (distributionTimeCache != repalceLabel.distributionTime) {
+                ///时间不同则  服务下发 替换本地
+                mouldList?.removeWhere((element) =>
+                    element.labelReplaceTaskId ==
+                    repalceLabel.labelReplaceTaskId);
+
+                mouldList?.add(repalceLabel);
+              }
+            }
+            StorageService.to.setString(getMouldSaveKey(),
+                jsonEncode(homeController.mouldBindList.value));
+          });
         } else {
           homeController.mouldBindList.value = data;
-          StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));
         }
       } else {
         homeController.mouldBindList.value = MouldBindTask();
@@ -157,7 +192,6 @@ class CacheUtils extends GetxController {
   Future<MouldBindTask> getMouldTask() async {
     var cacheMould = await StorageService.to.getString(getMouldSaveKey());
     if (cacheMould.isNotEmpty) {
-      Log.d("转移1${jsonDecode(cacheMould) is Map}");
       return MouldBindTask.fromJson(jsonDecode(cacheMould));
     } else {
       return MouldBindTask();
@@ -188,37 +222,85 @@ class CacheUtils extends GetxController {
 
   ////////////////////////////////以下为资产盘点数据操作//////////////////////////////////////////////
 
-  ///资产盘点未完成信息
-  var inventoryData = InventoryData().obs;
-
   /**
    * isLocalSave :  是否来自本地保存
+   * data : 服务下发数据
+   * 对比流程参考  支付任务替换
    * 
-   * 本地有和服务端的相同的 assetBindTaskId\labelReplaceTaskId\assetInventoryDetailId
-      这些id 则用本地缓存的（缓存信息里包含用户操作数据，比服务端丰富），没有这些id 则视为新增的id任务
-
-      本地没有 服务器有，  本地增加
-      本地有   服务器没有， 本地删除
-      服务器和本地都有的情况下比对下发时间DISTRIBUTION_DATE：下发时间一致，不动；下发时间不一致，清空对应模具信息再缓存
-      因为替换和盘点的labelReplaceTaskId\assetInventoryDetailId  和绑定的assetBindTaskId不一样，相同模具重复下发时的ID是不变的，
-      需要借助下发时间做进一步判断是否需要删除缓存
    */
   Future<void> saveInventoryTask(InventoryData? data, bool isLocalSave) async {
+    final HomeController homeController = Get.find<HomeController>();
+
     ///无该用户数据 直接保存 ,本地修改 直接保存
     if (StorageService.to.getString(getInventorySaveKey()).isEmpty ||
         isLocalSave) {
-      inventoryData.value = data ?? InventoryData();
+      homeController.inventoryList.value = data ?? InventoryData();
       StorageService.to.setString(getInventorySaveKey(), jsonEncode(data));
     } else {
       ///todo 网络获取 本地存在需要对比保存
       if (data != null && data.data?.isNotEmpty == true) {
         if (SERVER_ENV == Environment.DEVELOPMENT) {
-          inventoryData.value = data;
+          /// 服务端下发的taskNos
+          List<String?>? netTaskNos = data.data?.map((e) => e.taskNo).toList();
+
+          /// 本地缓存taskNos
+          List<String?>? cacheTaskNos = homeController.inventoryList.value.data
+              ?.map((e) => e.taskNo)
+              .toList();
+
+          ///服务端下有下发taskNo  本地没有taskNo  则本地添加
+          Iterable<InventoryFinishedList>? extraNetTaskNos = data.data?.where(
+              (element) => cacheTaskNos?.contains(element.taskNo) ?? false);
+          homeController.inventoryList.value.data?.addAll(extraNetTaskNos!);
+
+          ///本地有taskNo  服务端没有taskNo  则 删除本地taskNo
+          homeController.inventoryList.value.data?.removeWhere(
+              (element) => netTaskNos?.contains(element.taskNo) ?? false);
+
+          ///第二级 子任务 ：
+          /// 盘点任务 参考   支付绑定任务替换规则
+          ///
+          ///  以服务端下发的id 为准
+          ///先取出服务下发的所有的
+
+          ///盘点任务 只比对 assetInventoryDetailId
+          List<InventoryDetail> inventoryDetailsFromNet = [];
+          data.data?.forEach((taskElement) {
+            taskElement.list?.forEach((elementItem) {
+              inventoryDetailsFromNet.add(elementItem);
+            });
+          });
+
+          ///////////////////////////盘点任务签替换规则： 只比对assetInventoryDetailId： 本地有 服务端无则删除  本地无 服务端有则添加 ，其他不变 ///////////////////////////////////////////////////
+          inventoryDetailsFromNet.forEach((inventoryDetail) {
+            var inventoryList = homeController.inventoryList.value.data
+                ?.where(
+                    (element) => element.taskNo == inventoryDetail.inventoryNo)
+                .first
+                .list;
+
+            ///删除本地支付标签id   不在网路下发中的
+            inventoryList?.removeWhere((inventoryItem) =>
+                !inventoryDetailsFromNet
+                    .map((e) => e.assetInventoryDetailId)
+                    .contains(inventoryItem.assetInventoryDetailId));
+
+            /// 是否存在  ：本地不存在  服务有下发的id任务
+            var extraPayLabel = inventoryList
+                ?.map((e) => e.assetInventoryDetailId)
+                .contains(inventoryDetail.assetInventoryDetailId);
+
+            ///本地未包该服务下发的支付任务  则添加到本地缓存
+            if (extraPayLabel == false) {
+              inventoryList?.add(inventoryDetail);
+            }
+            saveInventoryTask(homeController.inventoryList.value, true);
+          });
         } else {
-          inventoryData.value = data;
+          homeController.inventoryList.value = data;
         }
       } else {
-        inventoryData.value = InventoryData();
+        homeController.inventoryList.value = InventoryData();
       }
     }
   }
@@ -227,8 +309,7 @@ class CacheUtils extends GetxController {
   Future<InventoryData> getInventoryTask() async {
     var cacheMould = await StorageService.to.getString(getInventorySaveKey());
     if (cacheMould.isNotEmpty) {
-      inventoryData.value = InventoryData.fromJson(jsonDecode(cacheMould));
-      return inventoryData.value;
+      return InventoryData.fromJson(jsonDecode(cacheMould));
     } else {
       return InventoryData();
     }

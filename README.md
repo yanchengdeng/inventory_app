@@ -90,6 +90,12 @@ e.printStackTrace();
 
 本地没有 服务器有，  本地增加
 本地有   服务器没有， 本地删除
+支付任务绑定 assetBindTaskId  只比对id
+标签替换任务 labelReplaceTaskId  如果相同 哈需要比对 下发时间，如果下发时间不一致则删除本地 取网络
+盘点任务  assetInventoryDetailId   同标签绑定任务一样，需要验证下发时间是否一致
+
+
+
 服务器和本地都有的情况下比对下发时间DISTRIBUTION_DATE：下发时间一致，不动；下发时间不一致，清空对应模具信息再缓存
 因为替换和盘点的labelReplaceTaskId\assetInventoryDetailId  和绑定的assetBindTaskId不一样，相同模具重复下发时的ID是不变的，
 需要借助下发时间做进一步判断是否需要删除缓存

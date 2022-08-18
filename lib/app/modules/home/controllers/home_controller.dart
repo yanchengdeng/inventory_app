@@ -35,8 +35,7 @@ class HomeController extends GetxController {
   /// 获取未完成资产盘点列表
   getInventoryList() async {
     inventoryList.value = await InventoryApi.getInventoryData();
-    if (inventoryList.value.state == API_RESPONSE_OK &&
-        inventoryList.value.data?.isNotEmpty == true) {
+    if (inventoryList.value.state == API_RESPONSE_OK) {
       await CacheUtils.to.saveInventoryTask(inventoryList.value, false);
     } else {
       inventoryList.value = await CacheUtils.to.getInventoryTask();
@@ -89,12 +88,6 @@ class HomeController extends GetxController {
   void onInit() async {
     super.onInit();
     EasyLoading.show(status: "获取中...");
-    // if (SERVER_ENV == Environment.SIT) {
-    //   ///SIT环境   x-user-code  不是必须参数
-    //   getMouldTaskList();
-    //   getInventoryList();
-    // } else {
-    //   ///开发环境   x-user-code  是必须参数
     var userResponseData = await UserStore.to.getProfile();
     if (userResponseData?.state == API_RESPONSE_OK &&
         userResponseData?.data != null) {

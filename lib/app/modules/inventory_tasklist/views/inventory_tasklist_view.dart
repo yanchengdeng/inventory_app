@@ -198,7 +198,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                                               .INVENTORY_TASKLIST_SUB_LEVEL,
                                                                           arguments: {
                                                                             'taskNo':
-                                                                                '${CacheUtils.to.inventoryData.value.data?[index].taskNo}',
+                                                                                '${homeController.inventoryList.value.data?[index].taskNo}',
                                                                             'bindStatus':
                                                                                 INVENTORY_STATUS_NOT,
                                                                             "isFinish":
@@ -300,7 +300,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                               },
                                             ),
                                           )),
-                                      itemCount: CacheUtils.to.inventoryData
+                                      itemCount: homeController.inventoryList
                                               .value.data?.length ??
                                           0)
                               : homeController.inventoryFinishedList?.length ==

@@ -57,8 +57,6 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                 ],
               ),
             ),
-
-            ///https://github.com/peng8350/flutter_pulltorefresh/issues/572  这里需要加入Expanded 避免该issue
             Obx(() => Container(
                 child: controller.mouldBindTaskListSearch?.length == 0
                     ? DefaultEmptyWidget()

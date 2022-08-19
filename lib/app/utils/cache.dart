@@ -62,15 +62,24 @@ class CacheUtils extends GetxController {
     final HomeController homeController = Get.find<HomeController>();
 
     ///无该用户数据 直接保存 ,本地修改 直接保存
-    if (StorageService.to.getString(getMouldSaveKey()).isEmpty || isLocalSave) {
+    var cahcheData = StorageService.to.getString(getMouldSaveKey());
+    if (cahcheData.isEmpty || isLocalSave) {
       homeController.mouldBindList.value = data ?? MouldBindTask();
-      StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));
+      if (data != null && data.data != null && data.data?.length != 0) {
+        StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));
+      }
     } else {
       /// 网络获取 本地存在需要对比保存
-      if (data != null && data.data?.isNotEmpty == true) {
-        if (SERVER_ENV == Environment.DEVELOPMENT) {
-          /// 服务端下发的taskNos
-          List<String?>? netTaskNos = data.data?.map((e) => e.taskNo).toList();
+      if (data != null && data.data != null && data.data?.length != 0) {
+        /// 服务端下发的taskNos
+        List<String?>? netTaskNos = data.data?.map((e) => e.taskNo).toList();
+
+        if (netTaskNos == null || netTaskNos.length == 0) {
+          ///网络无任务 则全部删除
+          homeController.mouldBindList.value = MouldBindTask();
+          StorageService.to.setString(getMouldSaveKey(), "");
+        } else {
+          homeController.mouldBindList.value = await getMouldTask();
 
           /// 本地缓存taskNos
           List<String?>? cacheTaskNos = homeController.mouldBindList.value.data
@@ -78,16 +87,17 @@ class CacheUtils extends GetxController {
               .toList();
 
           ///服务端下有下发taskNo  本地没有taskNo  则本地添加
-          // Iterable<MouldTaskItem> extraNetTaskNos = data.data?.where(
-          //         (element) => cacheTaskNos?.contains(element.taskNo) ?? false) ??
-          //     List.empty();
-
-          // homeController.mouldBindList.value.data
-          //     ?.addAllIf(extraNetTaskNos.isNotEmpty, extraNetTaskNos);
+          List<MouldTaskItem> extraNetTaskNos = data.data
+                  ?.where((element) =>
+                      cacheTaskNos?.contains(element.taskNo) == false)
+                  .toList() ??
+              List.empty();
+          homeController.mouldBindList.value.data
+              ?.addAllIf(extraNetTaskNos.isNotEmpty, extraNetTaskNos);
 
           ///本地有taskNo  服务端没有taskNo  则 删除本地taskNo
-          /// homeController.mouldBindList.value.data?.removeWhere(
-          /// (element) => netTaskNos?.contains(element.taskNo) ?? false);
+          homeController.mouldBindList.value.data
+              ?.removeWhere((element) => !netTaskNos.contains(element.taskNo));
 
           ///第二级 子任务 ：
           ///  支付任务标签  assetBindTaskId 取并集 只比对id  缓存有使用缓存 没有使用服务下发
@@ -176,11 +186,9 @@ class CacheUtils extends GetxController {
                 mouldList?.add(repalceLabel);
               }
             }
-            StorageService.to.setString(getMouldSaveKey(),
-                jsonEncode(homeController.mouldBindList.value));
           });
-        } else {
-          homeController.mouldBindList.value = data;
+          StorageService.to.setString(getMouldSaveKey(),
+              jsonEncode(homeController.mouldBindList.value));
         }
       } else {
         homeController.mouldBindList.value = MouldBindTask();
@@ -232,16 +240,23 @@ class CacheUtils extends GetxController {
     final HomeController homeController = Get.find<HomeController>();
 
     ///无该用户数据 直接保存 ,本地修改 直接保存
-    if (StorageService.to.getString(getInventorySaveKey()).isEmpty ||
-        isLocalSave) {
+    var cacheData = StorageService.to.getString(getInventorySaveKey());
+    if (cacheData.isEmpty || isLocalSave) {
       homeController.inventoryList.value = data ?? InventoryData();
-      StorageService.to.setString(getInventorySaveKey(), jsonEncode(data));
+      if (data != null && data.data != null && data.data?.length != 0) {
+        StorageService.to.setString(getInventorySaveKey(), jsonEncode(data));
+      }
     } else {
       ///todo 网络获取 本地存在需要对比保存
-      if (data != null && data.data?.isNotEmpty == true) {
-        if (SERVER_ENV == Environment.DEVELOPMENT) {
-          /// 服务端下发的taskNos
-          List<String?>? netTaskNos = data.data?.map((e) => e.taskNo).toList();
+      if (data != null && data.data != null && data.data?.length != 0) {
+        /// 服务端下发的taskNos
+        List<String?>? netTaskNos = data.data?.map((e) => e.taskNo).toList();
+
+        if (netTaskNos == null || netTaskNos.length == 0) {
+          homeController.inventoryList.value = InventoryData();
+          StorageService.to.setString(getInventorySaveKey(), '');
+        } else {
+          homeController.inventoryList.value = await getInventoryTask();
 
           /// 本地缓存taskNos
           List<String?>? cacheTaskNos = homeController.inventoryList.value.data
@@ -249,13 +264,17 @@ class CacheUtils extends GetxController {
               .toList();
 
           ///服务端下有下发taskNo  本地没有taskNo  则本地添加
-          Iterable<InventoryFinishedList>? extraNetTaskNos = data.data?.where(
-              (element) => cacheTaskNos?.contains(element.taskNo) ?? false);
-          homeController.inventoryList.value.data?.addAll(extraNetTaskNos!);
+          List<InventoryFinishedList> extraNetTaskNos = data.data
+                  ?.where((element) =>
+                      cacheTaskNos?.contains(element.taskNo) == false)
+                  .toList() ??
+              List.empty();
+          homeController.inventoryList.value.data
+              ?.addAllIf(extraNetTaskNos.isNotEmpty, extraNetTaskNos);
 
           ///本地有taskNo  服务端没有taskNo  则 删除本地taskNo
-          homeController.inventoryList.value.data?.removeWhere(
-              (element) => netTaskNos?.contains(element.taskNo) ?? false);
+          homeController.inventoryList.value.data
+              ?.removeWhere((element) => !netTaskNos.contains(element.taskNo));
 
           ///第二级 子任务 ：
           /// 盘点任务 参考   支付绑定任务替换规则
@@ -294,10 +313,8 @@ class CacheUtils extends GetxController {
             if (extraPayLabel == false) {
               inventoryList?.add(inventoryDetail);
             }
-            saveInventoryTask(homeController.inventoryList.value, true);
           });
-        } else {
-          homeController.inventoryList.value = data;
+          saveInventoryTask(homeController.inventoryList.value, true);
         }
       } else {
         homeController.inventoryList.value = InventoryData();

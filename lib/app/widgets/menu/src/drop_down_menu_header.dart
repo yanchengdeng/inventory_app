@@ -31,7 +31,7 @@ class DropDownMenuHeader extends StatefulWidget {
     required this.titles,
     this.headHeight,
     this.defaultColor = const Color(0xFF333333),
-    this.clickColor = const Color(0xFFFF00FF),
+    this.clickColor = Colors.blue,
     this.drawableEndAssetImg,
     this.iconSize,
   }) : super(key: key);

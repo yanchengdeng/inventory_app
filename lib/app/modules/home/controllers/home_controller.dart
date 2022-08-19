@@ -24,9 +24,9 @@ class HomeController extends GetxController {
 
   ///获取未完成模具绑定列表
   getMouldTaskList() async {
-    mouldBindList.value = await MouldTaskApi.getMouldTaskList();
-    if (mouldBindList.value.state == API_RESPONSE_OK) {
-      await CacheUtils.to.saveMouldTask(mouldBindList.value, false);
+    var netData = await MouldTaskApi.getMouldTaskList();
+    if (netData.state == API_RESPONSE_OK) {
+      await CacheUtils.to.saveMouldTask(netData, false);
     } else {
       mouldBindList.value = await CacheUtils.to.getMouldTask();
     }
@@ -34,9 +34,9 @@ class HomeController extends GetxController {
 
   /// 获取未完成资产盘点列表
   getInventoryList() async {
-    inventoryList.value = await InventoryApi.getInventoryData();
-    if (inventoryList.value.state == API_RESPONSE_OK) {
-      await CacheUtils.to.saveInventoryTask(inventoryList.value, false);
+    var netData = await InventoryApi.getInventoryData();
+    if (netData.state == API_RESPONSE_OK) {
+      await CacheUtils.to.saveInventoryTask(netData, false);
     } else {
       inventoryList.value = await CacheUtils.to.getInventoryTask();
     }

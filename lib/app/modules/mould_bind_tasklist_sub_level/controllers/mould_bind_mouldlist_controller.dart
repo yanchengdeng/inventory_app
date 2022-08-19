@@ -1,5 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/apis/apis.dart';
 import 'package:inventory_app/app/entity/UploadLabelParams.dart';
@@ -141,6 +143,7 @@ class MouldBindMouldListController extends GetxController {
             element.nameplatePhoto?.fullPath;
         var nameplatePhotoUUID =
             await FileApi.uploadFile(element?.nameplatePhoto?.fullPath ?? "");
+
         element?.nameplatePhoto?.fullPath = nameplatePhotoUUID;
       }
       if (element?.cavityPhoto?.fullPath != null &&
@@ -174,6 +177,19 @@ class MouldBindMouldListController extends GetxController {
         element?.bindStatus = BIND_STATUS_UPLOADED;
         element?.bindStatusText = MOULD_BIND_STATUS[BIND_STATUS_UPLOADED];
         updateLabelStatus(taskType, element);
+
+        ///删除已上传的图片
+        if (element?.overallPhoto?.documentName?.isNotEmpty == true) {
+          await File(element?.overallPhoto?.documentName ?? "").delete();
+        }
+
+        if (element?.nameplatePhoto?.documentName?.isNotEmpty == true) {
+          await File(element?.nameplatePhoto?.documentName ?? "").delete();
+        }
+
+        if (element?.cavityPhoto?.documentName?.isNotEmpty == true) {
+          await File(element?.cavityPhoto?.documentName ?? "").delete();
+        }
       }
     } else {
       if (element?.nameplatePhoto?.fullPath?.contains(APP_PACKAGE) == true) {
@@ -194,6 +210,9 @@ class MouldBindMouldListController extends GetxController {
         element?.bindStatus = BIND_STATUS_UPLOADED;
         element?.bindStatusText = MOULD_BIND_STATUS[BIND_STATUS_UPLOADED];
         updateLabelStatus(taskType, element);
+        if (element?.nameplatePhoto?.documentName?.isNotEmpty == true) {
+          await File(element?.nameplatePhoto?.documentName ?? "").delete();
+        }
       }
     }
   }

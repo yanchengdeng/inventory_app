@@ -53,7 +53,7 @@ class FileApi<T> {
   }
 
   ///获取文件服务token
-  static Future<String> uploadFile<T>(String filePath) async {
+  static Future<dynamic> uploadFile<T>(String filePath) async {
     if (filePath.isEmpty) {
       return '';
     }
@@ -81,10 +81,10 @@ class FileApi<T> {
         data: formData);
     Log.d("返回的图片URL/uuid=$response");
     //c5022939-fece-4fcf-ba7e-514bb64f14cb
-    if (response.toString().contains('-')) {
-      ///上传后 删除本地照片 FileSystemEntity
-      var fileEntity = await File(filePath).delete();
-    }
-    return response.toString();
+    // if (response.toString().contains('-')) {
+    ///上传后 删除本地照片 FileSystemEntity
+    // var fileEntity = await File(filePath).delete();
+    // }
+    return response;
   }
 }

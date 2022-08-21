@@ -13,6 +13,8 @@ import '../controllers/mould_bind_mouldlist_controller.dart';
 
 ///  模具绑定任务信息列表
 class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
+  var statusTitles = '全部';
+  var toolTypes = TOOL_TYPES.map((e) => e.name ?? '').toList();
   @override
   Widget build(BuildContext context) {
     var taskNo = Get.arguments['taskNo'];
@@ -22,7 +24,30 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
     Log.d(
         "传入二级模具菜单参数：taskNo = $taskNo,taskType = ${taskType},bindStatus = ${bindStatus},isFinish = ${isFinish}");
 
-    controller.findByParams(isFinish, taskNo, '', [bindStatus], []);
+    ///初始化选中值
+    if (bindStatus is List) {
+      if (bindStatus.length == 4) {
+        ///全选
+        SELECT_STATUS.forEach((element) {
+          element.isSelect = true;
+        });
+        statusTitles = '全部';
+      } else {
+        SELECT_STATUS.forEach((element) {
+          if (element.code == bindStatus[0]) {
+            element.isSelect = true;
+            statusTitles = element.name ?? '全部';
+          }
+        });
+      }
+    }
+
+    TOOL_TYPES.forEach((element) {
+      element.isSelect = true;
+    });
+
+    controller.findByParams(isFinish, taskNo, '', bindStatus, toolTypes);
+
     Get.put(MouldBindMouldListController());
 
     final MenuController _menuController = MenuController();
@@ -40,10 +65,10 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                   hintText: '搜资产编号、名称',
                   inputOnSubmit: (value) {
                     controller.findByParams(
-                        isFinish, taskNo, value, [bindStatus], []);
+                        isFinish, taskNo, value, bindStatus, toolTypes);
                   })),
           DropDownMenuHeader(
-              menuController: _menuController, titles: const ["全部", "工装类型"]),
+              menuController: _menuController, titles: [statusTitles, "工装类型"]),
           Expanded(
             child: Stack(
               children: [
@@ -180,7 +205,15 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                         menuController: _menuController,
                         filterList: SELECT_STATUS,
                         onTap: (index) {
-                          toastInfo(msg: _menuController.title);
+                          var statusStr = _menuController.title;
+                          var status = statusTitles.split(',');
+                          bindStatus = SELECT_STATUS
+                              .where((element) => _menuController.title
+                                  .contains(element.name ?? ''))
+                              .map((e) => e.code ?? -1)
+                              .toList();
+                          controller.findByParams(
+                              isFinish, taskNo, '', bindStatus, toolTypes);
                         },
                       ),
                       MenuList(
@@ -189,7 +222,15 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                         menuController: _menuController,
                         filterList: TOOL_TYPES,
                         onTap: (index) {
-                          toastInfo(msg: _menuController.title);
+                          toolTypes = TOOL_TYPES
+                              .where((element) => _menuController.title
+                                  .contains(element.name ?? ''))
+                              .toList()
+                              .map((e) => e.name ?? '')
+                              .toList();
+
+                          controller.findByParams(
+                              isFinish, taskNo, '', bindStatus, toolTypes);
                         },
                       )
                     ],

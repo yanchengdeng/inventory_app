@@ -163,7 +163,9 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                             'taskNo':
                                                                                 '${controller.mouldTaskItems[index].taskNo}',
                                                                             'bindStatus':
-                                                                                BIND_STATUS_WAITING_BIND,
+                                                                                [
+                                                                              BIND_STATUS_WAITING_BIND
+                                                                            ],
                                                                             "isFinish":
                                                                                 false
                                                                           });
@@ -203,7 +205,9 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                             'taskNo':
                                                                                 '${controller.mouldTaskItems[index].taskNo}',
                                                                             'bindStatus':
-                                                                                BIND_STATUS_REBIND,
+                                                                                [
+                                                                              BIND_STATUS_REBIND
+                                                                            ],
                                                                             "isFinish":
                                                                                 false
                                                                           });
@@ -243,7 +247,9 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                             'taskNo':
                                                                                 '${controller.mouldTaskItems[index].taskNo}',
                                                                             'bindStatus':
-                                                                                BIND_STATUS_WAITING_UPLOAD,
+                                                                                [
+                                                                              BIND_STATUS_WAITING_UPLOAD
+                                                                            ],
                                                                             "isFinish":
                                                                                 false
                                                                           });
@@ -283,7 +289,9 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                             'taskNo':
                                                                                 '${controller.mouldTaskItems[index].taskNo}',
                                                                             'bindStatus':
-                                                                                BIND_STATUS_UPLOADED,
+                                                                                [
+                                                                              BIND_STATUS_UPLOADED
+                                                                            ],
                                                                             "isFinish":
                                                                                 false
                                                                           });
@@ -302,8 +310,12 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                           '${controller.mouldTaskItems[index].taskType}',
                                                       'taskNo':
                                                           '${controller.mouldTaskItems[index].taskNo}',
-                                                      'bindStatus':
-                                                          BIND_STATUS_ALL,
+                                                      'bindStatus': [
+                                                        BIND_STATUS_WAITING_BIND,
+                                                        BIND_STATUS_REBIND,
+                                                        BIND_STATUS_WAITING_UPLOAD,
+                                                        BIND_STATUS_UPLOADED
+                                                      ],
                                                       "isFinish": false
                                                     })
                                               },
@@ -359,8 +371,12 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                         '${homeController.mouldTaskFinishedList[index]?.taskType}',
                                                     'taskNo':
                                                         '${homeController.mouldTaskFinishedList[index]?.taskNo}',
-                                                    'bindStatus':
-                                                        BIND_STATUS_ALL,
+                                                    'bindStatus': [
+                                                      BIND_STATUS_WAITING_BIND,
+                                                      BIND_STATUS_REBIND,
+                                                      BIND_STATUS_WAITING_UPLOAD,
+                                                      BIND_STATUS_UPLOADED
+                                                    ],
                                                     "isFinish": true
                                                   })
                                             },

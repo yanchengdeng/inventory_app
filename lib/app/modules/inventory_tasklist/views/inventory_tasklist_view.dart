@@ -209,7 +209,9 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                                             'taskNo':
                                                                                 '${homeController.inventoryList.value.data?[index].taskNo}',
                                                                             'bindStatus':
-                                                                                INVENTORY_STATUS_NOT,
+                                                                                [
+                                                                              INVENTORY_STATUS_NOT
+                                                                            ],
                                                                             "isFinish":
                                                                                 false
                                                                           });
@@ -247,7 +249,9 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                                             'taskNo':
                                                                                 '${controller.inventroyList[index].taskNo}',
                                                                             'bindStatus':
-                                                                                INVENTORY_WAITING_UPLOAD,
+                                                                                [
+                                                                              INVENTORY_WAITING_UPLOAD
+                                                                            ],
                                                                             "isFinish":
                                                                                 false
                                                                           });
@@ -285,7 +289,9 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                                             'taskNo':
                                                                                 '${controller.inventroyList[index].taskNo}',
                                                                             'bindStatus':
-                                                                                INVENTORY_HAVE_UPLOADED,
+                                                                                [
+                                                                              INVENTORY_HAVE_UPLOADED
+                                                                            ],
                                                                             "isFinish":
                                                                                 false
                                                                           });
@@ -302,8 +308,11 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                     arguments: {
                                                       'taskNo':
                                                           '${controller.inventroyList[index].taskNo}',
-                                                      'bindStatus':
-                                                          INVENTORY_STATUS_ALL,
+                                                      'bindStatus': [
+                                                        INVENTORY_STATUS_NOT,
+                                                        INVENTORY_WAITING_UPLOAD,
+                                                        INVENTORY_HAVE_UPLOADED
+                                                      ],
                                                       "isFinish": false
                                                     })
                                               },
@@ -395,8 +404,11 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                   arguments: {
                                                     'taskNo':
                                                         '${homeController.inventoryFinishedList?[index]?.taskNo}',
-                                                    'bindStatus':
-                                                        INVENTORY_STATUS_ALL,
+                                                    'bindStatus': [
+                                                      INVENTORY_STATUS_NOT,
+                                                      INVENTORY_WAITING_UPLOAD,
+                                                      INVENTORY_HAVE_UPLOADED
+                                                    ],
                                                     "isFinish": true
                                                   })
                                             },

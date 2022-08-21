@@ -258,7 +258,7 @@ class MainActivity : FlutterActivity() {
     private fun initBlueTooth() {
 
         if (blueToothDialog == null) {
-            blueToothDialog = BlueToothDialog(MainActivity@ this, rfidMgr!!)
+            blueToothDialog = BlueToothDialog(this, rfidMgr!!)
             val window = blueToothDialog?.window
             val height = resources.displayMetrics.heightPixels
             val width = resources.displayMetrics.widthPixels
@@ -297,7 +297,7 @@ class MainActivity : FlutterActivity() {
 
 
     private fun isReaderAvailable(): Boolean {
-        return mReader?.available()!!
+        return mReader?.available() == true
     }
 
     private fun read() {
@@ -351,7 +351,7 @@ class MainActivity : FlutterActivity() {
         rfidMgr?.disconnect()
         rfidMgr?.removeEventListener(mEventListener)
         blueToothDialog?.dismiss()
-        mTagDataList?.clear()
+        mTagDataList.clear()
         blueToothDialog = null
     }
 

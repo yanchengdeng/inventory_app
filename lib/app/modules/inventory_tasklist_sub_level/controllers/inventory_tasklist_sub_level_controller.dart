@@ -30,17 +30,40 @@ class InventoryTasklistSubLevelController extends GetxController {
       List<String> toolingType) async {
     this.taskNo = taskNo;
     if (isFinish) {
-      var task = homeController.inventoryFinishedList
-          ?.where((element) => element.taskNo == taskNo)
-          ?.first;
-      var mouldList = task?.list;
-      inventoryTaskSearch = mouldList;
+      _inventoryTaskSearch.value = homeController.inventoryFinishedList
+              ?.where((element) => element.taskNo == taskNo)
+              .first
+              ?.list
+              ?.where((element) =>
+                  (bindStatus.length > 0
+                      ? bindStatus.contains(element.assetInventoryStatus)
+                      : true) &&
+                  (toolingType.length > 0
+                      ? toolingType.contains(element.toolingType)
+                      : true) &&
+                  (key.isNotEmpty
+                      ? element.assetName?.contains(key) == true
+                      : true))
+              ?.toList() ??
+          List.empty();
     } else {
-      inventoryTaskSearch = await homeController.inventoryList.value.data
+      _inventoryTaskSearch.value = await homeController.inventoryList.value.data
               ?.where((element) => element.taskNo == this.taskNo)
               .first
-              .list ??
+              .list
+              ?.where((element) =>
+                  (bindStatus.length > 0
+                      ? bindStatus.contains(element.assetInventoryStatus)
+                      : true) &&
+                  (toolingType.length > 0
+                      ? toolingType.contains(element.toolingType)
+                      : true) &&
+                  (key.isNotEmpty
+                      ? element.assetName?.contains(key) == true
+                      : true))
+              .toList() ??
           List.empty();
+      Log.d("message---" + _inventoryTaskSearch.toString());
     }
   }
 

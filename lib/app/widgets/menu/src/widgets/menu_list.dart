@@ -81,22 +81,20 @@ class _MenuListState extends State<MenuList> {
                               Container(
                                   decoration: BoxDecoration(
                                       color: widget.filterList[index].isSelect == true
-                                          ? const Color(0x0DAB4BF4)
+                                          ? const Color.fromARGB(
+                                              255, 33, 150, 243)
                                           : Colors.white,
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(4)),
                                       border: Border.all(
-                                          color:
-                                              widget.filterList[index].isSelect == true
-                                                  ? const Color(0xffab4bf4)
-                                                  : const Color(0xffacacac))),
+                                          color: widget.filterList[index].isSelect == true
+                                              ? const Color.fromARGB(
+                                                  255, 33, 150, 243)
+                                              : const Color(0xffacacac))),
                                   alignment: Alignment.center,
                                   child: Text(widget.filterList[index].name ?? "",
                                       style: TextStyle(
-                                          color:
-                                              widget.filterList[index].isSelect == true
-                                                  ? const Color(0xffab4bf4)
-                                                  : const Color(0xffacacac)))),
+                                          color: widget.filterList[index].isSelect == true ? Color.fromARGB(255, 33, 150, 243) : const Color(0xffacacac)))),
                           onTap: () {
                             widget.menuController.changeTitle(
                                 widget.index, widget.filterList[index].name);
@@ -126,7 +124,8 @@ class _MenuListState extends State<MenuList> {
                                           color: widget.filterList[index]
                                                       .isSelect ==
                                                   true
-                                              ? const Color(0xffab4bf4)
+                                              ? const Color.fromARGB(
+                                                  255, 33, 150, 243)
                                               : const Color(0xffacacac))),
                                   onTap: () {
                                     setState(() {

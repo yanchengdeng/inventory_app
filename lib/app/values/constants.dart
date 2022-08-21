@@ -14,14 +14,12 @@ const int API_RESPONSE_OK = 1;
 const int API_RESPINSE_ERROR = -1;
 
 ///模具任务状态  -1  默认全部状态
-const int BIND_STATUS_ALL = -1;
 const int BIND_STATUS_WAITING_BIND = 0;
 const int BIND_STATUS_REBIND = 1;
 const int BIND_STATUS_UPLOADED = 2;
 const int BIND_STATUS_WAITING_UPLOAD = 3;
 
 const MOULD_BIND_STATUS = {
-  BIND_STATUS_ALL: '全部',
   BIND_STATUS_WAITING_BIND: '待绑定',
   BIND_STATUS_REBIND: '重新绑定',
   BIND_STATUS_UPLOADED: '已上传',
@@ -59,7 +57,6 @@ const int MOULD_TASK_TYPE_PAY = 0;
 const int MOULD_TASK_TYPE_LABEL = 1;
 
 /// 盘点全部状态
-const int INVENTORY_STATUS_ALL = -1;
 const int INVENTORY_STATUS_NOT = 0;
 
 ///本地模拟使用
@@ -67,11 +64,22 @@ const int INVENTORY_WAITING_UPLOAD = 2;
 const int INVENTORY_HAVE_UPLOADED = 1;
 
 const INVENTORY_STATUS = {
-  INVENTORY_STATUS_ALL: '全部',
   INVENTORY_STATUS_NOT: '未盘点',
   INVENTORY_WAITING_UPLOAD: '待上传',
   INVENTORY_HAVE_UPLOADED: '已上传',
 };
+
+///盘点类型
+final List<FilterRes> SELECTED_INVENTORY_STATUS = [
+  FilterRes(
+      name: INVENTORY_STATUS[INVENTORY_STATUS_NOT], code: INVENTORY_STATUS_NOT),
+  FilterRes(
+      name: INVENTORY_STATUS[INVENTORY_WAITING_UPLOAD],
+      code: INVENTORY_WAITING_UPLOAD),
+  FilterRes(
+      name: INVENTORY_STATUS[INVENTORY_HAVE_UPLOADED],
+      code: INVENTORY_HAVE_UPLOADED),
+];
 
 ///card 阴影值 elevation
 const double CARD_ELEVATION = 5.0;

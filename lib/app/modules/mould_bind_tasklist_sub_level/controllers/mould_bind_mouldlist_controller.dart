@@ -36,6 +36,16 @@ class MouldBindMouldListController extends GetxController {
               ?.where((element) => element.taskNo == taskNo)
               ?.first
               ?.mouldList
+              ?.where((element) =>
+                  (bindStatus.length > 0
+                      ? bindStatus.contains(element.bindStatus)
+                      : true) &&
+                  (toolingType.length > 0
+                      ? toolingType.contains(element.toolingType)
+                      : true) &&
+                  (key.isNotEmpty
+                      ? element.moldName?.contains(key) == true
+                      : true))
               ?.toList() ??
           List.empty();
     } else {
@@ -43,8 +53,19 @@ class MouldBindMouldListController extends GetxController {
               ?.where((element) => element.taskNo == taskNo)
               .first
               .mouldList
-              ?.toList() ??
+              ?.where((element) =>
+                  (bindStatus.length > 0
+                      ? bindStatus.contains(element.bindStatus)
+                      : true) &&
+                  (toolingType.length > 0
+                      ? toolingType.contains(element.toolingType)
+                      : true) &&
+                  (key.isNotEmpty
+                      ? element.moldName?.contains(key) == true
+                      : true))
+              .toList() ??
           List.empty();
+      Log.d("message---" + _mouldBindTaskListSearch.toString());
     }
   }
 

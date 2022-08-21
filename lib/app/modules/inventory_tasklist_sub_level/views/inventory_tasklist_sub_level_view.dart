@@ -30,26 +30,40 @@ const MOULD_BIND_STATUS = {
 class InventoryTasklistSubLevelView
     extends GetView<InventoryTasklistSubLevelController> {
   final MenuController _menuController = MenuController();
-  final List<FilterRes> list1 = [
-    FilterRes(name: 'F'),
-    FilterRes(name: 'G'),
-    FilterRes(name: 'M')
-  ];
-  final List<FilterRes> list2 = [
-    FilterRes(name: '待绑定', code: BIND_STATUS_WAITING_BIND),
-    FilterRes(name: '重新绑定', code: BIND_STATUS_REBIND),
-    FilterRes(name: '待上传', code: BIND_STATUS_WAITING_UPLOAD),
-    FilterRes(name: '已上传', code: BIND_STATUS_UPLOADED)
-  ];
+  var statusTitles = '全部';
+  var toolTypes = TOOL_TYPES.map((e) => e.name ?? '').toList();
 
   @override
   Widget build(BuildContext context) {
     var taskNo = Get.arguments['taskNo'];
     var bindStatus = Get.arguments['bindStatus'];
     var isFinish = Get.arguments['isFinish'];
+
+    ///初始化选中值
+    if (bindStatus is List) {
+      if (bindStatus.length == 3) {
+        ///全选
+        SELECTED_INVENTORY_STATUS.forEach((element) {
+          element.isSelect = true;
+        });
+        statusTitles = '全部';
+      } else {
+        SELECTED_INVENTORY_STATUS.forEach((element) {
+          if (element.code == bindStatus[0]) {
+            element.isSelect = true;
+            statusTitles = element.name ?? '全部';
+          }
+        });
+      }
+    }
+
+    TOOL_TYPES.forEach((element) {
+      element.isSelect = true;
+    });
+
     Log.d(
         "传入二级盘点菜单参数：taskNo = $taskNo,bindStatus = ${bindStatus},isFinish = ${isFinish}");
-    controller.findByParams(isFinish, taskNo, '', [bindStatus], []);
+    controller.findByParams(isFinish, taskNo, '', bindStatus, toolTypes);
     //
 
     return Scaffold(
@@ -65,7 +79,7 @@ class InventoryTasklistSubLevelView
                     hintText: '搜资产编号、名称',
                     inputOnSubmit: (value) {
                       controller.findByParams(
-                          isFinish, taskNo, value, [bindStatus], []);
+                          isFinish, taskNo, value, bindStatus, toolTypes);
                     })),
             DropDownMenuHeader(
                 menuController: _menuController, titles: const ["全部", "工装类型"]),
@@ -140,18 +154,34 @@ class InventoryTasklistSubLevelView
                           index: 0,
                           choose: Choose.multi,
                           menuController: _menuController,
-                          filterList: list1,
+                          filterList: SELECTED_INVENTORY_STATUS,
                           onTap: (index) {
-                            toastInfo(msg: list1[index].name ?? "hh");
+                            var statusStr = _menuController.title;
+                            var status = statusTitles.split(',');
+                            bindStatus = SELECTED_INVENTORY_STATUS
+                                .where((element) => _menuController.title
+                                    .contains(element.name ?? ''))
+                                .map((e) => e.code ?? -1)
+                                .toList();
+                            controller.findByParams(
+                                isFinish, taskNo, '', bindStatus, toolTypes);
                           },
                         ),
                         MenuList(
                           index: 1,
                           choose: Choose.multi,
                           menuController: _menuController,
-                          filterList: list2,
+                          filterList: TOOL_TYPES,
                           onTap: (index) {
-                            toastInfo(msg: list2[index].name ?? "hh");
+                            toolTypes = TOOL_TYPES
+                                .where((element) => _menuController.title
+                                    .contains(element.name ?? ''))
+                                .toList()
+                                .map((e) => e.name ?? '')
+                                .toList();
+
+                            controller.findByParams(
+                                isFinish, taskNo, '', bindStatus, toolTypes);
                           },
                         )
                       ],

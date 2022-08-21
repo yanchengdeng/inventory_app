@@ -50,7 +50,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => {controller.saveInfo(taskType, taskNo, assetNo)},
-          child: Text('离线\n保存'),
+          child: Text('保存'),
           backgroundColor: Colors.blue,
         ),
       ),

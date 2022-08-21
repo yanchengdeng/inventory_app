@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:inventory_app/app/style/style.dart';
 import 'package:inventory_app/app/values/fontsize.dart';
 
 /// 文本样式

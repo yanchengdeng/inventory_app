@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
 import '../../../style/text_style.dart';
+import '../../../utils/common.dart';
 import '../../../utils/logger.dart';
 import '../../../values/constants.dart';
 import '../../../widgets/empty.dart';
@@ -169,7 +170,7 @@ class InventoryTasklistSubLevelView
               children: [
                 Spacer(),
                 FloatingActionButton(
-                  child: Text('RFID\n读取'),
+                  child: Text('读取\n盘点'),
                   backgroundColor: Colors.orange,
                   // 设置 tag1
                   heroTag: 'tag1',
@@ -180,7 +181,7 @@ class InventoryTasklistSubLevelView
                 ),
                 Spacer(),
                 FloatingActionButton(
-                  child: Text('PDA\n扫描'),
+                  child: Text('扫描\n盘点'),
                   backgroundColor: Colors.green,
                   // 设置 tag2
                   heroTag: 'tag2',
@@ -191,12 +192,16 @@ class InventoryTasklistSubLevelView
                 ),
                 Spacer(),
                 FloatingActionButton(
-                  child: Text('数据\n上传'),
+                  child: Text('上传'),
                   // 设置 tag3
                   heroTag: 'tag3',
                   backgroundColor: Colors.blue,
-                  onPressed: () {
-                    controller.upload();
+                  onPressed: () async {
+                    if (await CommonUtils.isConnectNet()) {
+                      controller.upload();
+                    } else {
+                      toastInfo(msg: '网络异常，无法上传');
+                    }
                   },
                 ),
                 Spacer(),

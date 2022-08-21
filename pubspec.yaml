@@ -63,6 +63,9 @@ dependencies:
   path_provider:
   path:
 
+  # 网络判断
+  connectivity: ^3.0.6
+
 
 #  webview_flutter: ^3.0.4
   # webView使用本地插件，忽略ssl证书

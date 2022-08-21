@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/UserInfo.dart';
-import 'package:inventory_app/app/values/constants.dart';
 import '../apis/apis.dart';
 import '../services/services.dart';
 import '../values/values.dart';
@@ -22,8 +20,7 @@ class UserStore extends GetxController {
     token = StorageService.to.getString(STORAGE_USER_TOKEN_KEY);
     var profileOffline = StorageService.to.getString(STORAGE_USER_PROFILE_KEY);
     if (profileOffline.isNotEmpty) {
-      userData =
-          UserData.fromJson(jsonDecode(profileOffline));
+      userData = UserData.fromJson(jsonDecode(profileOffline));
     }
   }
 
@@ -34,11 +31,8 @@ class UserStore extends GetxController {
   }
 
   // 获取 profile
-  Future<UserInfo?> getProfile() async {
-   var userInfo = await UserAPI.profile();
-   if(userInfo.state == API_RESPONSE_OK) {
-     saveProfile(userInfo.data);
-   }
+  Future<UserData?> getProfile() async {
+    var userInfo = await UserAPI.profile();
     return userInfo;
   }
 

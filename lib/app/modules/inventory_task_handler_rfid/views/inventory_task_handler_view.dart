@@ -64,7 +64,7 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
                     Visibility(
                       visible: !controller.isRfidReadStatus.value,
                       child: FloatingActionButton(
-                        child: Text('PAD\n扫描'),
+                        child: Text('扫描'),
                         backgroundColor: Colors.green,
                         onPressed: () => {toastInfo(msg: '请点击设备左侧或右侧按钮扫描')},
                       ),
@@ -72,8 +72,7 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
                     Visibility(
                       visible: controller.isRfidReadStatus.value,
                       child: FloatingActionButton(
-                        child: Text(
-                            controller.isReadData.value ? '开始\n读取' : '结束\n读取'),
+                        child: Text(controller.isReadData.value ? '开始' : '结束'),
                         backgroundColor: Colors.orange,
                         // 设置 tag1
                         heroTag: 'tag1',
@@ -88,7 +87,7 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
                     ),
                     Spacer(),
                     FloatingActionButton(
-                      child: Text('离线\n保存'),
+                      child: Text('保存'),
                       // 设置 tag2
                       heroTag: 'tag2',
                       backgroundColor: Colors.blue,

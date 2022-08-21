@@ -1,10 +1,8 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/apis/apis.dart';
-import 'package:inventory_app/app/entity/UploadLabelParams.dart';
 import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
 import 'package:inventory_app/app/utils/loading.dart';
 import 'package:inventory_app/app/utils/logger.dart';
@@ -43,8 +41,8 @@ class MouldBindMouldListController extends GetxController {
     } else {
       _mouldBindTaskListSearch.value = homeController.mouldBindList.value.data
               ?.where((element) => element.taskNo == taskNo)
-              ?.first
-              ?.mouldList
+              .first
+              .mouldList
               ?.toList() ??
           List.empty();
     }
@@ -85,7 +83,7 @@ class MouldBindMouldListController extends GetxController {
         uploadTask(element, taskType);
       });
     } else {
-      toastInfo(msg: '暂无需要上传的任务');
+      toastInfo(msg: '当前无待上传状态的模具可上传');
     }
   }
 
@@ -253,7 +251,7 @@ class MouldBindMouldListController extends GetxController {
       ///重新取值 可实现刷新
       _mouldBindTaskListSearch.value = homeController.mouldBindList.value.data
               ?.where((element) => element.taskNo == mouldListItem?.taskNo)
-              ?.first
+              .first
               .mouldList ??
           List.empty();
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/cache.dart';
+import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/widgets/empty.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -24,8 +25,6 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
 
   @override
   Widget build(BuildContext context) {
-    homeController
-        .getInventoryFinishedList(homeController.state.inventoryFinishedPage);
     controller.getInventoryList();
     return Scaffold(
         appBar: AppBar(
@@ -68,6 +67,16 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                   homeController.state.selectedInventoryTab =
                                       !homeController
                                           .state.selectedInventoryTab;
+
+                                  if (homeController.inventoryFinishedList ==
+                                          null ||
+                                      homeController
+                                              .inventoryFinishedList.length ==
+                                          0) {
+                                    homeController.getInventoryFinishedList(
+                                        homeController
+                                            .state.inventoryFinishedPage);
+                                  }
                                 }
                               }),
                           flex: 1,
@@ -402,7 +411,9 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
   Future<void> _onRefresh() async {
     if (homeController.state.selectedInventoryTab) {
       await homeController.getInventoryList();
-      toastInfo(msg: "最新任务已更新");
+      if (await CommonUtils.isConnectNet()) {
+        toastInfo(msg: "最新任务已更新");
+      }
     } else {
       homeController.state.inventoryFinishedPage = 0;
       await homeController

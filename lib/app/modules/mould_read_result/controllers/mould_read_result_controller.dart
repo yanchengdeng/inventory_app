@@ -113,11 +113,25 @@ class MouldReadResultController extends GetxController {
     _eventChannel.receiveBroadcastStream().listen((event) {
       var jsonLabels = jsonDecode(event);
       readDataContent.value = ReadLabelInfo.fromJson(jsonLabels);
-      readDataContent.value.data?.forEach((element) {
-        if (!showAllLabels.contains(element)) {
-          showAllLabels.add(element);
+      if (isRfidReadStatus.value) {
+        if (readDataContent.value.type == LABEL_RFID) {
+          readDataContent.value.data?.forEach((element) {
+            if (!showAllLabels.contains(element)) {
+              showAllLabels.add(element);
+            }
+          });
+        } else {
+          toastInfo(msg: '当前为RFID读取方式');
         }
-      });
+      } else {
+        if (readDataContent.value.type == LABEL_SCAN) {
+          readDataContent.value.data?.forEach((element) {
+            if (!showAllLabels.contains(element)) {
+              showAllLabels.add(element);
+            }
+          });
+        }
+      }
 
       print("yancheng-返回到fullter 上标签数据：--${showAllLabels}");
     });
@@ -168,8 +182,10 @@ class MouldReadResultController extends GetxController {
     Log.d("读取页数据：${assertBindTaskInfo.value.toJson()}");
     if (assertBindTaskInfo.value.labelType == 0) {
       readLabelType.value = 0;
+      isRfidReadStatus.value = true;
     } else if (assertBindTaskInfo.value.labelType == LABEL_RFID) {
       readLabelType.value = LABEL_RFID;
+      isRfidReadStatus.value = true;
     } else if (assertBindTaskInfo.value.labelType == LABEL_SCAN) {
       readLabelType.value = LABEL_SCAN;
       isRfidReadStatus.value = false;

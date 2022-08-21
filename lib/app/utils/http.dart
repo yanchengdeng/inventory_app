@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -108,7 +106,7 @@ class HttpUtil {
         return handler.resolve(new Response(
             data: errorDIY,
             requestOptions: RequestOptions(data: "", path: "")));
-        return handler.next(e); //continue
+        // return handler.next(e); //continue
         // 如果你想完成请求并返回一些自定义数据，可以resolve 一个`Response`,如`handler.resolve(response)`。
         // 这样请求将会被终止，上层then会被调用，then中返回的数据将是你的自定义response.
       },

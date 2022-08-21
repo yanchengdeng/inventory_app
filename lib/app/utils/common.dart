@@ -6,8 +6,8 @@ import '../routes/app_pages.dart';
 import '../services/storage.dart';
 import '../store/user.dart';
 import '../style/color.dart';
-import '../values/storage.dart';
 import '../values/values.dart';
+import 'package:connectivity/connectivity.dart';
 
 /**
  * 常见工具类
@@ -30,7 +30,9 @@ class CommonUtils {
       required VoidCallback? callback}) {
     Get.defaultDialog(
       title: "温馨提示",
-      content: Container(margin : EdgeInsetsDirectional.only(start: 10,end: 10),child: Text('$content')),
+      content: Container(
+          margin: EdgeInsetsDirectional.only(start: 10, end: 10),
+          child: Text('$content')),
       confirm: ElevatedButton(
         onPressed: callback,
         child: Text(
@@ -66,5 +68,10 @@ class CommonUtils {
         "&mediaType=image";
     Log.d("加载图片：${imageUrl}");
     return imageUrl;
+  }
+
+  static Future<bool> isConnectNet() async {
+    var connectResult = await (Connectivity().checkConnectivity());
+    return connectResult != ConnectivityResult.none;
   }
 }

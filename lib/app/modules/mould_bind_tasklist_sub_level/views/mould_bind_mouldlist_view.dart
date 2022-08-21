@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/MouldBindTask.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
+import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/widgets/empty.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
-
 import '../../../style/text_style.dart';
 import '../../../utils/logger.dart';
 import '../../../values/constants.dart';
+import '../../../widgets/menu/flutter_down_menu.dart';
 import '../controllers/mould_bind_mouldlist_controller.dart';
 
 ///  模具绑定任务信息列表
@@ -24,44 +25,32 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
     controller.findByParams(isFinish, taskNo, '', [bindStatus], []);
     Get.put(MouldBindMouldListController());
 
+    final MenuController _menuController = MenuController();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('模具绑定'),
         centerTitle: true,
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-                margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: inputTextEdit(
-                    hintText: '搜资产编号、名称',
-                    inputOnSubmit: (value) {
-                      controller.findByParams(
-                          isFinish, taskNo, value, [bindStatus], []);
-                    })),
-            Container(
-              width: 200,
-              height: 50,
-              alignment: Alignment.center,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text('全部'),
-                    flex: 1,
-                  ),
-                  Expanded(
-                    child: Text('工装类型'),
-                    flex: 1,
-                  )
-                ],
-              ),
-            ),
-            Obx(() => Container(
-                child: controller.mouldBindTaskListSearch?.length == 0
-                    ? DefaultEmptyWidget()
-                    : Expanded(
-                        child: ListView.builder(
+      body: Column(
+        children: [
+          Container(
+              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: inputTextEdit(
+                  hintText: '搜资产编号、名称',
+                  inputOnSubmit: (value) {
+                    controller.findByParams(
+                        isFinish, taskNo, value, [bindStatus], []);
+                  })),
+          DropDownMenuHeader(
+              menuController: _menuController, titles: const ["全部", "工装类型"]),
+          Expanded(
+            child: Stack(
+              children: [
+                Obx(
+                  () => controller.mouldBindTaskListSearch?.length == 0
+                      ? DefaultEmptyWidget()
+                      : ListView.builder(
                           itemBuilder: ((context, index) => Card(
                                 elevation: CARD_ELEVATION,
                                 shadowColor: Colors.grey,
@@ -155,7 +144,6 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                                         BIND_STATUS_UPLOADED)
                                       {
                                         ///已上传（已完成和未完成模具中都有）
-
                                         Get.toNamed(
                                             Routes.MOULD_RESULT_ONLY_VIEW,
                                             arguments: controller
@@ -181,18 +169,48 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                               )),
                           itemCount: controller.mouldBindTaskListSearch?.length,
                         ),
-                      )))
-          ],
-        ),
+                ),
+                DropDownMenu(
+                    height: 300,
+                    milliseconds: 300,
+                    children: [
+                      MenuList(
+                        index: 0,
+                        choose: Choose.multi,
+                        menuController: _menuController,
+                        filterList: SELECT_STATUS,
+                        onTap: (index) {
+                          toastInfo(msg: _menuController.title);
+                        },
+                      ),
+                      MenuList(
+                        index: 1,
+                        choose: Choose.multi,
+                        menuController: _menuController,
+                        filterList: TOOL_TYPES,
+                        onTap: (index) {
+                          toastInfo(msg: _menuController.title);
+                        },
+                      )
+                    ],
+                    menuController: _menuController)
+              ],
+            ),
+          ),
+        ],
       ),
       floatingActionButton: Visibility(
         visible: !isFinish,
         child: FloatingActionButton(
-          onPressed: () {
-            controller.doUploadData(taskType);
+          onPressed: () async {
+            if (await CommonUtils.isConnectNet()) {
+              controller.doUploadData(taskType);
+            } else {
+              toastInfo(msg: '网络异常，无法上传');
+            }
           },
           backgroundColor: Colors.blue,
-          child: Text('数据\n上传'),
+          child: Text('上传'),
         ),
       ),
     );

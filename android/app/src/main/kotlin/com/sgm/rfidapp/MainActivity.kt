@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
-import com.blankj.utilcode.util.GsonUtils
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.PermissionUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.honeywell.aidc.*
 import com.honeywell.rfidservice.EventListener
 import com.honeywell.rfidservice.RfidManager
@@ -61,7 +58,7 @@ class MainActivity : FlutterActivity() {
     private var manager: AidcManager? = null
 
     ///rfidManager
-    private lateinit var rfidMgr: RfidManager
+    private  var rfidMgr: RfidManager? = null
 
     /// rfid读取类
     var mReader: RfidReader? = null
@@ -73,6 +70,7 @@ class MainActivity : FlutterActivity() {
 
     private lateinit var eventChannel : FlutterEventChannel
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
          eventChannel = FlutterEventChannel.getInstance()
@@ -90,7 +88,7 @@ class MainActivity : FlutterActivity() {
 
             when (call.method) {
                 START_READ_RFID_DATA -> {
-                    if (rfidMgr.readerAvailable()) {
+                    if (rfidMgr?.readerAvailable() == true) {
                         mIsReadBtnClicked = true
                         read()
                         result.success(true)
@@ -182,8 +180,10 @@ class MainActivity : FlutterActivity() {
                 doListenBarcodeReader()
             } catch (e: InvalidScannerNameException) {
                 toast("扫描：Invalid Scanner Name Exception:${e.message}")
+                Log.e("yancheng","扫描异常Invalid Scanner Name Exception:${e.message}")
             } catch (e: Exception) {
                 toast("扫描${e.message}")
+                Log.e("yancheng","扫描异常${e.message}")
             }
         }
     }
@@ -250,7 +250,7 @@ class MainActivity : FlutterActivity() {
     //初始化 rfid
     private fun initRfid() {
         rfidMgr = RfidManager.getInstance(this)
-        rfidMgr.addEventListener(mEventListener)
+        rfidMgr?.addEventListener(mEventListener)
 
     }
 
@@ -348,8 +348,8 @@ class MainActivity : FlutterActivity() {
             close()
         }
         mReader?.stopRead()
-        rfidMgr.disconnect()
-        rfidMgr.removeEventListener(mEventListener)
+        rfidMgr?.disconnect()
+        rfidMgr?.removeEventListener(mEventListener)
         blueToothDialog?.dismiss()
         mTagDataList?.clear()
         blueToothDialog = null

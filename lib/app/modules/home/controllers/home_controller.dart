@@ -89,9 +89,9 @@ class HomeController extends GetxController {
     super.onInit();
     EasyLoading.show(status: "获取中...");
     var userResponseData = await UserStore.to.getProfile();
-    if (userResponseData?.state == API_RESPONSE_OK &&
-        userResponseData?.data != null) {
-      state.userData.value = userResponseData?.data ?? UserData();
+    if (userResponseData != null &&
+        userResponseData.userCode?.isNotEmpty == true) {
+      state.userData.value = userResponseData;
       getMouldTaskList();
       getInventoryList();
     } else {

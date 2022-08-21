@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
-import 'package:inventory_app/app/apis/apis.dart';
 import 'package:inventory_app/app/entity/UploadLabelParams.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import '../../mould_read_result/controllers/mould_read_result_controller.dart';

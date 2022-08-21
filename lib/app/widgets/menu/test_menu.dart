@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_app/app/widgets/menu/flutter_down_menu.dart';
 
-import 'src/widgets/menu_list.dart';
-
 void main() {
   runApp(const MyApp());
 }
@@ -61,12 +59,11 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
                 child: Stack(
               children: [
-                InkWell(
-                  child: Center(
-                    child: Text(
-                        "选择：item${_menuController.index}-- ${_menuController.title}"),
-                  ),
-                  onTap: () {},
+                ListView.builder(
+                  itemBuilder: ((context, index) => Card(
+                        child: Text('fsdfsdf${index}'),
+                      )),
+                  itemCount: 10,
                 ),
                 DropDownMenu(
                     height: 300,

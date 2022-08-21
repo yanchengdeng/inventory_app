@@ -87,7 +87,7 @@ class InventoryTasklistSubLevelController extends GetxController {
         uploadSingleInventory(element);
       });
     } else {
-      toastInfo(msg: '暂无需要上传的任务');
+      toastInfo(msg: '当前无待上传状态的模具可上传');
     }
   }
 

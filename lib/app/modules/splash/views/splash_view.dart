@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/app/apis/apis.dart';
-import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/store/user.dart';
 import 'package:inventory_app/app/utils/loading.dart';
 import '../../../routes/app_pages.dart';
@@ -34,8 +31,6 @@ class SplashView extends GetView<SplashController> {
           });
           return false;
         } else {
-          ///TODO  退出app  清除webview 缓存 当h5 可以正常跳转 有限选择下面的pop方案
-          // exit(0);
           await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
           Get.offNamed(Routes.SPLASH);
           return true;
@@ -76,7 +71,7 @@ class SplashView extends GetView<SplashController> {
               var listSplits = loadUrl.split(SPLIT_URL);
               if (listSplits.length == 2) {
                 ///保存token
-              await  UserStore.to.setToken(listSplits[1]);
+                await UserStore.to.setToken(listSplits[1]);
                 toastInfo(msg: '登陆成功');
                 _controller.clearCache();
                 pageLoaded.complete();

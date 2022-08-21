@@ -4,12 +4,9 @@ import 'package:get/get.dart';
 import 'package:inventory_app/app/modules/home/controllers/home_controller.dart';
 import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/store/store.dart';
-import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/values/constants.dart';
-
 import '../entity/InventoryData.dart';
 import '../entity/MouldBindTask.dart';
-import '../values/values.dart';
 
 /**
  * 缓存跟着账号走  和产品确认账号的来源？？？

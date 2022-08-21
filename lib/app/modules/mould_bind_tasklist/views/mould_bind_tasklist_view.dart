@@ -7,6 +7,7 @@ import 'package:inventory_app/app/widgets/empty.dart';
 import 'package:inventory_app/app/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../style/text_style.dart';
+import '../../../utils/common.dart';
 import '../../../values/constants.dart';
 import '../controllers/mould_bind_tasklist_controller.dart';
 
@@ -21,8 +22,6 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
 
   @override
   Widget build(BuildContext context) {
-    homeController
-        .getMouldTaskFinishedList(homeController.state.mouldTaskFinishedPage);
     controller.getMouldTaskItems();
     return Scaffold(
         appBar: AppBar(
@@ -44,8 +43,11 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                               selected: homeController.state.selectedMouldTab,
                               isLeft: true,
                               callback: () {
-                                homeController.state.selectedMouldTab =
-                                    !homeController.state.selectedMouldTab;
+                                ///已选中了 点击无效
+                                if (!homeController.state.selectedMouldTab) {
+                                  homeController.state.selectedMouldTab =
+                                      !homeController.state.selectedMouldTab;
+                                }
                               }),
                           flex: 1,
                         ),
@@ -55,8 +57,19 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                               selected: !homeController.state.selectedMouldTab,
                               isLeft: false,
                               callback: () {
-                                homeController.state.selectedMouldTab =
-                                    !homeController.state.selectedMouldTab;
+                                if (homeController.state.selectedMouldTab) {
+                                  homeController.state.selectedMouldTab =
+                                      !homeController.state.selectedMouldTab;
+                                }
+                                if (homeController.mouldTaskFinishedList ==
+                                        null ||
+                                    homeController
+                                            .mouldTaskFinishedList.length ==
+                                        0) {
+                                  homeController.getMouldTaskFinishedList(
+                                      homeController
+                                          .state.mouldTaskFinishedPage);
+                                }
                               }),
                           flex: 1,
                         )
@@ -363,8 +376,9 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
   Future<void> _onRefresh() async {
     if (homeController.state.selectedMouldTab) {
       await homeController.getMouldTaskList();
-      controller.getMouldTaskItems();
-      toastInfo(msg: "最新任务已更新");
+      if (await CommonUtils.isConnectNet()) {
+        toastInfo(msg: "最新任务已更新");
+      }
     } else {
       homeController.state.mouldTaskFinishedPage = 0;
       await homeController

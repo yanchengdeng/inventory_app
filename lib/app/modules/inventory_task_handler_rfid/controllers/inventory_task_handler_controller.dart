@@ -138,7 +138,6 @@ class InventoryTaskHandlerController extends GetxController {
       if (rfidDataFromAndroid) {
         isReadData.value = true;
         findByParams(taskNo);
-        getGpsLagLng();
       }
     }
   }
@@ -146,27 +145,32 @@ class InventoryTaskHandlerController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-
+    isRfidReadStatus.value = Get.arguments['isRFID'];
     _eventChannel.receiveBroadcastStream().listen((event) {
       var jsonLabels = jsonDecode(event);
       readDataContent.value = ReadLabelInfo.fromJson(jsonLabels);
-      if (readDataContent.value.type == LABEL_RFID) {
+      if (readDataContent.value.type == LABEL_RFID && isRfidReadStatus.value) {
         readDataContent.value.data?.forEach((element) {
           if (!showAllLabels.contains(element)) {
             showAllLabels.add(element);
           }
         });
+        findByParams(taskNo);
       } else {
         ///扫描标签 先要定位
         if (locationInfo.value.address != null &&
             readDataContent.value.type == LABEL_SCAN) {
-          readDataContent.value.data?.forEach((element) {
-            if (!showAllLabels.contains(element)) {
-              showAllLabels.add(element);
-            } else {
-              toastInfo(msg: '');
-            }
-          });
+          if (!isRfidReadStatus.value) {
+            readDataContent.value.data?.forEach((element) {
+              if (!showAllLabels.contains(element)) {
+                showAllLabels.add(element);
+              } else {
+                toastInfo(msg: '已扫描过该标签');
+              }
+            });
+          } else {
+            toastInfo(msg: '当前盘点方式为读取盘点');
+          }
           findByParams(taskNo);
         } else {
           getGpsLagLng();
@@ -176,7 +180,6 @@ class InventoryTaskHandlerController extends GetxController {
       print("yancheng-返回到fullter 上标签数据：--${showAllLabels}");
     });
 
-    isRfidReadStatus.value = Get.arguments['isRFID'];
     await platform.invokeMethod(INIT_RFID_AND_SCAN);
   }
 

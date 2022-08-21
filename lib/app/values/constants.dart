@@ -5,6 +5,8 @@
  * desc : 常量信息
  */
 
+import '../widgets/menu/src/bean/filter_res.dart';
+
 ///接口返回正常code 码  1
 const int API_RESPONSE_OK = 1;
 
@@ -30,6 +32,27 @@ const MOULD_BIND_STATUS = {
 const String TOOL_TYPE_F = 'F';
 const String TOOL_TYPE_G = 'G';
 const String TOOL_TYPE_M = 'M';
+
+///工装类型
+final List<FilterRes> TOOL_TYPES = [
+  FilterRes(name: TOOL_TYPE_F),
+  FilterRes(name: TOOL_TYPE_G),
+  FilterRes(name: TOOL_TYPE_M)
+];
+
+///绑定状态类型
+final List<FilterRes> SELECT_STATUS = [
+  FilterRes(
+      name: MOULD_BIND_STATUS[BIND_STATUS_WAITING_BIND],
+      code: BIND_STATUS_WAITING_BIND),
+  FilterRes(
+      name: MOULD_BIND_STATUS[BIND_STATUS_REBIND], code: BIND_STATUS_REBIND),
+  FilterRes(
+      name: MOULD_BIND_STATUS[BIND_STATUS_WAITING_UPLOAD],
+      code: BIND_STATUS_WAITING_UPLOAD),
+  FilterRes(
+      name: MOULD_BIND_STATUS[BIND_STATUS_UPLOADED], code: BIND_STATUS_UPLOADED)
+];
 
 ///任务类型   0为支付，1为标签替换
 const int MOULD_TASK_TYPE_PAY = 0;

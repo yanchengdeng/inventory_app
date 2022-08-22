@@ -63,9 +63,9 @@ class InventoryApi<T> {
       toastInfo(msg: '已完成上传');
       return API_RESPONSE_OK;
     } else {
-      if (response['message'] == -1) {
+      if (response['state'] == -1) {
         return -1;
-      } else if (response['message'] == -2) {
+      } else if (response['state'] == -2) {
         return -2;
       } else {
         return 0;

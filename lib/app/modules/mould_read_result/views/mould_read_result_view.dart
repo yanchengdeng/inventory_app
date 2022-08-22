@@ -404,8 +404,6 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                       .nameplatePhoto?.fullPath
                                   : controller.imageUrlMp.value)),
                       onTap: () => {
-                        controller.getGpsLagLng(),
-                        toastInfo(msg: '获取定位中...'),
                         if (controller.showAllLabels.isEmpty == true)
                           {toastInfo(msg: "请先读取标签")}
                         else

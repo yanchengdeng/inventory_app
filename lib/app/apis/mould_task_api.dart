@@ -84,7 +84,7 @@ class MouldTaskApi<T> {
   static Future<bool> uploadForLableReplaceType<T>(
       int labelReplaceTaskId, String bodyParams) async {
     Map<String, dynamic> fileTokenMaps = HashMap();
-    fileTokenMaps['x-resource-code'] = 'mould_assetBindUpload';
+    fileTokenMaps['x-resource-code'] = 'mould_labelReplaceBindUpload';
     Options options = Options();
     options.headers = fileTokenMaps;
 

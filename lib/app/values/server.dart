@@ -1,7 +1,7 @@
 enum Environment { DEVELOPMENT, SIT, PRODUCTION }
 
 ///为当前环境
-const SERVER_ENV = Environment.DEVELOPMENT;
+const SERVER_ENV = Environment.SIT;
 
 ///=======================本地测试====================REBE002  Test4444===================
 ///接口域名统一配置  token失效返回 585

@@ -37,6 +37,8 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
           if (element.code == bindStatus[0]) {
             element.isSelect = true;
             statusTitles = element.name ?? '全部';
+          } else {
+            element.isSelect = false;
           }
         });
       }

@@ -35,6 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<FilterRes> list2 = [];
   final List<FilterRes> list3 = [];
 
+
+  
+
   @override
   void initState() {
     super.initState();

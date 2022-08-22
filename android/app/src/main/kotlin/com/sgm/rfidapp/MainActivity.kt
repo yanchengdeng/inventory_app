@@ -1,6 +1,7 @@
 package com.sgm.rfidapp
 
 import android.Manifest
+import android.location.Address
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -18,9 +19,8 @@ import com.honeywell.rfidservice.rfid.TagReadOption
 import com.sgm.rfidapp.data.LABEL
 import com.sgm.rfidapp.data.RfidData
 import com.sgm.rfidapp.dialog.BlueToothDialog
-import com.sgm.rfidapp.utils.ICallback
-import com.sgm.rfidapp.utils.LocationBean
-import com.sgm.rfidapp.utils.LocationUtil
+import com.sgm.rfidapp.utils.LocationInfo
+import com.sgm.rfidapp.utils.LocationUtils
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -120,18 +120,16 @@ class MainActivity : FlutterActivity() {
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     ).callback(object : PermissionUtils.FullCallback {
                         override fun onGranted(granted: MutableList<String>) {
-                            LocationUtil.getLocation(this@MainActivity,
-                                object : ICallback<LocationBean> {
-                                    override fun onResult(location: LocationBean?) {
-                                        location?.apply {
-                                            result.success(GsonUtils.toJson(location))
-                                        }
+                            LocationUtils.getInstance(this@MainActivity).addressCallback = object :LocationUtils.AddressCallback{
+                                override fun onGetAddress(address: LocationInfo?) {
+                                    address?.apply {
+                                        result.success(GsonUtils.toJson(address))
                                     }
+                                }
 
-                                    override fun onError(error: Throwable?) {
-                                        toast("GPS位置信号弱")
-                                    }
-                                })
+                                override fun onGetLocation(lat: Double, lng: Double) {
+                                }
+                            }
                         }
 
                         override fun onDenied(

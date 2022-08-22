@@ -43,9 +43,12 @@ class MouldBindMouldListController extends GetxController {
                   (toolingType.length > 0
                       ? toolingType.contains(element.toolingType)
                       : true) &&
-                  (key.isNotEmpty
-                      ? element.moldName?.contains(key) == true
-                      : true))
+                  ((key.isNotEmpty
+                          ? element.moldName?.contains(key) == true
+                          : true) ||
+                      (key.isNotEmpty
+                          ? element.assetNo?.contains(key) == true
+                          : true)))
               ?.toList() ??
           List.empty();
     } else {
@@ -60,9 +63,12 @@ class MouldBindMouldListController extends GetxController {
                   (toolingType.length > 0
                       ? toolingType.contains(element.toolingType)
                       : true) &&
-                  (key.isNotEmpty
-                      ? element.moldName?.contains(key) == true
-                      : true))
+                  ((key.isNotEmpty
+                          ? element.moldName?.contains(key) == true
+                          : true) ||
+                      (key.isNotEmpty
+                          ? element.assetNo?.contains(key) == true
+                          : true)))
               .toList() ??
           List.empty();
       Log.d("message---" + _mouldBindTaskListSearch.toString());
@@ -91,7 +97,8 @@ class MouldBindMouldListController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+  }
 
   doUploadData(String taskType) async {
     List<MouldList?>? mouldLists = mouldBindTaskListSearch

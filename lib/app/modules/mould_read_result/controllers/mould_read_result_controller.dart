@@ -211,6 +211,27 @@ class MouldReadResultController extends GetxController {
       CommonUtils.showCommonDialog(
           content: "本模具已绑定${showAllLabels.length}个标签，是否确认？",
           callback: () {
+            ///检查已读标签是否有和现有模具相同的标签
+            var allLables = [];
+
+            homeController.mouldBindList.value.data?.forEach((elementTask) {
+              elementTask.mouldList?.forEach((element) {
+                if (element.bindLabels?.isNotEmpty == true) {
+                  element.bindLabels?.forEach((label) {
+                    if (!allLables.contains(label)) {
+                      allLables.add(label);
+                    }
+                  });
+                }
+              });
+            });
+
+            allLables.forEach((element) {
+              if (showAllLabels.contains(element)) {
+                toastInfo(msg: '标签（${element}）已被其他工装模具绑定');
+              }
+            });
+
             if (locationInfo.value.lat != null) {
               assertBindTaskInfo.value.lat = locationInfo.value.lat.toString();
               assertBindTaskInfo.value.lng = locationInfo.value.lng.toString();

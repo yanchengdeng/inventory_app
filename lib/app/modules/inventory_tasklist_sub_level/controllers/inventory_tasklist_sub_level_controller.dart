@@ -41,9 +41,12 @@ class InventoryTasklistSubLevelController extends GetxController {
                   (toolingType.length > 0
                       ? toolingType.contains(element.toolingType)
                       : true) &&
-                  (key.isNotEmpty
-                      ? element.assetName?.contains(key) == true
-                      : true))
+                  ((key.isNotEmpty
+                          ? element.assetName?.contains(key) == true
+                          : true) ||
+                      (key.isNotEmpty
+                          ? element.assetNo?.contains(key) == true
+                          : true)))
               ?.toList() ??
           List.empty();
     } else {
@@ -58,9 +61,12 @@ class InventoryTasklistSubLevelController extends GetxController {
                   (toolingType.length > 0
                       ? toolingType.contains(element.toolingType)
                       : true) &&
-                  (key.isNotEmpty
-                      ? element.assetName?.contains(key) == true
-                      : true))
+                  ((key.isNotEmpty
+                          ? element.assetName?.contains(key) == true
+                          : true) ||
+                      (key.isNotEmpty
+                          ? element.assetNo?.contains(key) == true
+                          : true)))
               .toList() ??
           List.empty();
       Log.d("message---" + _inventoryTaskSearch.toString());

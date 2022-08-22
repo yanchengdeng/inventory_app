@@ -56,7 +56,7 @@ class MouldTaskApi<T> {
   }
 
   //支付类型绑定上传
-  static Future<bool> uploadForPayType<T>(
+  static Future<int> uploadForPayType<T>(
       int assetBindTaskId, String bodyParams) async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'mould_assetBindUpload';
@@ -77,11 +77,11 @@ class MouldTaskApi<T> {
     } else {
       toastInfo(msg: response['message']);
     }
-    return response['state'] == API_RESPONSE_OK;
+    return response['state'];
   }
 
   ///标签类型类型绑定上传
-  static Future<bool> uploadForLableReplaceType<T>(
+  static Future<int> uploadForLableReplaceType<T>(
       int labelReplaceTaskId, String bodyParams) async {
     Map<String, dynamic> fileTokenMaps = HashMap();
     fileTokenMaps['x-resource-code'] = 'mould_labelReplaceBindUpload';
@@ -97,6 +97,6 @@ class MouldTaskApi<T> {
     } else {
       toastInfo(msg: response['message']);
     }
-    return response['state'] == API_RESPONSE_OK;
+    return response['state'];
   }
 }

@@ -8,6 +8,7 @@ import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/utils/utils.dart';
 import '../apis/pretty_dio_logger.dart';
 import '../store/store.dart';
+import '../values/constants.dart';
 import '../values/values.dart';
 
 /*
@@ -24,7 +25,7 @@ class HttpUtil {
   factory HttpUtil() => _instance;
 
   ///自定义异常返回数据
-  var errorDIY = {"state": -1, "message": "未知异常", "data": []};
+  var errorDIY = {"state": DIY_ERROR_CODE, "message": "未知异常", "data": []};
   late Dio dio;
   CancelToken cancelToken = new CancelToken();
 
@@ -154,15 +155,15 @@ class HttpUtil {
   ErrorEntity createErrorEntity(DioError error) {
     switch (error.type) {
       case DioErrorType.cancel:
-        return ErrorEntity(state: -1, message: "请求取消");
+        return ErrorEntity(state: DIY_ERROR_CODE, message: "请求取消");
       case DioErrorType.connectTimeout:
-        return ErrorEntity(state: -1, message: "连接超时");
+        return ErrorEntity(state: DIY_ERROR_CODE, message: "连接超时");
       case DioErrorType.sendTimeout:
-        return ErrorEntity(state: -1, message: "请求超时");
+        return ErrorEntity(state: DIY_ERROR_CODE, message: "请求超时");
       case DioErrorType.receiveTimeout:
-        return ErrorEntity(state: -1, message: "响应超时");
+        return ErrorEntity(state: DIY_ERROR_CODE, message: "响应超时");
       case DioErrorType.cancel:
-        return ErrorEntity(state: -1, message: "请求取消");
+        return ErrorEntity(state: DIY_ERROR_CODE, message: "请求取消");
       case DioErrorType.response:
         {
           try {
@@ -201,16 +202,16 @@ class HttpUtil {
                 }
             }
           } on Exception catch (_) {
-            return ErrorEntity(state: -1, message: "未知错误");
+            return ErrorEntity(state: DIY_ERROR_CODE, message: "未知错误");
           }
         }
       default:
         {
           ///网络问题：SocketException: Connection failed (OS Error: Network is unreachable, errno = 101), address = 47.102.199.31, port = 59101
           if (error.message.contains('Network')) {
-            return ErrorEntity(state: -1, message: '请检查网络');
+            return ErrorEntity(state: DIY_ERROR_CODE, message: '请检查网络');
           } else {
-            return ErrorEntity(state: -1, message: error.message);
+            return ErrorEntity(state: DIY_ERROR_CODE, message: error.message);
           }
         }
     }
@@ -423,7 +424,7 @@ class HttpUtil {
 
 // 异常处理
 class ErrorEntity implements Exception {
-  int state = -1;
+  int state = DIY_ERROR_CODE;
   String message = "";
   ErrorEntity({required this.state, required this.message});
 

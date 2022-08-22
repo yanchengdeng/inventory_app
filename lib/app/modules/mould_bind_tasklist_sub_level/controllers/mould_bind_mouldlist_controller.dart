@@ -97,8 +97,7 @@ class MouldBindMouldListController extends GetxController {
   }
 
   @override
-  void onClose() {
-  }
+  void onClose() {}
 
   doUploadData(String taskType) async {
     List<MouldList?>? mouldLists = mouldBindTaskListSearch
@@ -196,9 +195,10 @@ class MouldBindMouldListController extends GetxController {
       jsonMaps['cavityPhoto'] = element?.cavityPhoto;
       jsonMaps['overallPhoto'] = element?.overallPhoto;
 
-      bool isSuccess = await MouldTaskApi.uploadForPayType(
+      /// state  1 正常  0 提示错误  -1 根据id删除本地数据
+      int resultCode = await MouldTaskApi.uploadForPayType(
           element?.assetBindTaskId ?? 0, jsonEncode(jsonMaps));
-      if (isSuccess) {
+      if (resultCode == API_RESPONSE_OK) {
         ///上传更新为已上传 状态
         element?.bindStatus = BIND_STATUS_UPLOADED;
         element?.bindStatusText = MOULD_BIND_STATUS[BIND_STATUS_UPLOADED];
@@ -216,6 +216,14 @@ class MouldBindMouldListController extends GetxController {
         if (element?.cavityPhoto?.documentName?.isNotEmpty == true) {
           await File(element?.cavityPhoto?.documentName ?? "").delete();
         }
+      } else if (resultCode == -1) {
+        homeController.mouldBindList.value.data
+            ?.where((element) => element.taskNo == element.taskNo)
+            .first
+            .mouldList
+            ?.removeWhere(
+                (it) => it.assetBindTaskId == element?.assetBindTaskId);
+        CacheUtils.to.saveMouldTask(homeController.mouldBindList.value, true);
       }
     } else {
       if (element?.nameplatePhoto?.fullPath?.contains(APP_PACKAGE) == true) {
@@ -228,10 +236,12 @@ class MouldBindMouldListController extends GetxController {
         element?.nameplatePhoto?.fullPath = nameplatePhotoUUID;
       }
       jsonMaps['nameplatePhoto'] = element?.nameplatePhoto;
-      bool isSuccess = await MouldTaskApi.uploadForLableReplaceType(
+
+      /// state  1 正常  0 提示错误  -1 根据id删除本地数据
+      int resultCode = await MouldTaskApi.uploadForLableReplaceType(
           element?.labelReplaceTaskId ?? 0, jsonEncode(jsonMaps));
 
-      if (isSuccess) {
+      if (resultCode == API_RESPONSE_OK) {
         ///上传更新为已上传 状态
         element?.bindStatus = BIND_STATUS_UPLOADED;
         element?.bindStatusText = MOULD_BIND_STATUS[BIND_STATUS_UPLOADED];
@@ -239,6 +249,14 @@ class MouldBindMouldListController extends GetxController {
         if (element?.nameplatePhoto?.documentName?.isNotEmpty == true) {
           await File(element?.nameplatePhoto?.documentName ?? "").delete();
         }
+      } else if (resultCode == -1) {
+        homeController.mouldBindList.value.data
+            ?.where((element) => element.taskNo == element.taskNo)
+            .first
+            .mouldList
+            ?.removeWhere(
+                (it) => it.labelReplaceTaskId == element?.labelReplaceTaskId);
+        CacheUtils.to.saveMouldTask(homeController.mouldBindList.value, true);
       }
     }
   }

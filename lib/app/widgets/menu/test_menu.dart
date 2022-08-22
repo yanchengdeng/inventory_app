@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:inventory_app/app/widgets/menu/flutter_down_menu.dart';
+import 'package:inventory_app/app/widgets/toast.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,9 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<FilterRes> list2 = [];
   final List<FilterRes> list3 = [];
 
-
-  
-
   @override
   void initState() {
     super.initState();
@@ -50,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var count = 10.obs;
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -59,15 +59,20 @@ class _MyHomePageState extends State<MyHomePage> {
             DropDownMenuHeader(
                 menuController: _menuController,
                 titles: const ["检测领域", "业务类型", "距离"]),
-            Expanded(
-                child: Stack(
+            Stack(
               children: [
-                ListView.builder(
-                  itemBuilder: ((context, index) => Card(
-                        child: Text('fsdfsdf${index}'),
-                      )),
-                  itemCount: 10,
-                ),
+                Obx(() => Expanded(
+                      child: ListView.builder(
+                        itemBuilder: ((context, index) => Card(
+                              child: InkWell(
+                                  child: ElevatedButton(
+                                      onPressed: () =>
+                                          {toastInfo(msg: "bucuo")},
+                                      child: Text('fsdfsdf'))),
+                            )),
+                        itemCount: count.value,
+                      ),
+                    )),
                 DropDownMenu(
                     height: 300,
                     milliseconds: 300,
@@ -100,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                     menuController: _menuController),
               ],
-            ))
+            )
           ],
         ));
   }

@@ -49,6 +49,9 @@ class MouldReadResultController extends GetxController {
   ///rfid 停止通过蓝牙获取信息
   static const String STOP_READ_RFID_DATA = 'stopReadRfidSdk';
 
+  ///释放扫描
+  static const String RELEASE_SCAN = 'release_scan';
+
   /// 获取gps经纬度
   static const String GET_GPS_LAT_LNG = 'getGpsLatLng';
 
@@ -148,6 +151,7 @@ class MouldReadResultController extends GetxController {
     // platform.invokeMethod(STOP_RFID_AND_SCAN);
     ///防止 离开页面没关闭rfid 读取
     await platform.invokeMethod(STOP_READ_RFID_DATA);
+    await platform.invokeMethod(RELEASE_SCAN);
   }
 
   void refreshImage(PhotoInfo uploadImageInfo) {
@@ -167,10 +171,10 @@ class MouldReadResultController extends GetxController {
     // await FileApi.getFileToken();
     assertBindTaskInfo.value = homeController.mouldBindList.value.data
             ?.where((element) => element.taskNo == taskNo)
-            ?.first
-            ?.mouldList
+            .first
+            .mouldList
             ?.where((element) => element.assetNo == assetNo)
-            ?.first ??
+            .first ??
         MouldList();
 
     ///默认添加已有标签
@@ -315,7 +319,7 @@ class MouldReadResultController extends GetxController {
 
             var st = homeController.mouldBindList.value.data
                 ?.where((element) => element.taskNo == taskNo)
-                ?.first
+                .first
                 .mouldList
                 ?.where((element) => element.assetNo == assertNo)
                 .first;

@@ -29,6 +29,7 @@ const MOULD_BIND_STATUS = {
  */
 class InventoryTasklistSubLevelView
     extends GetView<InventoryTasklistSubLevelController> {
+  final MenuController _menuController = MenuController();
   var statusTitles = '全部';
   var toolTypes = TOOL_TYPES.map((e) => e.name ?? '').toList();
 
@@ -51,8 +52,6 @@ class InventoryTasklistSubLevelView
           if (element.code == bindStatus[0]) {
             element.isSelect = true;
             statusTitles = element.name ?? '全部';
-          } else {
-            element.isSelect = false;
           }
         });
       }
@@ -65,9 +64,6 @@ class InventoryTasklistSubLevelView
     Log.d(
         "传入二级盘点菜单参数：taskNo = $taskNo,bindStatus = ${bindStatus},isFinish = ${isFinish}");
     controller.findByParams(isFinish, taskNo, '', bindStatus, toolTypes);
-
-    final MenuController _menuController = MenuController();
-
     //
 
     return Scaffold(
@@ -86,8 +82,7 @@ class InventoryTasklistSubLevelView
                           isFinish, taskNo, value, bindStatus, toolTypes);
                     })),
             DropDownMenuHeader(
-                menuController: _menuController,
-                titles: [statusTitles, "工装类型"]),
+                menuController: _menuController, titles: const ["全部", "工装类型"]),
             Expanded(
               child: Stack(
                 children: [

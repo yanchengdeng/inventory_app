@@ -48,6 +48,9 @@ class MainActivity : FlutterActivity() {
     ///只初始化rfid
     private val INIT_RFID_ONLY = "init_rfid_and_only"
 
+    //释放扫描
+    private val RELEASE_SCAN = "release_scan"
+
     ///只初始化扫描
     private val INIT_SCAN_ONLY = "init_scan_and_only"
 
@@ -112,6 +115,8 @@ class MainActivity : FlutterActivity() {
                 STOP_READ_RFID_DATA -> {
                     mIsReadBtnClicked = false
                     stopRead()
+
+
                     result.success(true)
                 }
                 GET_GPS_LAT_LNG -> {
@@ -155,6 +160,13 @@ class MainActivity : FlutterActivity() {
                 INIT_SCAN_ONLY -> {
                     initBarCodeReader()
                     Log.w("yancheng", "只初始化 扫描功能--")
+                }
+
+                RELEASE_SCAN ->{
+                    //红外扫描需要 添加和 释放成对出现，否则只会生效一次
+                    barcodeReader?.apply {
+                        release()
+                    }
                 }
 
                 STOP_RFID_AND_SCAN -> {

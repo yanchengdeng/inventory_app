@@ -121,3 +121,6 @@ const SAVE_KEY_FOR_INVENTORY = "inventory_key";
 ///android 低层发出的读取数据类型  1标签 2二维码
 const LABEL_RFID = 1;
 const LABEL_SCAN = 2;
+
+///自定义错误  防止和 后端业务码冲突
+const int DIY_ERROR_CODE = -100;

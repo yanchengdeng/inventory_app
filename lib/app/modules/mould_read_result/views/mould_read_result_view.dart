@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/entity/LocationInfo.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
 import '../../../routes/app_pages.dart';
@@ -249,6 +250,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                                     "";
                                                 controller.imageUrlAll.value =
                                                     "";
+                                                controller.locationInfo.value =
+                                                    LocationInfo();
                                                 Get.back();
                                               });
                                         } else {
@@ -350,9 +353,10 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                               ? controller.assertBindTaskInfo.value
                                   .nameplatePhoto?.fullPath
                               : controller.imageUrlMp.value)),
-                  onTap: () => {
-                    controller.getGpsLagLng(),
-                    if (controller.showAllLabels.isEmpty == true)
+                  onTap: () async => {
+                    if (controller.locationInfo.value.address == null)
+                      {await controller.getGpsLagLng()}
+                    else if (controller.showAllLabels.isEmpty == true)
                       {toastInfo(msg: "请先读取标签")}
                     else
                       {
@@ -381,10 +385,10 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                   ? controller.assertBindTaskInfo.value
                                       .overallPhoto?.fullPath
                                   : controller.imageUrlAll.value)),
-                      onTap: () => {
-                        controller.getGpsLagLng(),
-                        toastInfo(msg: '获取定位中...'),
-                        if (controller.showAllLabels.isEmpty == true)
+                      onTap: () async => {
+                        if (controller.locationInfo.value.address == null)
+                          {await controller.getGpsLagLng()}
+                        else if (controller.showAllLabels.isEmpty == true)
                           {toastInfo(msg: "请先读取标签")}
                         else
                           {

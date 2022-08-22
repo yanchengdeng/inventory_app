@@ -39,6 +39,9 @@ class InventoryTaskHandlerController extends GetxController {
   ///rfid 停止通过蓝牙获取信息
   static const String STOP_READ_RFID_DATA = 'stopReadRfidSdk';
 
+  ///释放扫描
+  static const String RELEASE_SCAN = 'release_scan';
+
   /// 获取gps经纬度
   static const String GET_GPS_LAT_LNG = 'getGpsLatLng';
 
@@ -194,6 +197,9 @@ class InventoryTaskHandlerController extends GetxController {
     // platform.invokeMethod(STOP_RFID_AND_SCAN);
     ///防止 离开页面没关闭rfid 读取
     await platform.invokeMethod(STOP_READ_RFID_DATA);
+
+    ///释放扫描  加入和释放 需要成对出现
+    await platform.invokeMethod(RELEASE_SCAN);
   }
 
   ///本地保存

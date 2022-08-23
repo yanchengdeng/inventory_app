@@ -116,6 +116,8 @@ class MainActivity : FlutterActivity() {
                     mIsReadBtnClicked = false
                     stopRead()
 
+                    LocationUtils.getInstance(this).stopLocation()
+
 
                     result.success(true)
                 }

@@ -14,6 +14,7 @@ import android.provider.Settings;
 
 import androidx.core.app.ActivityCompat;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 
 import java.io.IOException;
@@ -33,15 +34,10 @@ public class LocationUtils {
 
     public void setAddressCallback(AddressCallback addressCallback) {
         this.addressCallback = addressCallback;
-        if(isInit){
             showLocation();
-        }else {
-            isInit = true;
-        }
     }
 
     private static Location location;
-    private boolean isInit = false;//是否加载过
     private LocationUtils(Context context) {
         mContext = context;
         getLocation();
@@ -66,9 +62,7 @@ public class LocationUtils {
      */
     private void addAddressCallback(AddressCallback addressCallback){
         addressCallbacks.add(addressCallback);
-        if(isInit){
             showLocation();
-        }
     }
 
     /**
@@ -125,8 +119,8 @@ public class LocationUtils {
             showLocation();
         } else {//当GPS信号弱没获取到位置的时候可从网络获取
 //            System.out.println("==Google服务被墙的解决办法==");
-//            getLngAndLatWithNetwork();//Google服务被墙的解决办法
-            ToastUtils.showLong("GPS位置信号弱");
+            getLngAndLatWithNetwork();//Google服务被墙的解决办法
+
         }
         // 监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
         //LocationManager 每隔 5 秒钟会检测一下位置的变化情况，当移动距离超过 10 米的时候，
@@ -157,7 +151,7 @@ public class LocationUtils {
         try {
             List<Address> locationList = gc.getFromLocation(latitude, longitude, 1);
 
-            if (locationList != null) {
+            if (locationList != null && locationList.size() > 0 ) {
                 Address address = locationList.get(0);
                 String countryName = address.getCountryName();//国家
                 String countryCode = address.getCountryCode();
@@ -178,10 +172,16 @@ public class LocationUtils {
                         addressCallback.onGetAddress(new LocationInfo(latitude, longitude, locality + subLocality + featureName));
                     }
                 }
+            }else{
+                if(addressCallback != null) {
+                    addressCallback.onGetAddress(new LocationInfo(latitude, longitude, "未知区域"));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
-            addressCallback.onGetAddress(new LocationInfo(latitude,longitude,"未知区域"));
+            if(addressCallback != null) {
+                addressCallback.onGetAddress(new LocationInfo(latitude, longitude, "未知区域"));
+            }
         }
     }
 
@@ -225,6 +225,7 @@ public class LocationUtils {
                 && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        LogUtils.d("yancheng","网络定位");
         LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, locationListener);
         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -233,5 +234,16 @@ public class LocationUtils {
     public interface AddressCallback{
         void onGetAddress(LocationInfo address);
         void onGetLocation(double lat,double lng);
+    }
+
+
+    public void stopLocation(){
+        if (locationManager!=null) {
+            cleareAddressCallback();
+            if (location!=null){
+                location.reset();
+                LogUtils.d("yancheng","重置经纬度");
+            }
+        }
     }
 }

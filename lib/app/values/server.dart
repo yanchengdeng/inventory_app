@@ -5,13 +5,13 @@ const SERVER_ENV = Environment.SIT;
 
 ///=======================本地测试====================REBE002  Test4444===================
 ///接口域名统一配置  token失效返回 585
-const SERVER_API_URL = 'http://47.102.199.31:59101/rfidapp/rest';
+const SERVER_API_URL1 = 'http://47.102.199.31:59101/rfidapp/rest';
 
 ///文件服务域名统一配置
-const SERVER_FILE_UPLOAD = 'https://csapi-qa.saic-gm.com/cs';
+const SERVER_FILE_UPLOAD1 = 'https://csapi-qa.saic-gm.com/cs';
 
 ///==========================SIT 测试使用 统一改用改域名======= pwlvjy(Test1234)=================
-const SERVER_API_URL1 =
+const SERVER_API_URL =
     'https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest';
 
 /**
@@ -20,7 +20,7 @@ const SERVER_API_URL1 =
 2.网关Nginx代理，{host}/FileUpload/file/frontend/upload
  */
 
-const SERVER_FILE_UPLOAD1 = 'https://csapi-qa.saic-gm.com/cs';
+const SERVER_FILE_UPLOAD = 'https://csapi-qa.saic-gm.com/cs';
 
 ///文件服务地址  异常返回 500  已废弃
 /// const SERVER_FILE_API_URL =

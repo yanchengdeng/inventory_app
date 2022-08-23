@@ -103,6 +103,7 @@ class MouldReadResultController extends GetxController {
 
   /// 获取经纬度
   getGpsLagLng() async {
+    toastInfo(msg: '更新定位中...');
     var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
     Log.d("获取定位信息：$latLng");
     var location = jsonDecode(latLng);

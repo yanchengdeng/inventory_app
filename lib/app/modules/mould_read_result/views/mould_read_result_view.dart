@@ -161,7 +161,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                     Text('标签编号 ', style: textBoldNumberBlueStyle()),
                     InkWell(
                       child: Text(
-                        controller.locationInfo.value.lat == null
+                        controller.locationInfo.value.address == null
                             ? ""
                             : "${controller.locationInfo.value.lat},${controller.locationInfo.value.lng}",
                         style: textSmallTextStyle(),

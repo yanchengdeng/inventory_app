@@ -4,13 +4,14 @@
 
 class LocationInfo {
   LocationInfo({
-      String? address, 
-      double? lat, 
-      double? lng,}){
+    String? address,
+    double? lat,
+    double? lng,
+  }) {
     _address = address;
     _lat = lat;
     _lng = lng;
-}
+  }
 
   LocationInfo.fromJson(dynamic json) {
     _address = json['address'];
@@ -20,16 +21,22 @@ class LocationInfo {
   String? _address;
   double? _lat;
   double? _lng;
-LocationInfo copyWith({  String? address,
-  double? lat,
-  double? lng,
-}) => LocationInfo(  address: address ?? _address,
-  lat: lat ?? _lat,
-  lng: lng ?? _lng,
-);
+  LocationInfo copyWith({
+    String? address,
+    double? lat,
+    double? lng,
+  }) =>
+      LocationInfo(
+        address: address ?? _address,
+        lat: lat ?? _lat,
+        lng: lng ?? _lng,
+      );
   String? get address => _address;
   double? get lat => _lat;
   double? get lng => _lng;
+  set lat(double? lat) => _lat = lat;
+  set lng(double? lng) => _lng = lng;
+  set address(String? address) => _address = address;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -38,5 +45,4 @@ LocationInfo copyWith({  String? address,
     map['lng'] = _lng;
     return map;
   }
-
 }

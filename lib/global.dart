@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/services/location.dart';
 import 'package:inventory_app/app/utils/cache.dart';
 import 'app/services/storage.dart';
 import 'app/store/store.dart';
@@ -20,6 +21,7 @@ class Global {
     Get.put<ConfigStore>(ConfigStore());
     Get.put<UserStore>(UserStore());
     Get.put<CacheUtils>(CacheUtils());
+    // Get.put<LocationMapService>(LocationMapService());
   }
 
   static void setSystemUi() {

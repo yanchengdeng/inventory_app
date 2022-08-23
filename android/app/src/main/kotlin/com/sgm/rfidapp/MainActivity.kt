@@ -19,8 +19,6 @@ import com.honeywell.rfidservice.rfid.TagReadOption
 import com.sgm.rfidapp.data.LABEL
 import com.sgm.rfidapp.data.RfidData
 import com.sgm.rfidapp.dialog.BlueToothDialog
-import com.sgm.rfidapp.utils.LocationInfo
-import com.sgm.rfidapp.utils.LocationUtils
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -38,9 +36,6 @@ class MainActivity : FlutterActivity() {
 
     ///rfid 停止通过蓝牙获取信息
     private val STOP_READ_RFID_DATA = "stopReadRfidSdk"
-
-    ///读取经纬度
-    private val GET_GPS_LAT_LNG = "getGpsLatLng"
 
     ///初始化rfid 读取与扫描
     private val INIT_RFID_AND_SCAN = "init_rfid_and_scan"
@@ -115,38 +110,7 @@ class MainActivity : FlutterActivity() {
                 STOP_READ_RFID_DATA -> {
                     mIsReadBtnClicked = false
                     stopRead()
-
-                    LocationUtils.getInstance(this).stopLocation()
-
-
                     result.success(true)
-                }
-                GET_GPS_LAT_LNG -> {
-                    PermissionUtils.permission(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ).callback(object : PermissionUtils.FullCallback {
-                        override fun onGranted(granted: MutableList<String>) {
-                            LocationUtils.getInstance(this@MainActivity).addressCallback = object :LocationUtils.AddressCallback{
-                                override fun onGetAddress(address: LocationInfo?) {
-                                    address?.apply {
-                                        result.success(GsonUtils.toJson(address))
-                                    }
-                                }
-
-                                override fun onGetLocation(lat: Double, lng: Double) {
-                                }
-                            }
-                        }
-
-                        override fun onDenied(
-                            deniedForever: MutableList<String>,
-                            denied: MutableList<String>
-                        ) {
-                            toast("拒绝无法正常使用")
-                        }
-
-                    }).request()
                 }
                 INIT_RFID_AND_SCAN -> {
                     initBarCodeReader()

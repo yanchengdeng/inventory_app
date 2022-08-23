@@ -5,13 +5,12 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/ReadLabelInfo.dart';
 import 'package:inventory_app/app/entity/UploadLabelParams.dart';
+import 'package:inventory_app/app/services/location.dart';
 import 'package:inventory_app/app/utils/cache.dart';
 import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/values/constants.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
-
-import '../../../apis/file_api.dart';
 import '../../../entity/LocationInfo.dart';
 import '../../../entity/MouldBindTask.dart';
 import '../../home/controllers/home_controller.dart';
@@ -51,9 +50,6 @@ class MouldReadResultController extends GetxController {
 
   ///释放扫描
   static const String RELEASE_SCAN = 'release_scan';
-
-  /// 获取gps经纬度
-  static const String GET_GPS_LAT_LNG = 'getGpsLatLng';
 
   /// 初始化rfid sdk 和 扫描sdk
   static const String INIT_RFID_AND_SCAN = 'init_rfid_and_scan';
@@ -103,11 +99,15 @@ class MouldReadResultController extends GetxController {
 
   /// 获取经纬度
   getGpsLagLng() async {
-    toastInfo(msg: '更新定位中...');
-    var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
-    Log.d("获取定位信息：$latLng");
-    var location = jsonDecode(latLng);
-    locationInfo.value = LocationInfo.fromJson(location);
+    // LocationMapService.to.initMap();
+    // LocationMapService.to.startLocation();
+    //
+    // locationInfo.value.lat =
+    //     LocationMapService.to.locationResult['latitude'] as double?;
+    // locationInfo.value.address =
+    //     LocationMapService.to.locationResult['address'] as String?;
+    // locationInfo.value.lng =
+    //     LocationMapService.to.locationResult['longitude'] as double?;
   }
 
   @override
@@ -153,6 +153,7 @@ class MouldReadResultController extends GetxController {
     ///防止 离开页面没关闭rfid 读取
     await platform.invokeMethod(STOP_READ_RFID_DATA);
     await platform.invokeMethod(RELEASE_SCAN);
+    // LocationMapService.to.stopLocation();
   }
 
   void refreshImage(PhotoInfo uploadImageInfo) {

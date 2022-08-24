@@ -58,6 +58,18 @@ class CacheUtils extends GetxController {
   Future<void> saveMouldTask(MouldBindTask? data, bool isLocalSave) async {
     final HomeController homeController = Get.find<HomeController>();
 
+    ///设置下发的数据 缓存状态 bindStatusPre 为默认的bindStatus
+    if (data != null && data.data != null && data.data?.isNotEmpty == true) {
+      data.data?.forEach((element) {
+        element.mouldList?.forEach((element) {
+          if (element.bindStatus == BIND_STATUS_REBIND ||
+              element.bindStatus == BIND_STATUS_WAITING_BIND) {
+            element.bindStatusPre = element.bindStatus;
+          }
+        });
+      });
+    }
+
     ///无该用户数据 直接保存 ,本地修改 直接保存
     var cahcheData = StorageService.to.getString(getMouldSaveKey());
     if (cahcheData.isEmpty || isLocalSave) {

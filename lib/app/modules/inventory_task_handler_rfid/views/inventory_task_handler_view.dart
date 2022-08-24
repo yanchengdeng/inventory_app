@@ -57,50 +57,67 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
             ),
           ),
           floatingActionButton: Obx(() => Container(
-                margin: EdgeInsetsDirectional.only(bottom: 30),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                height: 100,
+                margin: EdgeInsetsDirectional.only(bottom: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Spacer(),
-                    Visibility(
-                      visible: !controller.isRfidReadStatus.value,
-                      child: FloatingActionButton(
-                        child: Text('扫描'),
-                        backgroundColor: Colors.green,
-                        onPressed: () => {toastInfo(msg: '请点击设备左侧或右侧按钮扫描')},
+                    Container(
+                      margin: EdgeInsetsDirectional.only(start: 40, bottom: 10),
+                      child: Text(
+                        "请点击设备左侧或右侧按钮扫描",
+                        style: textLitleBlackTextStyle(),
                       ),
                     ),
-                    Visibility(
-                      visible: controller.isRfidReadStatus.value,
-                      child: FloatingActionButton(
-                        child: Text(controller.isReadData.value ? '开始' : '结束'),
-                        backgroundColor: Colors.orange,
-                        // 设置 tag1
-                        heroTag: 'tag1',
-                        onPressed: () {
-                          if (LocationMapService
-                                  .to.locationResult.value.address ==
-                              null) {
-                            controller.getGpsLagLng();
-                          } else {
-                            controller.locationInfo.value =
-                                LocationMapService.to.locationResult.value;
-                            controller.startReadRfidData(taskNo);
-                          }
-                        },
-                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Spacer(),
+                        Visibility(
+                          visible: controller.isRfidReadStatus.value,
+                          child: FloatingActionButton(
+                            child:
+                                Text(controller.isReadData.value ? '读取' : '停止'),
+                            backgroundColor: Colors.orange,
+                            // 设置 tag1
+                            heroTag: 'tag1',
+                            onPressed: () {
+                              if (LocationMapService
+                                      .to.locationResult.value.address ==
+                                  null) {
+                                controller.getGpsLagLng();
+                              } else {
+                                controller.locationInfo.value =
+                                    LocationMapService.to.locationResult.value;
+                                controller.startReadRfidData(taskNo);
+                              }
+                            },
+                          ),
+                        ),
+                        Spacer(),
+                        FloatingActionButton(
+                          child: Text('保存'),
+                          // 设置 tag2
+                          heroTag: 'tag2',
+                          backgroundColor: Colors.blue,
+                          onPressed: () {
+                            controller.saveInfo(taskNo);
+                          },
+                        ),
+                        Spacer(),
+                        FloatingActionButton(
+                          child: Text('上传'),
+                          // 设置 tag2
+                          heroTag: 'tag3',
+                          backgroundColor: Colors.blue,
+                          onPressed: () {
+                            toastInfo(msg: '待验证');
+                            // controller.upload();
+                          },
+                        ),
+                        Spacer()
+                      ],
                     ),
-                    Spacer(),
-                    FloatingActionButton(
-                      child: Text('保存'),
-                      // 设置 tag2
-                      heroTag: 'tag2',
-                      backgroundColor: Colors.blue,
-                      onPressed: () {
-                        controller.saveInfo(taskNo);
-                      },
-                    ),
-                    Spacer(),
                   ],
                 ),
               ))),

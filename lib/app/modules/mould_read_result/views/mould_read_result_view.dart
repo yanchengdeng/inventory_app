@@ -30,13 +30,15 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
 
     return WillPopScope(
       onWillPop: () async {
-        if (controller.showAllLabels.length == 0) {
-          Get.back();
-          return true;
-        } else {
-          controller.saveInfo(taskType, taskNo, assetNo);
-          return false;
-        }
+        // if (controller.showAllLabels.length == 0) {
+        //   Get.back();
+        //   return true;
+        // } else {
+        //   controller.saveInfo(taskType, taskNo, assetNo);
+        //   return false;
+        // }
+        Get.back();
+        return true;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -237,29 +239,57 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                     onTap: () {
                                       if (controller.showAllLabels.length ==
                                           1) {
-                                        if (controller.imageUrlAll.isNotEmpty ||
-                                            controller.imageUrlMp.isNotEmpty ||
-                                            controller.imageUrlXq.isNotEmpty) {
-                                          CommonUtils.showCommonDialog(
-                                              content: "删除所有标签，将会清空照片，是否继续？",
-                                              callback: () {
-                                                controller.showAllLabels
-                                                    .clear();
-                                                controller.imageUrlXq.value =
-                                                    "";
-                                                controller.imageUrlMp.value =
-                                                    "";
-                                                controller.imageUrlAll.value =
-                                                    "";
-                                                LocationMapService
-                                                    .to
-                                                    .locationResult
-                                                    .value = LocationInfo();
-                                                Get.back();
-                                              });
+                                        ///标签型删除
+                                        if (Get.arguments['taskType'] ==
+                                            MOULD_TASK_TYPE_LABEL.toString()) {
+                                          if (controller
+                                              .imageUrlMp.isNotEmpty) {
+                                            CommonUtils.showCommonDialog(
+                                                content:
+                                                    "删除所有标签，将会清空已经上传的铭牌照片，是否继续？",
+                                                callback: () {
+                                                  controller.showAllLabels
+                                                      .clear();
+
+                                                  controller.imageUrlMp.value =
+                                                      "";
+                                                  LocationMapService.to
+                                                      .stopLocation();
+                                                  controller.locationInfo
+                                                      .value = LocationInfo();
+
+                                                  Get.back();
+                                                });
+                                          } else {
+                                            controller.showAllLabels
+                                                .removeAt(index);
+                                          }
                                         } else {
-                                          controller.showAllLabels
-                                              .removeAt(index);
+                                          if (controller
+                                                  .imageUrlAll.isNotEmpty ||
+                                              controller
+                                                  .imageUrlMp.isNotEmpty) {
+                                            CommonUtils.showCommonDialog(
+                                                content:
+                                                    "删除所有标签，将会清空已经上传的整体和铭牌照片，是否继续？",
+                                                callback: () {
+                                                  controller.showAllLabels
+                                                      .clear();
+                                                  controller.imageUrlAll.value =
+                                                      "";
+                                                  controller.imageUrlMp.value =
+                                                      "";
+                                                  controller.locationInfo
+                                                      .value = LocationInfo();
+
+                                                  LocationMapService.to
+                                                      .stopLocation();
+                                                  Get.back();
+                                                });
+                                          } else {
+                                            controller.showAllLabels
+                                                .removeAt(index);
+                                          }
                                         }
                                       } else {
                                         controller.showAllLabels
@@ -350,24 +380,22 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
             Obx(() => InkWell(
                   child: Expanded(
                       flex: 1,
-                      child: textImageWidget(
-                          '铭牌照片',
-                          controller.imageUrlMp.value.isEmpty
-                              ? controller.assertBindTaskInfo.value
-                                  .nameplatePhoto?.fullPath
-                              : controller.imageUrlMp.value)),
+                      child:
+                          textImageWidget('铭牌照片', controller.imageUrlMp.value)),
                   onTap: () async => {
                     if (LocationMapService.to.locationResult.value.address ==
                         null)
                       {await controller.getGpsLagLng()}
                     else if (controller.showAllLabels.isEmpty == true)
                       {
-                        toastInfo(msg: "请先读取标签"),
                         controller.locationInfo.value =
-                            LocationMapService.to.locationResult.value
+                            LocationMapService.to.locationResult.value,
+                        toastInfo(msg: "请先读取标签"),
                       }
                     else
                       {
+                        controller.locationInfo.value =
+                            LocationMapService.to.locationResult.value,
                         Get.toNamed(Routes.TAKE_PHOTO,
                             arguments: {'photoType': PHOTO_TYPE_MP})
                       }
@@ -388,11 +416,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '整体照片',
-                              controller.imageUrlAll.value.isEmpty
-                                  ? controller.assertBindTaskInfo.value
-                                      .overallPhoto?.fullPath
-                                  : controller.imageUrlAll.value)),
+                              '整体照片', controller.imageUrlAll.value)),
                       onTap: () async => {
                         if (LocationMapService
                                 .to.locationResult.value.address ==
@@ -400,12 +424,14 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                           {await controller.getGpsLagLng()}
                         else if (controller.showAllLabels.isEmpty == true)
                           {
-                            toastInfo(msg: "请先读取标签"),
                             controller.locationInfo.value =
-                                LocationMapService.to.locationResult.value
+                                LocationMapService.to.locationResult.value,
+                            toastInfo(msg: "请先读取标签"),
                           }
                         else
                           {
+                            controller.locationInfo.value =
+                                LocationMapService.to.locationResult.value,
                             Get.toNamed(Routes.TAKE_PHOTO,
                                 arguments: {'photoType': PHOTO_TYPE_ALL})
                           }
@@ -416,11 +442,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '铭牌照片',
-                              controller.imageUrlMp.value.isEmpty
-                                  ? controller.assertBindTaskInfo.value
-                                      .nameplatePhoto?.fullPath
-                                  : controller.imageUrlMp.value)),
+                              '铭牌照片', controller.imageUrlMp.value)),
                       onTap: () => {
                         if (controller.showAllLabels.isEmpty == true)
                           {toastInfo(msg: "请先读取标签")}
@@ -442,11 +464,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child: Expanded(
                           flex: 1,
                           child: textImageWidget(
-                              '型腔照片',
-                              controller.imageUrlXq.value.isEmpty
-                                  ? controller.assertBindTaskInfo.value
-                                      .cavityPhoto?.fullPath
-                                  : controller.imageUrlXq.value)),
+                              '型腔照片', controller.imageUrlXq.value)),
                       onTap: () => {
                         Get.toNamed(Routes.TAKE_PHOTO,
                             arguments: {'photoType': PHOTO_TYPE_XQ})

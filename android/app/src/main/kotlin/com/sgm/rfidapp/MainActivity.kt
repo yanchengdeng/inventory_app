@@ -1,14 +1,18 @@
 package com.sgm.rfidapp
 
 import android.Manifest
-import android.location.Address
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.PermissionUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.honeywell.aidc.*
+import com.honeywell.aidc.BarcodeReader.BarcodeListener
+import com.honeywell.aidc.BarcodeReader.TriggerListener
 import com.honeywell.rfidservice.EventListener
 import com.honeywell.rfidservice.RfidManager
 import com.honeywell.rfidservice.TriggerMode
@@ -28,7 +32,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterActivity(),BarcodeListener,
+TriggerListener {
     private val CHANNEL = "mould_read_result/blue_teeth"
 
     ///rfid 开始通过蓝牙获取信息
@@ -69,6 +74,7 @@ class MainActivity : FlutterActivity() {
         super.onCreate(savedInstanceState)
          eventChannel = FlutterEventChannel.getInstance()
         flutterEngine?.plugins?.add(eventChannel)
+        initBarCodeReader()
 
     }
 
@@ -107,11 +113,18 @@ class MainActivity : FlutterActivity() {
                     mIsReadBtnClicked = false
                     stopRead()
                     result.success(true)
-                    Log.w("yancheng", "关闭 RFID--")
+                    Log.w("yancheng", "停止读取 RFID--")
                 }
                 INIT_RFID_AND_SCAN -> {
                     initRfid()
-                    initBarCodeReader()
+                    try {
+                        barcodeReader?.apply {
+                            claim()
+                        }
+                    }catch (e : ScannerUnavailableException){
+                        toast("Scanner unavailable")
+                    }
+
                     result.success(true)
                     Log.w("yancheng", "初始化 RFID 和扫描功能--")
                 }
@@ -141,16 +154,12 @@ class MainActivity : FlutterActivity() {
                     //红外扫描需要 添加和 释放成对出现，否则只会生效一次
                     barcodeReader?.apply {
                         release()
-                        result.success(true)
                     }
                     stopRead()
+                    result.success(true)
                     Log.w("yancheng", "释放扫描功能 rifd--")
                 }
 
-//                STOP_RFID_AND_SCAN -> {
-//                    closeRfidAndScan()
-//                    Log.w("yancheng", "关闭 RFID 和扫描功能--")
-//                }
                 else -> {
                     result.notImplemented()
                 }
@@ -179,35 +188,13 @@ class MainActivity : FlutterActivity() {
     //添加扫描配置及监听事件
     private fun doListenBarcodeReader() {
         barcodeReader?.apply {
-            claim()
+           addBarcodeListener(this@MainActivity)
             setProperty(
                 BarcodeReader.PROPERTY_TRIGGER_CONTROL_MODE,
                 BarcodeReader.TRIGGER_CONTROL_MODE_AUTO_CONTROL
             )
-            //注册扫描回调
-            addBarcodeListener(object : BarcodeReader.BarcodeListener {
-                override fun onBarcodeEvent(event: BarcodeReadEvent?) {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        mTagDataList.clear()
-                        event?.barcodeData?.let {
-                            mTagDataList.add(it)
-                            eventChannel.sendEventData(
-                                GsonUtils.toJson(
-                                    RfidData(
-                                        LABEL.SCAN.type,
-                                        mTagDataList
-                                    )
-                                )
-                            )
-                        }
-                        LogUtils.d("yancheng 条形码扫描：","${event?.barcodeData}")
-                    }.start()
-                }
+            addTriggerListener(this@MainActivity)
 
-                override fun onFailureEvent(p0: BarcodeFailureEvent?) {
-                    toast("扫描失败，重新试试")
-                }
-            })
 
             val properties: MutableMap<String, Any> = HashMap()
             // Set Symbologies On/Off
@@ -330,11 +317,15 @@ class MainActivity : FlutterActivity() {
      */
     private fun closeRfidAndScan() {
         barcodeReader?.apply {
+            removeBarcodeListener(this@MainActivity)
+            removeTriggerListener(this@MainActivity)
             close()
+            barcodeReader = null
         }
         manager?.apply {
             close()
         }
+
         mReader?.stopRead()
         rfidMgr?.disconnect()
         rfidMgr?.removeEventListener(mEventListener)
@@ -349,6 +340,31 @@ class MainActivity : FlutterActivity() {
         GlobalScope.launch(Dispatchers.Main) {
             ToastUtils.showLong(msg)
         }.start()
+    }
+
+    override fun onBarcodeEvent(event: BarcodeReadEvent?) {
+        GlobalScope.launch(Dispatchers.Main) {
+            mTagDataList.clear()
+            event?.barcodeData?.let {
+                mTagDataList.add(it)
+                eventChannel.sendEventData(
+                    GsonUtils.toJson(
+                        RfidData(
+                            LABEL.SCAN.type,
+                            mTagDataList
+                        )
+                    )
+                )
+            }
+            LogUtils.d("yancheng 条形码扫描：","${event?.barcodeData}")
+        }.start()
+    }
+
+    override fun onFailureEvent(p0: BarcodeFailureEvent?) {
+        toast("扫描失败，重新试试")
+    }
+
+    override fun onTriggerEvent(p0: TriggerStateChangeEvent?) {
     }
 
 }

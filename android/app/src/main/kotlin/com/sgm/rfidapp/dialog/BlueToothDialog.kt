@@ -168,7 +168,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
                 return@setOnClickListener
             }
 
-            mWaitDialog?.setTitle("创建的读写器")
+            mWaitDialog?.setTitle("创建读写器")
             mWaitDialog?.show()
             mHandler.postDelayed({
                 mRfidMgr.createReader()

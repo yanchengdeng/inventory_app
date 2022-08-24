@@ -186,6 +186,9 @@ class MouldList {
     String? assetNo,
     List<String>? bindLabels,
     int? bindStatus,
+
+    ///本地添加一个记录状态值 用于待上传状态 可以返回到他的上一个状态（待绑定/重新绑定）
+    int? bindStatusPre,
     String? bindStatusText,
     String? address,
     PhotoInfo? cavityPhoto,
@@ -215,6 +218,7 @@ class MouldList {
     _assetNo = assetNo;
     _bindLabels = bindLabels;
     _bindStatus = bindStatus;
+    _bindStatusPre = bindStatusPre;
     _bindStatusText = bindStatusText;
     _address = address;
     _cavityPhoto = cavityPhoto;
@@ -247,6 +251,7 @@ class MouldList {
     _bindLabels =
         json['bindLabels'] != null ? json['bindLabels'].cast<String>() : [];
     _bindStatus = json['bindStatus'];
+    _bindStatusPre = json['bindStatusPre'];
     _bindStatusText = json['bindStatusText'];
     _address = json['address'];
     _cavityPhoto = json['cavityPhoto'] != null
@@ -282,6 +287,7 @@ class MouldList {
   String? _assetNo;
   List<String>? _bindLabels;
   int? _bindStatus;
+  int? _bindStatusPre;
   String? _bindStatusText;
   String? _address;
   PhotoInfo? _cavityPhoto;
@@ -311,6 +317,7 @@ class MouldList {
     String? assetNo,
     List<String>? bindLabels,
     int? bindStatus,
+    int? bindStatusPre,
     String? bindStatusText,
     String? address,
     PhotoInfo? cavityPhoto,
@@ -341,6 +348,7 @@ class MouldList {
         assetNo: assetNo ?? _assetNo,
         bindLabels: bindLabels ?? _bindLabels,
         bindStatus: bindStatus ?? _bindStatus,
+        bindStatusPre: bindStatusPre ?? _bindStatusPre,
         bindStatusText: bindStatusText ?? _bindStatusText,
         address: address ?? _address,
         cavityPhoto: cavityPhoto ?? _cavityPhoto,
@@ -372,6 +380,8 @@ class MouldList {
   set bindLabels(List<String>? bindLabels) => _bindLabels = bindLabels;
   int? get bindStatus => _bindStatus;
   set bindStatus(int? bindStatus) => _bindStatus = bindStatus;
+  int? get bindStatusPre => _bindStatusPre;
+  set bindStatusPre(int? bindStatusPre) => _bindStatusPre = bindStatusPre;
   String? get bindStatusText => _bindStatusText;
   set bindStatusText(String? bindStatusText) =>
       _bindStatusText = bindStatusText;
@@ -411,6 +421,7 @@ class MouldList {
     map['assetNo'] = _assetNo;
     map['bindLabels'] = _bindLabels;
     map['bindStatus'] = _bindStatus;
+    map['bindStatusPre'] = _bindStatusPre;
     map['bindStatusText'] = _bindStatusText;
     map['address'] = _address;
     if (_cavityPhoto != null) {

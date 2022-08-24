@@ -198,6 +198,12 @@ class MouldReadResultController extends GetxController {
         showAllLabels.add(element);
       }
     });
+
+    ///照片显示
+    imageUrlAll.value = assertBindTaskInfo.value.overallPhoto?.fullPath ?? '';
+    imageUrlMp.value = assertBindTaskInfo.value.nameplatePhoto?.fullPath ?? '';
+    imageUrlXq.value = assertBindTaskInfo.value.cavityPhoto?.fullPath ?? '';
+
     Log.d("读取页数据：${assertBindTaskInfo.value.toJson()}");
     if (assertBindTaskInfo.value.labelType == 0) {
       readLabelType.value = 0;
@@ -223,33 +229,41 @@ class MouldReadResultController extends GetxController {
 当模具绑定状态为“待上传”，对内容进行编辑后，以上内容有缺失时，保存后变为“待绑定/重新绑定
    */
   saveInfo(String taskType, String taskNo, String assertNo) async {
-    if (showAllLabels.length == 0) {
-      toastInfo(msg: "未做任何修改");
+    ///检查已读标签是否有和现有模具相同的标签
+    var allLables = [];
+
+    ///是否本地缓存数据存在已读标签
+    var isExistSameLable = false;
+
+    homeController.mouldBindList.value.data?.forEach((elementTask) {
+      elementTask.mouldList?.forEach((element) {
+        if (element.bindLabels?.isNotEmpty == true) {
+          element.bindLabels?.forEach((label) {
+            if (!allLables.contains(label)) {
+              allLables.add(label);
+            }
+          });
+        }
+      });
+    });
+
+    allLables.forEach((element) {
+      if (showAllLabels.contains(element)) {
+        isExistSameLable = true;
+      }
+    });
+
+    if (isExistSameLable) {
+      allLables.forEach((element) {
+        if (showAllLabels.contains(element)) {
+          toastInfo(msg: '标签（${element}）已被其他工装模具绑定');
+        }
+      });
+      return;
     } else {
       CommonUtils.showCommonDialog(
           content: "本模具已绑定${showAllLabels.length}个标签，是否确认？",
           callback: () {
-            ///检查已读标签是否有和现有模具相同的标签
-            var allLables = [];
-
-            homeController.mouldBindList.value.data?.forEach((elementTask) {
-              elementTask.mouldList?.forEach((element) {
-                if (element.bindLabels?.isNotEmpty == true) {
-                  element.bindLabels?.forEach((label) {
-                    if (!allLables.contains(label)) {
-                      allLables.add(label);
-                    }
-                  });
-                }
-              });
-            });
-
-            allLables.forEach((element) {
-              if (showAllLabels.contains(element)) {
-                toastInfo(msg: '标签（${element}）已被其他工装模具绑定');
-              }
-            });
-
             if (LocationMapService.to.locationResult.value.address != null) {
               assertBindTaskInfo.value.lat =
                   LocationMapService.to.locationResult.value.lat.toString();
@@ -305,6 +319,11 @@ class MouldReadResultController extends GetxController {
                       BIND_STATUS_WAITING_UPLOAD;
                   assertBindTaskInfo.value.bindStatusText =
                       MOULD_BIND_STATUS[BIND_STATUS_WAITING_UPLOAD];
+                } else {
+                  assertBindTaskInfo.value.bindStatus =
+                      assertBindTaskInfo.value.bindStatusPre;
+                  assertBindTaskInfo.value.bindStatusText =
+                      MOULD_BIND_STATUS[assertBindTaskInfo.value.bindStatusPre];
                 }
               } else if (assertBindTaskInfo.value.toolingType == TOOL_TYPE_F ||
                   assertBindTaskInfo.value.toolingType == TOOL_TYPE_G) {
@@ -321,6 +340,11 @@ class MouldReadResultController extends GetxController {
                       BIND_STATUS_WAITING_UPLOAD;
                   assertBindTaskInfo.value.bindStatusText =
                       MOULD_BIND_STATUS[BIND_STATUS_WAITING_UPLOAD];
+                } else {
+                  assertBindTaskInfo.value.bindStatus =
+                      assertBindTaskInfo.value.bindStatusPre;
+                  assertBindTaskInfo.value.bindStatusText =
+                      MOULD_BIND_STATUS[assertBindTaskInfo.value.bindStatusPre];
                 }
               }
             } else {
@@ -333,6 +357,11 @@ class MouldReadResultController extends GetxController {
                     BIND_STATUS_WAITING_UPLOAD;
                 assertBindTaskInfo.value.bindStatusText =
                     MOULD_BIND_STATUS[BIND_STATUS_WAITING_UPLOAD];
+              } else {
+                assertBindTaskInfo.value.bindStatus =
+                    assertBindTaskInfo.value.bindStatusPre;
+                assertBindTaskInfo.value.bindStatusText =
+                    MOULD_BIND_STATUS[assertBindTaskInfo.value.bindStatusPre];
               }
             }
 

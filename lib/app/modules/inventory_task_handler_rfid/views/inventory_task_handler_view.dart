@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:inventory_app/app/services/location.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
 import '../../../style/text_style.dart';
 import '../../../values/constants.dart';
@@ -77,9 +78,13 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
                         // 设置 tag1
                         heroTag: 'tag1',
                         onPressed: () {
-                          if (controller.locationInfo.value.address == null) {
+                          if (LocationMapService
+                                  .to.locationResult.value.address ==
+                              null) {
                             controller.getGpsLagLng();
                           } else {
+                            controller.locationInfo.value =
+                                LocationMapService.to.locationResult.value;
                             controller.startReadRfidData(taskNo);
                           }
                         },

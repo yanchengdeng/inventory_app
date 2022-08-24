@@ -21,7 +21,7 @@ class Global {
     Get.put<ConfigStore>(ConfigStore());
     Get.put<UserStore>(UserStore());
     Get.put<CacheUtils>(CacheUtils());
-    // Get.put<LocationMapService>(LocationMapService());
+    Get.put<LocationMapService>(LocationMapService());
   }
 
   static void setSystemUi() {

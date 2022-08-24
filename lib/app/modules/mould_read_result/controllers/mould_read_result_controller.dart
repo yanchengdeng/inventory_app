@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:inventory_app/app/entity/LocationInfo.dart';
 import 'package:inventory_app/app/entity/ReadLabelInfo.dart';
 import 'package:inventory_app/app/entity/UploadLabelParams.dart';
 import 'package:inventory_app/app/services/location.dart';
@@ -11,7 +12,6 @@ import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/values/constants.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
-import '../../../entity/LocationInfo.dart';
 import '../../../entity/MouldBindTask.dart';
 import '../../home/controllers/home_controller.dart';
 
@@ -33,6 +33,8 @@ class MouldReadResultController extends GetxController {
 
   var locationInfo = LocationInfo().obs;
 
+  // var locationInfo = LocationInfo().obs;
+
   ///读取rfid数据
   var isReadData = Rx<bool>(true);
 
@@ -48,20 +50,20 @@ class MouldReadResultController extends GetxController {
   ///rfid 停止通过蓝牙获取信息
   static const String STOP_READ_RFID_DATA = 'stopReadRfidSdk';
 
-  ///释放扫描
-  static const String RELEASE_SCAN = 'release_scan';
-
-  /// 初始化rfid sdk 和 扫描sdk
+  ///初始化rfid 和扫描
   static const String INIT_RFID_AND_SCAN = 'init_rfid_and_scan';
 
+  ///释放rfid 和 扫描
+  static const String RELEASE_SCAN_AND_RFID = 'release_scan_and_rfid';
+
+  /// 检查定位权限
+  static const String CHECK_LOCATION_PERMISSION = 'check_location_permission';
+
+  /// 初始化rfid sdk 和 扫描sdk
+  // static const String INIT_RFID_AND_SCAN = 'init_rfid_and_scan';
+
   /// 停止rfid sdk 和 扫描sdk
-  static const String STOP_RFID_AND_SCAN = 'stop_rfid_and_scan';
-
-  ///只初始化rfid
-  // static const INIT_RFID_ONLY = 'init_rfid_and_only';
-
-  ///只初始化扫描
-  // static const INIT_SCAN_ONLY = 'init_scan_and_only';
+  // static const String STOP_RFID_AND_SCAN = 'stop_rfid_and_scan';
 
   ///flutter 与android 原生交互  只能一次发送一个回复 模式
   static const platform = MethodChannel(READ_RFID_DATA_CHANNEL);
@@ -99,19 +101,29 @@ class MouldReadResultController extends GetxController {
 
   /// 获取经纬度
   getGpsLagLng() async {
-    // LocationMapService.to.initMap();
-    // LocationMapService.to.startLocation();
-    //
-    // locationInfo.value.lat =
-    //     LocationMapService.to.locationResult['latitude'] as double?;
-    // locationInfo.value.address =
-    //     LocationMapService.to.locationResult['address'] as String?;
-    // locationInfo.value.lng =
-    //     LocationMapService.to.locationResult['longitude'] as double?;
+    // var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
+    // Log.d("获取定位信息：$latLng");
+    // var location = jsonDecode(latLng);
+    // locationInfo.value = LocationInfo.fromJson(location);
+    // toastInfo(msg: '已成功定位');
+
+    if (await CommonUtils.isConnectNet()) {
+      if (await platform.invokeMethod(CHECK_LOCATION_PERMISSION)) {
+        toastInfo(msg: '定位中...');
+        if (LocationMapService.to.locationListener == null) {
+          LocationMapService.to.initMap();
+        }
+        LocationMapService.to.startLocation();
+      } else {
+        Log.d('定位授权');
+      }
+    } else {
+      toastInfo(msg: "请检查网络");
+    }
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
 
     _eventChannel.receiveBroadcastStream().listen((event) {
@@ -139,6 +151,8 @@ class MouldReadResultController extends GetxController {
 
       print("yancheng-返回到fullter 上标签数据：--${showAllLabels}");
     });
+
+    await platform.invokeMethod(INIT_RFID_AND_SCAN);
   }
 
   @override
@@ -151,9 +165,8 @@ class MouldReadResultController extends GetxController {
     ///需要做处理 关闭读取rfid 和扫描  读取生命周期维护放到android 生命周期中。目前为 app 退出或者 进程不存在会关闭
     // platform.invokeMethod(STOP_RFID_AND_SCAN);
     ///防止 离开页面没关闭rfid 读取
-    await platform.invokeMethod(STOP_READ_RFID_DATA);
-    await platform.invokeMethod(RELEASE_SCAN);
-    // LocationMapService.to.stopLocation();
+    LocationMapService.to.stopLocation();
+    await platform.invokeMethod(RELEASE_SCAN_AND_RFID);
   }
 
   void refreshImage(PhotoInfo uploadImageInfo) {
@@ -196,7 +209,6 @@ class MouldReadResultController extends GetxController {
       readLabelType.value = LABEL_SCAN;
       isRfidReadStatus.value = false;
     }
-    await platform.invokeMethod(INIT_RFID_AND_SCAN);
     EasyLoading.dismiss();
   }
 
@@ -238,10 +250,13 @@ class MouldReadResultController extends GetxController {
               }
             });
 
-            if (locationInfo.value.lat != null) {
-              assertBindTaskInfo.value.lat = locationInfo.value.lat.toString();
-              assertBindTaskInfo.value.lng = locationInfo.value.lng.toString();
-              assertBindTaskInfo.value.address = locationInfo.value.address;
+            if (LocationMapService.to.locationResult.value.address != null) {
+              assertBindTaskInfo.value.lat =
+                  LocationMapService.to.locationResult.value.lat.toString();
+              assertBindTaskInfo.value.lng =
+                  LocationMapService.to.locationResult.value.lng.toString();
+              assertBindTaskInfo.value.address =
+                  LocationMapService.to.locationResult.value.address;
             }
 
             if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
@@ -284,7 +299,8 @@ class MouldReadResultController extends GetxController {
                     assertBindTaskInfo
                             .value.overallPhoto?.fullPath?.isNotEmpty ==
                         true &&
-                    locationInfo.value.lat != null) {
+                    LocationMapService.to.locationResult.value.address !=
+                        null) {
                   assertBindTaskInfo.value.bindStatus =
                       BIND_STATUS_WAITING_UPLOAD;
                   assertBindTaskInfo.value.bindStatusText =
@@ -299,7 +315,8 @@ class MouldReadResultController extends GetxController {
                     assertBindTaskInfo
                             .value.overallPhoto?.fullPath?.isNotEmpty ==
                         true &&
-                    locationInfo.value.lat != null) {
+                    LocationMapService.to.locationResult.value.address !=
+                        null) {
                   assertBindTaskInfo.value.bindStatus =
                       BIND_STATUS_WAITING_UPLOAD;
                   assertBindTaskInfo.value.bindStatusText =
@@ -311,7 +328,7 @@ class MouldReadResultController extends GetxController {
                   assertBindTaskInfo
                           .value.nameplatePhoto?.fullPath?.isNotEmpty ==
                       true &&
-                  locationInfo.value.lat != null) {
+                  LocationMapService.to.locationResult.value.address != null) {
                 assertBindTaskInfo.value.bindStatus =
                     BIND_STATUS_WAITING_UPLOAD;
                 assertBindTaskInfo.value.bindStatusText =

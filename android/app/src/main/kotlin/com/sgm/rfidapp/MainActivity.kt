@@ -40,17 +40,13 @@ class MainActivity : FlutterActivity() {
     ///初始化rfid 读取与扫描
     private val INIT_RFID_AND_SCAN = "init_rfid_and_scan"
 
-    ///只初始化rfid
-    private val INIT_RFID_ONLY = "init_rfid_and_only"
 
-    //释放扫描
-    private val RELEASE_SCAN = "release_scan"
+    ///检查定位权限
+    private val  CHECK_LOCATION_PERMISSION = "check_location_permission"
 
-    ///只初始化扫描
-    private val INIT_SCAN_ONLY = "init_scan_and_only"
+    //释放扫描 和rfid
+    private val RELEASE_SCAN_AND_RFID = "release_scan_and_rfid"
 
-    /// 停止rfid sdk 和 扫描sdk
-    private val STOP_RFID_AND_SCAN = "stop_rfid_and_scan"
     //条形码读取
     private var barcodeReader: BarcodeReader? = null
     private var manager: AidcManager? = null
@@ -111,34 +107,50 @@ class MainActivity : FlutterActivity() {
                     mIsReadBtnClicked = false
                     stopRead()
                     result.success(true)
+                    Log.w("yancheng", "关闭 RFID--")
                 }
                 INIT_RFID_AND_SCAN -> {
-                    initBarCodeReader()
                     initRfid()
+                    initBarCodeReader()
+                    result.success(true)
                     Log.w("yancheng", "初始化 RFID 和扫描功能--")
                 }
 
-                INIT_RFID_ONLY -> {
-                    initRfid()
-                    Log.w("yancheng", "只初始化 RFID --")
-                }
+                CHECK_LOCATION_PERMISSION ->{
+                   var isGranted =  PermissionUtils.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)
+                    if (isGranted){
+                        result.success(isGranted)
+                    }else{
+                        PermissionUtils.permission(Manifest.permission.ACCESS_FINE_LOCATION)
+                            .callback(object : PermissionUtils.FullCallback {
+                                override fun onGranted(granted: MutableList<String>) {
+                                    result.success(true)
+                                }
 
-                INIT_SCAN_ONLY -> {
-                    initBarCodeReader()
-                    Log.w("yancheng", "只初始化 扫描功能--")
-                }
-
-                RELEASE_SCAN ->{
-                    //红外扫描需要 添加和 释放成对出现，否则只会生效一次
-                    barcodeReader?.apply {
-                        release()
+                                override fun onDenied(
+                                    deniedForever: MutableList<String>,
+                                    denied: MutableList<String>
+                                ) {
+                                    toast("拒绝无法正常使用")
+                                }
+                            }).request()
                     }
                 }
 
-                STOP_RFID_AND_SCAN -> {
-                    closeRfidAndScan()
-                    Log.w("yancheng", "关闭 RFID 和扫描功能--")
+                RELEASE_SCAN_AND_RFID ->{
+                    //红外扫描需要 添加和 释放成对出现，否则只会生效一次
+                    barcodeReader?.apply {
+                        release()
+                        result.success(true)
+                    }
+                    stopRead()
+                    Log.w("yancheng", "释放扫描功能 rifd--")
                 }
+
+//                STOP_RFID_AND_SCAN -> {
+//                    closeRfidAndScan()
+//                    Log.w("yancheng", "关闭 RFID 和扫描功能--")
+//                }
                 else -> {
                     result.notImplemented()
                 }

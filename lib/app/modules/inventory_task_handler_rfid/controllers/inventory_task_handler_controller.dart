@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/cache.dart';
+import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/values/constants.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
 
 import '../../../entity/InventoryData.dart';
 import '../../../entity/LocationInfo.dart';
 import '../../../entity/ReadLabelInfo.dart';
+import '../../../services/location.dart';
 import '../../../utils/logger.dart';
 import '../../home/controllers/home_controller.dart';
 
@@ -39,17 +41,26 @@ class InventoryTaskHandlerController extends GetxController {
   ///rfid 停止通过蓝牙获取信息
   static const String STOP_READ_RFID_DATA = 'stopReadRfidSdk';
 
-  ///释放扫描
-  static const String RELEASE_SCAN = 'release_scan';
-
-  /// 获取gps经纬度
-  static const String GET_GPS_LAT_LNG = 'getGpsLatLng';
-
-  /// 初始化rfid sdk 和 扫描sdk
+  ///初始化rfid 和扫描
   static const String INIT_RFID_AND_SCAN = 'init_rfid_and_scan';
 
+  ///释放rfid 和 扫描
+  static const String RELEASE_SCAN_AND_RFID = 'release_scan_and_rfid';
+
+  /// 检查定位权限
+  static const String CHECK_LOCATION_PERMISSION = 'check_location_permission';
+
+  /// 初始化rfid sdk 和 扫描sdk
+  // static const String INIT_RFID_AND_SCAN = 'init_rfid_and_scan';
+
   /// 停止rfid sdk 和 扫描sdk
-  static const String STOP_RFID_AND_SCAN = 'stop_rfid_and_scan';
+  // static const String STOP_RFID_AND_SCAN = 'stop_rfid_and_scan';
+
+  /// 初始化rfid sdk 和 扫描sdk
+  // static const String INIT_RFID_AND_SCAN = 'init_rfid_and_scan';
+
+  /// 停止rfid sdk 和 扫描sdk
+  // static const String STOP_RFID_AND_SCAN = 'stop_rfid_and_scan';
 
   ///flutter 与android 原生交互  只能一次发送一个回复 模式
   static const platform = MethodChannel(READ_RFID_DATA_CHANNEL);
@@ -120,11 +131,19 @@ class InventoryTaskHandlerController extends GetxController {
 
   /// 获取经纬度
   getGpsLagLng() async {
-    var latLng = await platform.invokeMethod(GET_GPS_LAT_LNG);
-    Log.d("获取定位信息：$latLng");
-    var location = jsonDecode(latLng);
-    locationInfo.value = LocationInfo.fromJson(location);
-    toastInfo(msg: '已成功定位');
+    if (await CommonUtils.isConnectNet()) {
+      if (await platform.invokeMethod(CHECK_LOCATION_PERMISSION)) {
+        toastInfo(msg: '定位中...');
+        if (LocationMapService.to.locationListener == null) {
+          LocationMapService.to.initMap();
+        }
+        LocationMapService.to.startLocation();
+      } else {
+        Log.d('定位授权');
+      }
+    } else {
+      toastInfo(msg: '请检查网络');
+    }
   }
 
   ///开始读 、停止读
@@ -161,8 +180,9 @@ class InventoryTaskHandlerController extends GetxController {
         findByParams(taskNo);
       } else {
         ///扫描标签 先要定位
-        if (locationInfo.value.address != null &&
+        if (LocationMapService.to.locationResult.value.address != null &&
             readDataContent.value.type == LABEL_SCAN) {
+          locationInfo.value = LocationMapService.to.locationResult.value;
           if (!isRfidReadStatus.value) {
             readDataContent.value.data?.forEach((element) {
               if (!showAllLabels.contains(element)) {
@@ -196,10 +216,10 @@ class InventoryTaskHandlerController extends GetxController {
     ///需要做处理 关闭读取rfid 和扫描  读取生命周期维护放到android 生命周期中。目前为 app 退出或者 进程不存在会关闭
     // platform.invokeMethod(STOP_RFID_AND_SCAN);
     ///防止 离开页面没关闭rfid 读取
-    await platform.invokeMethod(STOP_READ_RFID_DATA);
-
-    ///释放扫描  加入和释放 需要成对出现
-    await platform.invokeMethod(RELEASE_SCAN);
+    // platform.invokeMethod(STOP_RFID_AND_SCAN);
+    ///防止 离开页面没关闭rfid 读取
+    LocationMapService.to.stopLocation();
+    await platform.invokeMethod(RELEASE_SCAN_AND_RFID);
   }
 
   ///本地保存

@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/entity/LocationInfo.dart';
+import 'package:inventory_app/app/services/location.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
 import '../../../routes/app_pages.dart';
@@ -250,8 +251,10 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                                     "";
                                                 controller.imageUrlAll.value =
                                                     "";
-                                                controller.locationInfo.value =
-                                                    LocationInfo();
+                                                LocationMapService
+                                                    .to
+                                                    .locationResult
+                                                    .value = LocationInfo();
                                                 Get.back();
                                               });
                                         } else {
@@ -354,10 +357,15 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                   .nameplatePhoto?.fullPath
                               : controller.imageUrlMp.value)),
                   onTap: () async => {
-                    if (controller.locationInfo.value.address == null)
+                    if (LocationMapService.to.locationResult.value.address ==
+                        null)
                       {await controller.getGpsLagLng()}
                     else if (controller.showAllLabels.isEmpty == true)
-                      {toastInfo(msg: "请先读取标签")}
+                      {
+                        toastInfo(msg: "请先读取标签"),
+                        controller.locationInfo.value =
+                            LocationMapService.to.locationResult.value
+                      }
                     else
                       {
                         Get.toNamed(Routes.TAKE_PHOTO,
@@ -386,10 +394,16 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                       .overallPhoto?.fullPath
                                   : controller.imageUrlAll.value)),
                       onTap: () async => {
-                        if (controller.locationInfo.value.address == null)
+                        if (LocationMapService
+                                .to.locationResult.value.address ==
+                            null)
                           {await controller.getGpsLagLng()}
                         else if (controller.showAllLabels.isEmpty == true)
-                          {toastInfo(msg: "请先读取标签")}
+                          {
+                            toastInfo(msg: "请先读取标签"),
+                            controller.locationInfo.value =
+                                LocationMapService.to.locationResult.value
+                          }
                         else
                           {
                             Get.toNamed(Routes.TAKE_PHOTO,

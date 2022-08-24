@@ -134,9 +134,7 @@ class InventoryTaskHandlerController extends GetxController {
     if (await CommonUtils.isConnectNet()) {
       if (await platform.invokeMethod(CHECK_LOCATION_PERMISSION)) {
         toastInfo(msg: '定位中...');
-        if (LocationMapService.to.locationListener == null) {
-          LocationMapService.to.initMap();
-        }
+        LocationMapService.to.initMap();
         LocationMapService.to.startLocation();
       } else {
         Log.d('定位授权');

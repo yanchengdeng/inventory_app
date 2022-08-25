@@ -5,6 +5,7 @@ import 'package:inventory_app/app/modules/home/controllers/home_controller.dart'
 import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/store/store.dart';
 import 'package:inventory_app/app/values/constants.dart';
+import 'package:inventory_app/app/widgets/toast.dart';
 import '../entity/InventoryData.dart';
 import '../entity/MouldBindTask.dart';
 
@@ -58,8 +59,9 @@ class CacheUtils extends GetxController {
   Future<void> saveMouldTask(MouldBindTask? data, bool isLocalSave) async {
     final HomeController homeController = Get.find<HomeController>();
 
-    ///设置下发的数据 缓存状态 bindStatusPre 为默认的bindStatus
-    if (data != null && data.data != null && data.data?.isNotEmpty == true) {
+    /// 网络获取 本地存在需要对比保存
+    if (data != null && data.data != null && data.data?.length != 0) {
+      ///设置下发的数据 缓存状态 bindStatusPre 为默认的bindStatus
       data.data?.forEach((element) {
         element.mouldList?.forEach((element) {
           if (element.bindStatus == BIND_STATUS_REBIND ||
@@ -68,18 +70,13 @@ class CacheUtils extends GetxController {
           }
         });
       });
-    }
 
-    ///无该用户数据 直接保存 ,本地修改 直接保存
-    var cahcheData = StorageService.to.getString(getMouldSaveKey());
-    if (cahcheData.isEmpty || isLocalSave) {
-      homeController.mouldBindList.value = data ?? MouldBindTask();
-      if (data != null && data.data != null && data.data?.length != 0) {
+      ///无该用户数据 直接保存 ,本地修改 直接保存
+      var cahcheData = StorageService.to.getString(getMouldSaveKey());
+      if (cahcheData.isEmpty || isLocalSave) {
+        homeController.mouldBindList.value = data;
         StorageService.to.setString(getMouldSaveKey(), jsonEncode(data));
-      }
-    } else {
-      /// 网络获取 本地存在需要对比保存
-      if (data != null && data.data != null && data.data?.length != 0) {
+      } else {
         /// 服务端下发的taskNos
         List<String?>? netTaskNos = data.data?.map((e) => e.taskNo).toList();
 
@@ -199,9 +196,10 @@ class CacheUtils extends GetxController {
         }
         StorageService.to.setString(
             getMouldSaveKey(), jsonEncode(homeController.mouldBindList.value));
-      } else {
-        homeController.mouldBindList.value = MouldBindTask();
       }
+    } else {
+      homeController.mouldBindList.value = MouldBindTask();
+      StorageService.to.setString(getMouldSaveKey(), "");
     }
   }
 
@@ -248,16 +246,14 @@ class CacheUtils extends GetxController {
   Future<void> saveInventoryTask(InventoryData? data, bool isLocalSave) async {
     final HomeController homeController = Get.find<HomeController>();
 
-    ///无该用户数据 直接保存 ,本地修改 直接保存
-    var cacheData = StorageService.to.getString(getInventorySaveKey());
-    if (cacheData.isEmpty || isLocalSave) {
-      homeController.inventoryList.value = data ?? InventoryData();
-      if (data != null && data.data != null && data.data?.length != 0) {
+    ///todo 网络获取 本地存在需要对比保存
+    if (data != null && data.data != null && data.data?.length != 0) {
+      ///本地无数据 直接添加进缓存
+      var cacheData = StorageService.to.getString(getInventorySaveKey());
+      if (cacheData.isEmpty || isLocalSave) {
+        homeController.inventoryList.value = data;
         StorageService.to.setString(getInventorySaveKey(), jsonEncode(data));
-      }
-    } else {
-      ///todo 网络获取 本地存在需要对比保存
-      if (data != null && data.data != null && data.data?.length != 0) {
+      } else {
         /// 服务端下发的taskNos
         List<String?>? netTaskNos = data.data?.map((e) => e.taskNo).toList();
 
@@ -325,9 +321,10 @@ class CacheUtils extends GetxController {
           });
           saveInventoryTask(homeController.inventoryList.value, true);
         }
-      } else {
-        homeController.inventoryList.value = InventoryData();
       }
+    } else {
+      homeController.inventoryList.value = InventoryData();
+      StorageService.to.setString(getInventorySaveKey(), '');
     }
   }
 

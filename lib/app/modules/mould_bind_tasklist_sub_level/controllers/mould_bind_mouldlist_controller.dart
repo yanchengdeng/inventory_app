@@ -162,8 +162,6 @@ class MouldBindMouldListController extends GetxController {
     if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
       if (element?.nameplatePhoto?.fullPath != null &&
           element?.nameplatePhoto?.fullPath?.contains(APP_PACKAGE) == true) {
-        element?.nameplatePhoto?.fileSuffix = 'jpg';
-        element?.nameplatePhoto?.downloadType = 'url';
         element?.nameplatePhoto?.documentName =
             element.nameplatePhoto?.fullPath;
         var nameplatePhotoUUID =
@@ -174,8 +172,7 @@ class MouldBindMouldListController extends GetxController {
       if (element?.cavityPhoto?.fullPath != null &&
           element?.cavityPhoto?.fullPath?.contains(APP_PACKAGE) == true) {
         element?.cavityPhoto?.documentName = element.cavityPhoto?.fullPath;
-        element?.cavityPhoto?.fileSuffix = 'jpg';
-        element?.cavityPhoto?.downloadType = 'url';
+
         var cavityPhotoNetUUID =
             await FileApi.uploadFile(element?.cavityPhoto?.fullPath ?? "");
         element?.cavityPhoto?.fullPath = cavityPhotoNetUUID;
@@ -183,14 +180,18 @@ class MouldBindMouldListController extends GetxController {
 
       if (element?.overallPhoto?.fullPath != null &&
           element?.overallPhoto?.fullPath?.contains(APP_PACKAGE) == true) {
-        element?.overallPhoto?.fileSuffix = 'jpg';
-        element?.overallPhoto?.downloadType = 'url';
         element?.overallPhoto?.documentName = element.overallPhoto?.fullPath;
         var overallPhotoUUID =
             await FileApi.uploadFile(element?.overallPhoto?.fullPath ?? "");
         element?.overallPhoto?.fullPath = overallPhotoUUID;
       }
 
+      element?.nameplatePhoto?.downloadType = 'url';
+      element?.cavityPhoto?.downloadType = 'url';
+      element?.overallPhoto?.downloadType = 'url';
+      element?.nameplatePhoto?.fileSuffix = 'jpg';
+      element?.cavityPhoto?.fileSuffix = 'jpg';
+      element?.overallPhoto?.fileSuffix = 'jpg';
       jsonMaps['nameplatePhoto'] = element?.nameplatePhoto;
       jsonMaps['cavityPhoto'] = element?.cavityPhoto;
       jsonMaps['overallPhoto'] = element?.overallPhoto;
@@ -279,6 +280,11 @@ class MouldBindMouldListController extends GetxController {
           ?.removeWhere((element) => element.taskNo == mouldListItem?.taskNo);
       Log.e(
           "该任务下都已经上传 ，删除该模具任务现在还有${homeController.mouldBindList.value.data?.length}个任务");
+
+      if (homeController.mouldBindList.value.data?.length == 0) {
+        homeController.mouldBindList.value = MouldBindTask();
+      }
+
       await CacheUtils.to
           .saveMouldTask(homeController.mouldBindList.value, true);
 

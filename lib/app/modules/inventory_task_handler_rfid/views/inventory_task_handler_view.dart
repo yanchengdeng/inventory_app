@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:inventory_app/app/services/location.dart';
-import 'package:inventory_app/app/widgets/toast.dart';
 import '../../../style/text_style.dart';
 import '../../../values/constants.dart';
 import '../controllers/inventory_task_handler_controller.dart';
@@ -23,7 +21,7 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
       },
       child: Scaffold(
           appBar: AppBar(
-            title: Text('读取盘点'),
+            title: Text(isRfidType ? '读取盘点' : '扫描清单'),
             centerTitle: true,
           ),
           body: Obx(
@@ -57,8 +55,7 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
             ),
           ),
           floatingActionButton: Obx(() => Container(
-                height: 100,
-                margin: EdgeInsetsDirectional.only(bottom: 20),
+                height: 90,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -115,8 +112,7 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
                           heroTag: 'tag3',
                           backgroundColor: Colors.blue,
                           onPressed: () {
-                            toastInfo(msg: '待验证');
-                            // controller.upload();
+                            controller.upload();
                           },
                         ),
                         Spacer()

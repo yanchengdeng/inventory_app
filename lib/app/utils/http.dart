@@ -70,7 +70,7 @@ class HttpUtil {
     dio.interceptors.add(CookieManager(cookieJar));
 
     //添加日志
-    const int _maxLineWidth = 90;
+    const int _maxLineWidth = 120;
     final _prettyDioLogger = PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
@@ -95,6 +95,7 @@ class HttpUtil {
       onResponse: (response, handler) {
         EasyLoading.dismiss();
         // Do something with response data
+        Log.d('返回结果：${response}');
         return handler.next(response); // continue
         // 如果你想终止请求并触发一个错误,你可以 reject 一个`DioError`对象,如`handler.reject(error)`，
         // 这样请求将被中止并触发异常，上层catchError会被调用。
@@ -123,7 +124,7 @@ class HttpUtil {
 
   // 错误处理
   void onError(ErrorEntity eInfo) {
-    print('error.state -> ' +
+    Log.e('error.state -> ' +
         eInfo.state.toString() +
         ', error.message -> ' +
         eInfo.message);

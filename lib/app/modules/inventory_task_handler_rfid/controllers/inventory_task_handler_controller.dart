@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/routes/app_pages.dart';
+import 'package:inventory_app/app/services/services.dart';
 import 'package:inventory_app/app/utils/cache.dart';
 import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/values/constants.dart';
@@ -94,6 +95,10 @@ class InventoryTaskHandlerController extends GetxController {
                 checkHasSameLabel(element.labelNo))
             .toList() ??
         List.empty();
+
+    _inventoryTaskHandle.forEach((element) {
+      Log.d("找到数据${element?.toJson().toString()}");
+    });
   }
 
 /**
@@ -102,7 +107,12 @@ class InventoryTaskHandlerController extends GetxController {
  */
   bool checkHasSameLabel(String? labelNo) {
     if (labelNo != null && labelNo.isNotEmpty && showAllLabels.length > 0) {
-      List<String> labels = labelNo.split(',');
+      List<String> labels = [];
+      if (labelNo.contains(',')) {
+        labels = labelNo.split(',');
+      } else {
+        labels = [labelNo];
+      }
       bool isSame = false;
       showAllLabels.forEach((element1) {
         labels.forEach((element2) {
@@ -196,10 +206,10 @@ class InventoryTaskHandlerController extends GetxController {
                 toastInfo(msg: '已扫描过该标签');
               }
             });
+            findByParams(taskNo);
           } else {
             toastInfo(msg: '当前盘点方式为读取盘点');
           }
-          findByParams(taskNo);
         } else {
           getGpsLagLng();
         }
@@ -314,41 +324,47 @@ class InventoryTaskHandlerController extends GetxController {
         homeController.inventoryList.value.data
             ?.removeWhere((element) => element.taskNo == this.taskNo);
 
-        CacheUtils.to
-            .saveInventoryTask(homeController.inventoryList.value, true);
-
         Log.e(
             "该任务下都已经上传 ，删除该模具任务现在还有${homeController.inventoryList.value.data?.length}个任务");
 
+        if (homeController.inventoryList.value.data?.length == 0) {
+          homeController.inventoryList.value = InventoryData();
+        }
+
+        await CacheUtils.to
+            .saveInventoryTask(homeController.inventoryList.value, true);
+
         ///返回到 第一级列表页
-        Get.offAndToNamed(Routes.INVENTORY_TASKLIST);
-      } else if (resultCode == -1) {
-        toastInfo(msg: '${element?.assetNo}已从任务中移除模具所在的盘点单');
-        homeController.inventoryList.value.data
-            ?.where((element) => element.taskNo == this.taskNo)
-            .first
-            .list
-            ?.removeWhere((element1) => element1.assetNo == element?.assetNo);
-
-        CacheUtils.to
-            .saveInventoryTask(homeController.inventoryList.value, true);
+        Get.off(Routes.INVENTORY_TASKLIST);
+      } else {
         if (markUploadCount == _inventoryTaskHandle.length) {
           Get.back();
         }
-      } else if (resultCode == -2) {
-        toastInfo(msg: '${element?.assetNo}已从任务中移除模具所在的盘点单');
+      }
+    } else if (resultCode == -1) {
+      toastInfo(msg: '${element?.assetNo}已从任务中移除模具所在的盘点单');
+      homeController.inventoryList.value.data
+          ?.where((element) => element.taskNo == this.taskNo)
+          .first
+          .list
+          ?.removeWhere((element1) => element1.assetNo == element?.assetNo);
 
-        homeController.inventoryList.value.data
-            ?.where((element) => element.taskNo == this.taskNo)
-            .first
-            .list
-            ?.removeWhere((element1) => element1.assetNo == element?.assetNo);
+      CacheUtils.to.saveInventoryTask(homeController.inventoryList.value, true);
+      if (markUploadCount == _inventoryTaskHandle.length) {
+        Get.back();
+      }
+    } else if (resultCode == -2) {
+      toastInfo(msg: '${element?.assetNo}已从任务中移除模具所在的盘点单');
 
-        CacheUtils.to
-            .saveInventoryTask(homeController.inventoryList.value, true);
-        if (markUploadCount == _inventoryTaskHandle.length) {
-          Get.back();
-        }
+      homeController.inventoryList.value.data
+          ?.where((element) => element.taskNo == this.taskNo)
+          .first
+          .list
+          ?.removeWhere((element1) => element1.assetNo == element?.assetNo);
+
+      CacheUtils.to.saveInventoryTask(homeController.inventoryList.value, true);
+      if (markUploadCount == _inventoryTaskHandle.length) {
+        Get.back();
       }
     }
   }

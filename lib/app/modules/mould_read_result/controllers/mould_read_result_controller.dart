@@ -235,11 +235,12 @@ class MouldReadResultController extends GetxController {
     ///是否本地缓存数据存在已读标签
     var isExistSameLable = false;
 
+    ///过滤掉 自己
     homeController.mouldBindList.value.data?.forEach((elementTask) {
       elementTask.mouldList?.forEach((element) {
         if (element.bindLabels?.isNotEmpty == true) {
           element.bindLabels?.forEach((label) {
-            if (!allLables.contains(label)) {
+            if (!allLables.contains(label) && (element.taskNo != taskNo && element.assetNo != assertNo)) {
               allLables.add(label);
             }
           });

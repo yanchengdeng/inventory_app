@@ -165,11 +165,15 @@ class InventoryTasklistSubLevelController extends GetxController {
         homeController.inventoryList.value.data
             ?.removeWhere((element) => element.taskNo == this.taskNo);
 
-        CacheUtils.to
-            .saveInventoryTask(homeController.inventoryList.value, true);
-
         Log.e(
             "该任务下都已经上传 ，删除该模具任务现在还有${homeController.inventoryList.value.data?.length}个任务");
+
+        if (homeController.inventoryList.value.data?.length == 0) {
+          homeController.inventoryList.value = InventoryData();
+        }
+
+        await CacheUtils.to
+            .saveInventoryTask(homeController.inventoryList.value, true);
 
         ///返回到上一页
         Get.back();

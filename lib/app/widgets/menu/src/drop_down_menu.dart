@@ -33,7 +33,8 @@ class _DropDownMenuState extends State<DropDownMenu>
   late Animation<double> animation; // 动画抽象类
   late CurvedAnimation cure; // 动画运行的速度轨迹 速度的变化
 
-  bool isShowShadow = true; // true 显示下拉菜单 false 隐藏下拉菜单
+  /// todo  更改此处代码 ，如果是true 则会第一次遮挡下方内容
+  bool isShowShadow = false; // true 显示下拉菜单 false 隐藏下拉菜单
 
   @override
   void initState() {

@@ -165,7 +165,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
                                                                 AlignmentDirectional
                                                                     .topEnd,
                                                             child: Text(
-                                                                '盘点总数：${controller.inventroyList[index].inventoryTotal}',
+                                                                '盘点总数：${controller.inventroyList[index].list?.length}',
                                                                 style:
                                                                     textNormalListTextStyle()),
                                                           ),

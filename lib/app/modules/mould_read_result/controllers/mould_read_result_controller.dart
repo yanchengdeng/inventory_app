@@ -277,21 +277,29 @@ class MouldReadResultController extends GetxController {
               if (imageUrlAll.isNotEmpty) {
                 assertBindTaskInfo.value.overallPhoto?.fullPath =
                     imageUrlAll.value;
+              } else {
+                assertBindTaskInfo.value.overallPhoto?.fullPath = '';
               }
 
               if (imageUrlMp.isNotEmpty) {
                 assertBindTaskInfo.value.nameplatePhoto?.fullPath =
                     imageUrlMp.value;
+              } else {
+                assertBindTaskInfo.value.nameplatePhoto?.fullPath = '';
               }
 
               if (imageUrlXq.isNotEmpty) {
                 assertBindTaskInfo.value.cavityPhoto?.fullPath =
                     imageUrlXq.value;
+              } else {
+                assertBindTaskInfo.value.cavityPhoto?.fullPath = '';
               }
             } else {
               if (imageUrlMp.isNotEmpty) {
                 assertBindTaskInfo.value.nameplatePhoto?.fullPath =
                     imageUrlMp.value;
+              } else {
+                assertBindTaskInfo.value.nameplatePhoto?.fullPath = '';
               }
             }
 

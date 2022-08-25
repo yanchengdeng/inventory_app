@@ -28,6 +28,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
 
     controller.getTaskInfo(taskNo, assetNo);
 
+    ///返回设计初衷是 和保存一致 : 待用户操作成标准（准确数据后才可返回，比如增删标签）
     return WillPopScope(
       onWillPop: () async {
         // if (controller.showAllLabels.length == 0) {
@@ -37,8 +38,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
         //   controller.saveInfo(taskType, taskNo, assetNo);
         //   return false;
         // }
-        Get.back();
-        return true;
+        controller.saveInfo(taskType, taskNo, assetNo);
+        return false;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -415,8 +416,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                 Obx(() => InkWell(
                       child: Expanded(
                           flex: 1,
-                          child: textImageWidget(
-                              '整体照片', controller.imageUrlAll.value)),
+                          child: textImageWidget('${ALL_PHOTO_NAME}',
+                              controller.imageUrlAll.value)),
                       onTap: () async => {
                         if (LocationMapService
                                 .to.locationResult.value.address ==
@@ -441,8 +442,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                 Obx(() => InkWell(
                       child: Expanded(
                           flex: 1,
-                          child: textImageWidget(
-                              '铭牌照片', controller.imageUrlMp.value)),
+                          child: textImageWidget('${NAME_PHOTO_NAME}',
+                              controller.imageUrlMp.value)),
                       onTap: () => {
                         if (controller.showAllLabels.isEmpty == true)
                           {toastInfo(msg: "请先读取标签")}
@@ -463,8 +464,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                 Obx(() => InkWell(
                       child: Expanded(
                           flex: 1,
-                          child: textImageWidget(
-                              '型腔照片', controller.imageUrlXq.value)),
+                          child: textImageWidget('${CAVITY_PHOTO_NAME}',
+                              controller.imageUrlXq.value)),
                       onTap: () => {
                         Get.toNamed(Routes.TAKE_PHOTO,
                             arguments: {'photoType': PHOTO_TYPE_XQ})
@@ -483,35 +484,72 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
   /// Image.file(File(imagePath))
   ///文字 图片混合组件
   Widget textImageWidget(String title, String? imageUrl) {
-    return Container(
-      child: Column(
-        children: [
-          Text(title, style: textNormalListTextStyle()),
-          Container(
-              height: SizeConstant.IAMGE_SIZE_HEIGHT,
-              width: SizeConstant.IAMGE_SIZE_HEIGHT,
-              margin: EdgeInsetsDirectional.only(top: 10),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.fromBorderSide(
-                      BorderSide(color: Colors.black12, width: 2)),
-                  borderRadius:
-                      BorderRadiusDirectional.all(Radius.circular(5.0))),
-              child: imageUrl == null || imageUrl.isEmpty == true
-                  ? Icon(Icons.add_a_photo, size: 80, color: Colors.black12)
-                  : imageUrl.contains(APP_PACKAGE) == true
-                      ? Image.file(File(imageUrl),
-                          height: SizeConstant.IAMGE_SIZE_HEIGHT,
-                          width: SizeConstant.IAMGE_SIZE_HEIGHT,
-                          fit: BoxFit.fill)
-                      : CachedNetworkImage(
-                          imageUrl: CommonUtils.getNetImageUrl(imageUrl),
-                          fit: BoxFit.contain,
-                          height: SizeConstant.IAMGE_SIZE_HEIGHT,
-                          width: SizeConstant.IAMGE_SIZE_HEIGHT,
-                        ))
-        ],
+    return Stack(alignment: AlignmentDirectional.topEnd, children: [
+      Container(
+        child: Column(
+          children: [
+            Text(title, style: textNormalListTextStyle()),
+            Container(
+                height: SizeConstant.IAMGE_SIZE_HEIGHT,
+                width: SizeConstant.IAMGE_SIZE_HEIGHT,
+                margin: EdgeInsetsDirectional.only(top: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.fromBorderSide(
+                        BorderSide(color: Colors.black12, width: 2)),
+                    borderRadius:
+                        BorderRadiusDirectional.all(Radius.circular(5.0))),
+                child: imageUrl == null || imageUrl.isEmpty == true
+                    ? Icon(Icons.add_a_photo, size: 80, color: Colors.black12)
+                    : imageUrl.contains(APP_PACKAGE) == true
+                        ? Image.file(File(imageUrl),
+                            height: SizeConstant.IAMGE_SIZE_HEIGHT,
+                            width: SizeConstant.IAMGE_SIZE_HEIGHT,
+                            fit: BoxFit.fill)
+                        : CachedNetworkImage(
+                            imageUrl: CommonUtils.getNetImageUrl(imageUrl),
+                            fit: BoxFit.contain,
+                            height: SizeConstant.IAMGE_SIZE_HEIGHT,
+                            width: SizeConstant.IAMGE_SIZE_HEIGHT,
+                          ))
+          ],
+        ),
       ),
-    );
+      InkWell(
+        onTap: () => {
+          if (title == ALL_PHOTO_NAME)
+            {
+              ///如果是整体照片删除则对应的 经纬度也删除
+              controller.imageUrlAll.value = "",
+              controller.locationInfo.value = LocationInfo(),
+              LocationMapService.to.stopLocation()
+            }
+          else if (title == NAME_PHOTO_NAME)
+            {
+              if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL.toString())
+                {
+                  ///如果是标签替换 铭牌照片删除则对应的 经纬度也删除
+                  controller.imageUrlMp.value = "",
+                  controller.locationInfo.value = LocationInfo(),
+                  LocationMapService.to.stopLocation()
+                }
+              else
+                {
+                  controller.imageUrlMp.value = "",
+                }
+            }
+          else if (title == CAVITY_PHOTO_NAME)
+            {controller.imageUrlXq.value = ""}
+        },
+        child: Container(
+          margin: EdgeInsetsDirectional.only(top: 20),
+          child: Image(
+            image: AssetImage('images/icon_round_close.png'),
+            width: 20,
+            height: 20,
+          ),
+        ),
+      )
+    ]);
   }
 }

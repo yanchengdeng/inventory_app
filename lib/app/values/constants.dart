@@ -124,3 +124,8 @@ const LABEL_SCAN = 2;
 
 ///自定义错误  防止和 后端业务码冲突
 const int DIY_ERROR_CODE = -100;
+
+///照片名称
+const String ALL_PHOTO_NAME = '整体照片';
+const String NAME_PHOTO_NAME = '铭牌照片';
+const String CAVITY_PHOTO_NAME = '型腔照片';

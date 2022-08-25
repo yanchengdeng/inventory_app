@@ -62,11 +62,15 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      margin: EdgeInsetsDirectional.only(start: 40, bottom: 10),
-                      child: Text(
-                        "请点击设备左侧或右侧按钮扫描",
-                        style: textLitleBlackTextStyle(),
+                    Visibility(
+                      visible: !controller.isRfidReadStatus.value,
+                      child: Container(
+                        margin:
+                            EdgeInsetsDirectional.only(start: 40, bottom: 10),
+                        child: Text(
+                          "请点击设备左侧或右侧按钮扫描",
+                          style: textLitleBlackTextStyle(),
+                        ),
                       ),
                     ),
                     Row(

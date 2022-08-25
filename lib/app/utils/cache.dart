@@ -196,9 +196,9 @@ class CacheUtils extends GetxController {
               }
             }
           });
-          StorageService.to.setString(getMouldSaveKey(),
-              jsonEncode(homeController.mouldBindList.value));
         }
+        StorageService.to.setString(
+            getMouldSaveKey(), jsonEncode(homeController.mouldBindList.value));
       } else {
         homeController.mouldBindList.value = MouldBindTask();
       }

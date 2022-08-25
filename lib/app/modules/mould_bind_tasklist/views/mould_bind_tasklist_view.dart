@@ -120,7 +120,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                               textNormalListTextStyle()),
                                                     ),
                                                     Text(
-                                                        '工装模具总数：${controller.mouldTaskItems[index].totalMoulds}',
+                                                        '工装模具总数：${controller.mouldTaskItems[index].mouldList?.length}',
                                                         style:
                                                             textNormalListTextStyle()),
                                                     Padding(

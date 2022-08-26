@@ -147,19 +147,19 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                                           ),
                                         ),
                                         Text(
-                                            '标签编号:${getLabelInfo(controller.mouldBindTaskListSearch?[index])}',
+                                            '标签编号：${getLabelInfo(controller.mouldBindTaskListSearch?[index])}',
                                             style: textNormalListTextStyle()),
                                         Text(
-                                            '零件号:${controller.mouldBindTaskListSearch?[index]?.moldNo}',
+                                            '零件号：${controller.mouldBindTaskListSearch?[index]?.moldNo}',
                                             style: textNormalListTextStyle()),
                                         Text(
                                             '零件名称：${controller.mouldBindTaskListSearch?[index]?.moldName}',
                                             style: textNormalListTextStyle()),
                                         Text(
-                                            'SGM车型:${controller.mouldBindTaskListSearch?[index]?.toolingName}',
+                                            'SGM车型：${controller.mouldBindTaskListSearch?[index]?.toolingName}',
                                             style: textNormalListTextStyle()),
                                         Text(
-                                            '备注：${controller.mouldBindTaskListSearch?[index]?.remark}',
+                                            '备注：${controller.mouldBindTaskListSearch?[index]?.remark ?? ''}',
                                             style: textNormalListTextStyle())
                                       ],
                                     ),

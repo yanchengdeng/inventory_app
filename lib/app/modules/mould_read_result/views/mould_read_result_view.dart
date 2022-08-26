@@ -88,13 +88,16 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                           '零件号：${controller.assertBindTaskInfo.value.moldNo ?? ""}',
                           style: textLitleWhiteTextStyle()),
                       Text(
-                          '工装&模具名称：${controller.assertBindTaskInfo.value.toolingName ?? ""}',
+                          '零件名称：${controller.assertBindTaskInfo.value.moldName ?? ""}',
                           style: textLitleWhiteTextStyle()),
                       Obx(() => (Visibility(
                           visible: controller.isShowAllInfo.value,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(
+                                  '工装&模具名称：${controller.assertBindTaskInfo.value.toolingName ?? ""}',
+                                  style: textLitleWhiteTextStyle()),
                               Text(
                                   '工装&模具尺寸(mm)：${controller.assertBindTaskInfo.value.toolingSize}',
                                   style: textLitleWhiteTextStyle()),

@@ -307,6 +307,11 @@ TriggerListener {
 
     override fun onStop() {
         super.onStop()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         Log.w("yancheng", "onStop----操作关闭RFID 和扫描功能--")
         closeRfidAndScan()
     }

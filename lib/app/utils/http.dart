@@ -123,11 +123,15 @@ class HttpUtil {
    */
 
   // 错误处理
-  void onError(ErrorEntity eInfo) {
+  void onError(ErrorEntity eInfo) async {
     Log.e('error.state -> ' +
         eInfo.state.toString() +
         ', error.message -> ' +
         eInfo.message);
+
+    if (!await CommonUtils.isConnectNet()) {
+      eInfo.message = '请检查网络';
+    }
     switch (eInfo.state) {
       case TOKEN_OUT_CODE:
         CommonUtils.logOut();

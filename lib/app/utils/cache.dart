@@ -198,8 +198,8 @@ class CacheUtils extends GetxController {
             getMouldSaveKey(), jsonEncode(homeController.mouldBindList.value));
       }
     } else {
+      await StorageService.to.setString(getMouldSaveKey(), '');
       homeController.mouldBindList.value = MouldBindTask();
-      StorageService.to.setString(getMouldSaveKey(), "");
     }
   }
 
@@ -323,8 +323,8 @@ class CacheUtils extends GetxController {
         }
       }
     } else {
+      await StorageService.to.setString(getInventorySaveKey(), '');
       homeController.inventoryList.value = InventoryData();
-      StorageService.to.setString(getInventorySaveKey(), '');
     }
   }
 

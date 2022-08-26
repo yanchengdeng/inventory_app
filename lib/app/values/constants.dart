@@ -118,7 +118,7 @@ const SAVE_KEY_FOR_MOULD = "mould_key";
 ///盘点保存key
 const SAVE_KEY_FOR_INVENTORY = "inventory_key";
 
-///android 低层发出的读取数据类型  1标签 2二维码
+///android 低层发出的读取数据类型 默认rfid 0   1标签 2二维码
 const LABEL_RFID = 1;
 const LABEL_SCAN = 2;
 

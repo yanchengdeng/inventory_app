@@ -204,6 +204,14 @@ class MouldReadResultController extends GetxController {
     imageUrlMp.value = assertBindTaskInfo.value.nameplatePhoto?.fullPath ?? '';
     imageUrlXq.value = assertBindTaskInfo.value.cavityPhoto?.fullPath ?? '';
 
+    if (assertBindTaskInfo.value.address != null) {
+      locationInfo.value.address = assertBindTaskInfo.value.address;
+      locationInfo.value.lat =
+          double.parse(assertBindTaskInfo.value.lat ?? '0.0');
+      locationInfo.value.lng =
+          double.parse(assertBindTaskInfo.value.lng ?? '0.0');
+    }
+
     Log.d("读取页数据：${assertBindTaskInfo.value.toJson()}");
     if (assertBindTaskInfo.value.labelType == 0) {
       readLabelType.value = 0;
@@ -240,7 +248,7 @@ class MouldReadResultController extends GetxController {
       elementTask.mouldList?.forEach((element) {
         if (element.bindLabels?.isNotEmpty == true) {
           element.bindLabels?.forEach((label) {
-            if (!allLables.contains(label) && (element.taskNo != taskNo && element.assetNo != assertNo)) {
+            if (!allLables.contains(label) && element.assetNo != assertNo) {
               allLables.add(label);
             }
           });

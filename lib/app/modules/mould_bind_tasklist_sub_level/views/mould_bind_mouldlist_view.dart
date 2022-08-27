@@ -15,6 +15,7 @@ import '../controllers/mould_bind_mouldlist_controller.dart';
 class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
   var statusTitles = '全部';
   var toolTypes = TOOL_TYPES.map((e) => e.name ?? '').toList();
+  var searchKey = '';
   @override
   Widget build(BuildContext context) {
     var taskNo = Get.arguments['taskNo'];
@@ -48,7 +49,7 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
       element.isSelect = true;
     });
 
-    controller.findByParams(isFinish, taskNo, '', bindStatus, toolTypes);
+    controller.findByParams(isFinish, taskNo, searchKey, bindStatus, toolTypes);
 
     Get.put(MouldBindMouldListController());
 
@@ -66,8 +67,9 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
               child: inputTextEdit(
                   hintText: '搜资产编号、名称',
                   inputOnSubmit: (value) {
+                    searchKey = value;
                     controller.findByParams(
-                        isFinish, taskNo, value, bindStatus, toolTypes);
+                        isFinish, taskNo, searchKey, bindStatus, toolTypes);
                   })),
           DropDownMenuHeader(
               menuController: _menuController, titles: [statusTitles, "工装类型"]),
@@ -125,10 +127,17 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                                                               "taskNo":
                                                                   Get.arguments[
                                                                       'taskNo'],
-                                                              "assetNo": controller
-                                                                  .mouldBindTaskListSearch?[
-                                                                      index]
-                                                                  ?.assetNo
+                                                              "bindId": (Get.arguments[
+                                                                          'taskType'] ==
+                                                                      MOULD_TASK_TYPE_PAY)
+                                                                  ? (controller
+                                                                      .mouldBindTaskListSearch?[
+                                                                          index]
+                                                                      .assetBindTaskId)
+                                                                  : (controller
+                                                                      .mouldBindTaskListSearch?[
+                                                                          index]
+                                                                      .labelReplaceTaskId)
                                                             })
                                                       },
                                                   child: Text('绑定')),
@@ -185,10 +194,17 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                                               "taskType":
                                                   Get.arguments['taskType'],
                                               "taskNo": Get.arguments['taskNo'],
-                                              "assetNo": controller
-                                                  .mouldBindTaskListSearch?[
-                                                      index]
-                                                  .assetNo
+                                              "bindId": (Get.arguments[
+                                                          'taskType'] ==
+                                                      MOULD_TASK_TYPE_PAY)
+                                                  ? (controller
+                                                      .mouldBindTaskListSearch?[
+                                                          index]
+                                                      .assetBindTaskId)
+                                                  : (controller
+                                                      .mouldBindTaskListSearch?[
+                                                          index]
+                                                      .labelReplaceTaskId)
                                             })
                                       }
                                   },
@@ -214,8 +230,8 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                                   .contains(element.name ?? ''))
                               .map((e) => e.code ?? -1)
                               .toList();
-                          controller.findByParams(
-                              isFinish, taskNo, '', bindStatus, toolTypes);
+                          controller.findByParams(isFinish, taskNo, searchKey,
+                              bindStatus, toolTypes);
                         },
                       ),
                       MenuList(
@@ -231,8 +247,8 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
                               .map((e) => e.name ?? '')
                               .toList();
 
-                          controller.findByParams(
-                              isFinish, taskNo, '', bindStatus, toolTypes);
+                          controller.findByParams(isFinish, taskNo, searchKey,
+                              bindStatus, toolTypes);
                         },
                       )
                     ],

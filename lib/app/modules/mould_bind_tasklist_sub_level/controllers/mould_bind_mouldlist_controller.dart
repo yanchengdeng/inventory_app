@@ -99,7 +99,7 @@ class MouldBindMouldListController extends GetxController {
   @override
   void onClose() {}
 
-  doUploadData(String taskType) async {
+  doUploadData(int taskType) async {
     List<MouldList?>? mouldLists = mouldBindTaskListSearch
         ?.where((element) => element?.bindStatus == BIND_STATUS_WAITING_UPLOAD)
         ?.toList();
@@ -151,7 +151,7 @@ class MouldBindMouldListController extends GetxController {
       }
    */
   ///单个任务上传
-  uploadTask(MouldList? element, String taskType) async {
+  uploadTask(MouldList? element, int taskType) async {
     var jsonMaps = HashMap();
     jsonMaps['address'] = element?.address;
     jsonMaps['bindLabels'] = element?.bindLabels;
@@ -159,7 +159,7 @@ class MouldBindMouldListController extends GetxController {
     jsonMaps['lat'] = element?.lat;
     jsonMaps['lng'] = element?.lng;
 
-    if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+    if (taskType == MOULD_TASK_TYPE_PAY) {
       if (element?.nameplatePhoto?.fullPath != null &&
           element?.nameplatePhoto?.fullPath?.contains(APP_PACKAGE) == true) {
         element?.nameplatePhoto?.documentName =
@@ -193,8 +193,10 @@ class MouldBindMouldListController extends GetxController {
       element?.cavityPhoto?.fileSuffix = 'jpg';
       element?.overallPhoto?.fileSuffix = 'jpg';
       jsonMaps['nameplatePhoto'] = element?.nameplatePhoto;
-      jsonMaps['cavityPhoto'] = element?.cavityPhoto;
       jsonMaps['overallPhoto'] = element?.overallPhoto;
+      if (element?.cavityPhoto?.fullPath?.isNotEmpty == true) {
+        jsonMaps['cavityPhoto'] = element?.cavityPhoto;
+      }
 
       /// state  1 正常  0 提示错误  -1 根据id删除本地数据
       int resultCode = await MouldTaskApi.uploadForPayType(
@@ -262,7 +264,7 @@ class MouldBindMouldListController extends GetxController {
     }
   }
 
-  updateLabelStatus(String taskType, MouldList? mouldListItem) async {
+  updateLabelStatus(int taskType, MouldList? mouldListItem) async {
     ///todo 暂时先去掉  待缓存逻辑确定后再放开
     ///全是已完成任务
     Log.d("绑定任务都已上传 ，现在${homeController.mouldBindList.value.data?.length}个任务");

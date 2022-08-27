@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/app/services/location.dart';
@@ -11,6 +13,7 @@ import '../controllers/inventory_task_handler_controller.dart';
 class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
   var taskNo = Get.arguments['taskNo'];
   var isRfidType = Get.arguments['isRFID'];
+
   @override
   Widget build(BuildContext context) {
     controller.findByParams(taskNo);
@@ -21,7 +24,7 @@ class InventoryTaskHandlerView extends GetView<InventoryTaskHandlerController> {
       },
       child: Scaffold(
           appBar: AppBar(
-            title: Text(isRfidType ? '读取盘点' : '扫描清单'),
+            title: Obx(() => Text(controller.readRFIDTitle.value)),
             centerTitle: true,
           ),
           body: Obx(

@@ -12,6 +12,7 @@ import 'package:inventory_app/app/utils/common.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/values/constants.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
+import '../../../apis/file_api.dart';
 import '../../../entity/MouldBindTask.dart';
 import '../../home/controllers/home_controller.dart';
 
@@ -180,15 +181,22 @@ class MouldReadResultController extends GetxController {
   }
 
   ///获取编辑信息
-  void getTaskInfo(taskNo, assetNo) async {
+  void getTaskInfo(String taskNo, taskType, int bindId) async {
     ///
     // EasyLoading.show(status: "加载中...");
-    // await FileApi.getFileToken();
+    if (await CommonUtils.isConnectNet()) {
+      EasyLoading.show(status: "加载中...");
+      await FileApi.getFileToken();
+    }
     assertBindTaskInfo.value = homeController.mouldBindList.value.data
-            ?.where((element) => element.taskNo == taskNo)
+            ?.where((elementTask) =>
+                elementTask.taskNo == taskNo &&
+                taskType == elementTask.taskType)
             .first
             .mouldList
-            ?.where((element) => element.assetNo == assetNo)
+            ?.where((element) => taskType == MOULD_TASK_TYPE_PAY
+                ? element.assetBindTaskId == bindId
+                : element.labelReplaceTaskId == bindId)
             .first ??
         MouldList();
 
@@ -236,19 +244,22 @@ class MouldReadResultController extends GetxController {
 6.4.3标签替换任务类型：标签编号至少有一个、铭牌照片、存放位置经纬度
 当模具绑定状态为“待上传”，对内容进行编辑后，以上内容有缺失时，保存后变为“待绑定/重新绑定
    */
-  saveInfo(String taskType, String taskNo, String assertNo) async {
+  saveInfo(String taskNo, int taskType, int bindId) async {
     ///检查已读标签是否有和现有模具相同的标签
     var allLables = [];
 
     ///是否本地缓存数据存在已读标签
     var isExistSameLable = false;
 
-    ///过滤掉 自己
+    ///所有标签  [过滤掉当前任务的]
     homeController.mouldBindList.value.data?.forEach((elementTask) {
       elementTask.mouldList?.forEach((element) {
         if (element.bindLabels?.isNotEmpty == true) {
           element.bindLabels?.forEach((label) {
-            if (!allLables.contains(label) && element.assetNo != assertNo) {
+            if (!allLables.contains(label) &&
+                !(taskType == MOULD_TASK_TYPE_PAY
+                    ? element.assetBindTaskId == bindId
+                    : element.labelReplaceTaskId == bindId)) {
               allLables.add(label);
             }
           });
@@ -282,7 +293,7 @@ class MouldReadResultController extends GetxController {
                   LocationMapService.to.locationResult.value.address;
             }
 
-            if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+            if (taskType == MOULD_TASK_TYPE_PAY) {
               if (imageUrlAll.isNotEmpty) {
                 assertBindTaskInfo.value.overallPhoto?.fullPath =
                     imageUrlAll.value;
@@ -318,7 +329,7 @@ class MouldReadResultController extends GetxController {
               assertBindTaskInfo.value.labelType = readDataContent.value.type;
             }
 
-            if (taskType == MOULD_TASK_TYPE_PAY.toString()) {
+            if (taskType == MOULD_TASK_TYPE_PAY) {
               if (assertBindTaskInfo.value.toolingType == TOOL_TYPE_M) {
                 if (showAllLabels.length > 0 &&
                     assertBindTaskInfo
@@ -330,8 +341,7 @@ class MouldReadResultController extends GetxController {
                     assertBindTaskInfo
                             .value.overallPhoto?.fullPath?.isNotEmpty ==
                         true &&
-                    LocationMapService.to.locationResult.value.address !=
-                        null) {
+                    locationInfo.value.address != null) {
                   assertBindTaskInfo.value.bindStatus =
                       BIND_STATUS_WAITING_UPLOAD;
                   assertBindTaskInfo.value.bindStatusText =
@@ -351,8 +361,7 @@ class MouldReadResultController extends GetxController {
                     assertBindTaskInfo
                             .value.overallPhoto?.fullPath?.isNotEmpty ==
                         true &&
-                    LocationMapService.to.locationResult.value.address !=
-                        null) {
+                    locationInfo.value.address != null) {
                   assertBindTaskInfo.value.bindStatus =
                       BIND_STATUS_WAITING_UPLOAD;
                   assertBindTaskInfo.value.bindStatusText =
@@ -369,7 +378,7 @@ class MouldReadResultController extends GetxController {
                   assertBindTaskInfo
                           .value.nameplatePhoto?.fullPath?.isNotEmpty ==
                       true &&
-                  LocationMapService.to.locationResult.value.address != null) {
+                  locationInfo.value.address != null) {
                 assertBindTaskInfo.value.bindStatus =
                     BIND_STATUS_WAITING_UPLOAD;
                 assertBindTaskInfo.value.bindStatusText =
@@ -383,10 +392,13 @@ class MouldReadResultController extends GetxController {
             }
 
             var st = homeController.mouldBindList.value.data
-                ?.where((element) => element.taskNo == taskNo)
+                ?.where((element) =>
+                    element.taskNo == taskNo && element.taskType == taskType)
                 .first
                 .mouldList
-                ?.where((element) => element.assetNo == assertNo)
+                ?.where((element) => taskType == MOULD_TASK_TYPE_PAY
+                    ? element.assetBindTaskId == bindId
+                    : element.labelReplaceTaskId == bindId)
                 .first;
             st = assertBindTaskInfo.value;
 

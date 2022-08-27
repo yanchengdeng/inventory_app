@@ -60,13 +60,16 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
                           '零件号：${controller.mouldBindTaskFinished.value.moldNo}',
                           style: textLitleWhiteTextStyle()),
                       Text(
-                          '工装&模具名称：${controller.mouldBindTaskFinished.value.toolingName}',
+                          '零件名称：${controller.mouldBindTaskFinished.value.moldName ?? ""}',
                           style: textLitleWhiteTextStyle()),
                       Obx(() => (Visibility(
                           visible: controller.isShowAllInfo.value,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(
+                                  '工装&模具名称：${controller.mouldBindTaskFinished.value.toolingName}',
+                                  style: textLitleWhiteTextStyle()),
                               Text(
                                   '工装&模具尺寸(mm)：${controller.mouldBindTaskFinished.value.toolingSize}',
                                   style: textLitleWhiteTextStyle()),

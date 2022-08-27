@@ -159,7 +159,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                               .MOULD_BIND_MOULDLIST,
                                                                           arguments: {
                                                                             'taskType':
-                                                                                '${controller.mouldTaskItems[index].taskType}',
+                                                                                controller.mouldTaskItems[index].taskType,
                                                                             'taskNo':
                                                                                 '${controller.mouldTaskItems[index].taskNo}',
                                                                             'bindStatus':
@@ -201,7 +201,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                               .MOULD_BIND_MOULDLIST,
                                                                           arguments: {
                                                                             'taskType':
-                                                                                '${controller.mouldTaskItems[index].taskType}',
+                                                                                controller.mouldTaskItems[index].taskType,
                                                                             'taskNo':
                                                                                 '${controller.mouldTaskItems[index].taskNo}',
                                                                             'bindStatus':
@@ -285,7 +285,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                               .MOULD_BIND_MOULDLIST,
                                                                           arguments: {
                                                                             'taskType':
-                                                                                '${controller.mouldTaskItems[index].taskType}',
+                                                                                controller.mouldTaskItems[index].taskType,
                                                                             'taskNo':
                                                                                 '${controller.mouldTaskItems[index].taskNo}',
                                                                             'bindStatus':
@@ -306,8 +306,9 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                 Get.toNamed(
                                                     Routes.MOULD_BIND_MOULDLIST,
                                                     arguments: {
-                                                      'taskType':
-                                                          '${controller.mouldTaskItems[index].taskType}',
+                                                      'taskType': controller
+                                                          .mouldTaskItems[index]
+                                                          .taskType,
                                                       'taskNo':
                                                           '${controller.mouldTaskItems[index].taskNo}',
                                                       'bindStatus': [
@@ -367,8 +368,10 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                               Get.toNamed(
                                                   Routes.MOULD_BIND_MOULDLIST,
                                                   arguments: {
-                                                    'taskType':
-                                                        '${homeController.mouldTaskFinishedList[index]?.taskType}',
+                                                    'taskType': homeController
+                                                        .mouldTaskFinishedList[
+                                                            index]
+                                                        ?.taskType,
                                                     'taskNo':
                                                         '${homeController.mouldTaskFinishedList[index]?.taskNo}',
                                                     'bindStatus': [
@@ -392,6 +395,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
   Future<void> _onRefresh() async {
     if (homeController.state.selectedMouldTab) {
       await homeController.getMouldTaskList();
+      controller.getMouldTaskItems();
       if (await CommonUtils.isConnectNet()) {
         toastInfo(msg: "最新任务已更新");
       }

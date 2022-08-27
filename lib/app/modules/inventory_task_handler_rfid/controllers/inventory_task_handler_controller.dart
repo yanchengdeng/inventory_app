@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 
@@ -36,6 +37,9 @@ class InventoryTaskHandlerController extends GetxController {
 
   ///读取rfid数据
   var isReadData = Rx<bool>(true);
+
+  ///读取rfid 标题状态展示
+  var readRFIDTitle = '读取盘点'.obs;
 
   ///RFID SDK 通信channel  只允许上下行 一次交互
   static const String READ_RFID_DATA_CHANNEL = 'mould_read_result/blue_teeth';
@@ -83,6 +87,10 @@ class InventoryTaskHandlerController extends GetxController {
 
   /// 标记上传的次数
   var markUploadCount = 0;
+
+  ///定时器 如果是rfid 读取则一分钟后停止
+  var rfidReadTime = const Duration(seconds: 10);
+  Timer? timer = null;
 
   ///查找查询数据
   findByParams(String taskNo) async {
@@ -162,20 +170,37 @@ class InventoryTaskHandlerController extends GetxController {
   }
 
   ///开始读 、停止读
-  startReadRfidData(String taskNo) async {
+  startReadRfidData(String taskNo) {
     if (isReadData.value) {
-      var rfidDataFromAndroid =
-          (await platform.invokeMethod(START_READ_RFID_DATA));
-      if (rfidDataFromAndroid) {
-        isReadData.value = false;
-      }
+      startReadRFID();
     } else {
-      var rfidDataFromAndroid =
-          (await platform.invokeMethod(STOP_READ_RFID_DATA));
-      if (rfidDataFromAndroid) {
-        isReadData.value = true;
-        findByParams(taskNo);
-      }
+      stopReadRFID();
+    }
+  }
+
+  ///开始rfid 读取
+  void startReadRFID() async {
+    var rfidDataFromAndroid =
+        (await platform.invokeMethod(START_READ_RFID_DATA));
+    if (rfidDataFromAndroid) {
+      isReadData.value = false;
+      readRFIDTitle.value = '读取中';
+      timer = Timer(rfidReadTime, () {
+        Log.d('倒计时结束了');
+        stopReadRFID();
+      });
+    }
+  }
+
+  /// 停止读取rfid
+  void stopReadRFID() async {
+    var rfidDataFromAndroid =
+        (await platform.invokeMethod(STOP_READ_RFID_DATA));
+    if (rfidDataFromAndroid) {
+      isReadData.value = true;
+      readRFIDTitle.value = '读取完成';
+      timer?.cancel();
+      findByParams(taskNo);
     }
   }
 
@@ -183,6 +208,7 @@ class InventoryTaskHandlerController extends GetxController {
   void onInit() async {
     super.onInit();
     isRfidReadStatus.value = Get.arguments['isRFID'];
+    readRFIDTitle.value = isRfidReadStatus.value ? '读取盘点' : '扫描清单';
     _eventChannel.receiveBroadcastStream().listen((event) {
       var jsonLabels = jsonDecode(event);
       readDataContent.value = ReadLabelInfo.fromJson(jsonLabels);
@@ -334,8 +360,8 @@ class InventoryTaskHandlerController extends GetxController {
         await CacheUtils.to
             .saveInventoryTask(homeController.inventoryList.value, true);
 
-        ///返回到 第一级列表页
-        Get.off(Routes.INVENTORY_TASKLIST);
+        ///直接返回第一级列表：
+        Get.until((route) => Get.currentRoute == Routes.INVENTORY_TASKLIST);
       } else {
         if (markUploadCount == _inventoryTaskHandle.length) {
           Get.back();

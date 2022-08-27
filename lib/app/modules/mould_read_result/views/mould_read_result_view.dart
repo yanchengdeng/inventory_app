@@ -21,12 +21,15 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
   Widget build(BuildContext context) {
     var taskNo = Get.arguments['taskNo'];
     var taskType = Get.arguments['taskType'];
-    var assetNo = Get.arguments['assetNo'];
 
-    ///任务类型  type  0为支付，1为标签替换
-    Log.d("传递数据给读取编辑页：${taskNo}--${assetNo}----type=${taskType}");
+    /// 如果taskType 类型为 支付型 则取
+    var bindId = Get.arguments['bindId'];
 
-    controller.getTaskInfo(taskNo, assetNo);
+    ///任务类型  type  0为支付，1为标签替换assetBindTaskId  标签替换型 则取labelReplaceTaskId
+    Log.d(
+        "传递数据给读取编辑页：taskNo:${taskNo}-,bindId: -${bindId}----type=${taskType}");
+
+    controller.getTaskInfo(taskNo, taskType, bindId);
 
     ///返回设计初衷是 和保存一致 : 待用户操作成标准（准确数据后才可返回，比如增删标签）
     return WillPopScope(
@@ -38,7 +41,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
         //   controller.saveInfo(taskType, taskNo, assetNo);
         //   return false;
         // }
-        controller.saveInfo(taskType, taskNo, assetNo);
+        controller.saveInfo(taskNo, taskType, bindId);
         return false;
       },
       child: Scaffold(
@@ -54,7 +57,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => {controller.saveInfo(taskType, taskNo, assetNo)},
+          onPressed: () => {controller.saveInfo(taskNo, taskType, bindId)},
           child: Text('保存'),
           backgroundColor: Colors.blue,
         ),

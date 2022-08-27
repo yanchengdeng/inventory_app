@@ -19,18 +19,15 @@ class MouldBindTaskListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    Log.d("MouldBindTasklistController--onInit()");
   }
 
   @override
   void onReady() {
     super.onReady();
-    Log.d("MouldBindTasklistController--onReady()");
   }
 
   @override
   void onClose() {
-    Log.d("MouldBindTasklistController--onClose()");
     homeController.state.selectedMouldTab = true;
   }
 

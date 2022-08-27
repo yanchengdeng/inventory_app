@@ -27,9 +27,9 @@ class HomeController extends GetxController {
     var netData = await MouldTaskApi.getMouldTaskList();
     if (netData.state == API_RESPONSE_OK) {
       await CacheUtils.to.saveMouldTask(netData, false);
-    } else {
-      mouldBindList.value = await CacheUtils.to.getMouldTask();
     }
+
+    mouldBindList.value = await CacheUtils.to.getMouldTask();
   }
 
   /// 获取未完成资产盘点列表
@@ -37,9 +37,8 @@ class HomeController extends GetxController {
     var netData = await InventoryApi.getInventoryData();
     if (netData.state == API_RESPONSE_OK) {
       await CacheUtils.to.saveInventoryTask(netData, false);
-    } else {
-      inventoryList.value = await CacheUtils.to.getInventoryTask();
     }
+    inventoryList.value = await CacheUtils.to.getInventoryTask();
   }
 
   ///已完成的盘点任务

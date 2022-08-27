@@ -423,6 +423,7 @@ class InventoryTaskListView extends GetView<InventoryTasklistController> {
   Future<void> _onRefresh() async {
     if (homeController.state.selectedInventoryTab) {
       await homeController.getInventoryList();
+      controller.getInventoryList();
       if (await CommonUtils.isConnectNet()) {
         toastInfo(msg: "最新任务已更新");
       }

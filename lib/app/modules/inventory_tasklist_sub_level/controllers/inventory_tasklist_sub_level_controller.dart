@@ -24,11 +24,17 @@ class InventoryTasklistSubLevelController extends GetxController {
   final homeController = Get.find<HomeController>();
 
   var taskNo = '';
+  var key = '';
+  var bindStatus = <int>[];
+  var toolingTypes = <String>[];
 
   ///查找查询数据
   findByParams(isFinish, String taskNo, String key, List<int> bindStatus,
       List<String> toolingType) async {
     this.taskNo = taskNo;
+    this.key = key;
+    this.bindStatus = bindStatus;
+    this.toolingTypes = toolingType;
     if (isFinish) {
       _inventoryTaskSearch.value = homeController.inventoryFinishedList
               ?.where((element) => element.taskNo == taskNo)
@@ -177,40 +183,40 @@ class InventoryTasklistSubLevelController extends GetxController {
 
         ///返回到上一页
         Get.back();
-      } else if (resultCode == -1) {
-        toastInfo(msg: '${element?.assetNo}已从任务中移除模具所在的盘点单');
-        homeController.inventoryList.value.data
-            ?.where((element) => element.taskNo == this.taskNo)
-            .first
-            .list
-            ?.removeWhere((element1) => element1.assetNo == element?.assetNo);
-
-        CacheUtils.to
-            .saveInventoryTask(homeController.inventoryList.value, true);
-      } else if (resultCode == -2) {
-        toastInfo(msg: '${element?.assetNo}已从任务中移除模具所在的盘点单');
-
-        homeController.inventoryList.value.data
-            ?.where((element) => element.taskNo == this.taskNo)
-            .first
-            .list
-            ?.removeWhere((element1) => element1.assetNo == element?.assetNo);
-
-        CacheUtils.to
-            .saveInventoryTask(homeController.inventoryList.value, true);
-      } else {
-        List<InventoryDetail> originTasks = await homeController
-                .inventoryList.value.data
-                ?.where((element) => element.taskNo == this.taskNo)
-                .first
-                .list ??
-            List.empty();
-
-        inventoryTaskSearch = originTasks;
-
-        CacheUtils.to
-            .saveInventoryTask(homeController.inventoryList.value, true);
       }
+      await CacheUtils.to
+          .saveInventoryTask(homeController.inventoryList.value, true);
+      findByParams(false, taskNo, key, bindStatus, toolingTypes);
+    } else if (resultCode == -1) {
+      toastInfo(msg: '${element?.assetNo}已从任务中移除模具所在的盘点单');
+      homeController.inventoryList.value.data
+          ?.where((element) => element.taskNo == this.taskNo)
+          .first
+          .list
+          ?.removeWhere((element1) => element1.assetNo == element?.assetNo);
+
+      CacheUtils.to.saveInventoryTask(homeController.inventoryList.value, true);
+    } else if (resultCode == -2) {
+      toastInfo(msg: '${element?.assetNo}已从任务中移除模具所在的盘点单');
+
+      homeController.inventoryList.value.data
+          ?.where((element) => element.taskNo == this.taskNo)
+          .first
+          .list
+          ?.removeWhere((element1) => element1.assetNo == element?.assetNo);
+
+      CacheUtils.to.saveInventoryTask(homeController.inventoryList.value, true);
+    } else {
+      List<InventoryDetail> originTasks = await homeController
+              .inventoryList.value.data
+              ?.where((element) => element.taskNo == this.taskNo)
+              .first
+              .list ??
+          List.empty();
+
+      inventoryTaskSearch = originTasks;
+
+      CacheUtils.to.saveInventoryTask(homeController.inventoryList.value, true);
     }
   }
 }

@@ -175,7 +175,7 @@ class BlueToothDialog(context: Activity, rfidMgr: RfidManager) :
                 closeWaitingDialog()
                 mBtnCreateReader.setTextColor(Color.rgb(0, 128, 0))
                 dismiss()
-            }, 3000)
+            }, 2000)
         }
 
         //扫描

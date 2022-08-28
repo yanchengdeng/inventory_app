@@ -208,7 +208,7 @@ class InventoryTaskHandlerController extends GetxController {
   void onInit() async {
     super.onInit();
     isRfidReadStatus.value = Get.arguments['isRFID'];
-    readRFIDTitle.value = isRfidReadStatus.value ? '读取盘点' : '扫描清单';
+    readRFIDTitle.value = isRfidReadStatus.value ? '读取盘点' : '扫描盘点';
     _eventChannel.receiveBroadcastStream().listen((event) {
       var jsonLabels = jsonDecode(event);
       readDataContent.value = ReadLabelInfo.fromJson(jsonLabels);
@@ -261,6 +261,8 @@ class InventoryTaskHandlerController extends GetxController {
     ///防止 离开页面没关闭rfid 读取
     LocationMapService.to.stopLocation();
     await platform.invokeMethod(RELEASE_SCAN_AND_RFID);
+    timer?.cancel();
+    markUploadCount = 0;
   }
 
   ///本地保存
@@ -289,7 +291,7 @@ class InventoryTaskHandlerController extends GetxController {
         getGpsLagLng();
       }
     } else {
-      // toastInfo(msg: '暂无可保存数据');
+      toastInfo(msg: '暂无可保存数据');
     }
   }
 
@@ -325,10 +327,10 @@ class InventoryTaskHandlerController extends GetxController {
 
     int resultCode =
         await InventoryApi.uploadInventoryTask(jsonEncode(jsonMaps));
-    markUploadCount++;
-    if (resultCode == API_RESPONSE_OK) {
-      element?.assetInventoryStatus = INVENTORY_HAVE_UPLOADED;
 
+    if (resultCode == API_RESPONSE_OK) {
+      markUploadCount++;
+      element?.assetInventoryStatus = INVENTORY_HAVE_UPLOADED;
       List<InventoryDetail?>? allFinished = homeController
           .inventoryList.value.data
           ?.where((elementItem) => elementItem.taskNo == this.taskNo)
@@ -364,6 +366,8 @@ class InventoryTaskHandlerController extends GetxController {
         Get.until((route) => Get.currentRoute == Routes.INVENTORY_TASKLIST);
       } else {
         if (markUploadCount == _inventoryTaskHandle.length) {
+          await CacheUtils.to
+              .saveInventoryTask(homeController.inventoryList.value, true);
           Get.back();
         }
       }

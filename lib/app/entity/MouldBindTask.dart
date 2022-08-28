@@ -195,6 +195,7 @@ class MouldList {
     String? distributionTime,
     int? labelReplaceTaskId,
     int? labelType,
+    int? labelTypePre,
     String? lat,
     String? lng,
     String? manufactureUnits,
@@ -225,6 +226,7 @@ class MouldList {
     _distributionTime = distributionTime;
     _labelReplaceTaskId = labelReplaceTaskId;
     _labelType = labelType;
+    _labelTypePre = labelTypePre;
     _lat = lat;
     _lng = lng;
     _manufactureUnits = manufactureUnits;
@@ -260,6 +262,7 @@ class MouldList {
     _distributionTime = json['distributionTime'];
     _labelReplaceTaskId = json['labelReplaceTaskId'];
     _labelType = json['labelType'];
+    _labelTypePre = json['labelTypePre'];
     _lat = json['lat'];
     _lng = json['lng'];
     _manufactureUnits = json['manufactureUnits'];
@@ -294,6 +297,7 @@ class MouldList {
   String? _distributionTime;
   int? _labelReplaceTaskId;
   int? _labelType;
+  int? _labelTypePre;
   String? _lat;
   String? _lng;
   String? _manufactureUnits;
@@ -324,6 +328,7 @@ class MouldList {
     String? distributionTime,
     int? labelReplaceTaskId,
     int? labelType,
+    int? labelTypePre,
     String? lat,
     String? lng,
     String? manufactureUnits,
@@ -355,6 +360,7 @@ class MouldList {
         distributionTime: distributionTime ?? _distributionTime,
         labelReplaceTaskId: labelReplaceTaskId ?? _labelReplaceTaskId,
         labelType: labelType ?? _labelType,
+        labelTypePre: labelTypePre ?? _labelTypePre,
         lat: lat ?? _lat,
         lng: lng ?? _lng,
         manufactureUnits: manufactureUnits ?? _manufactureUnits,
@@ -392,6 +398,8 @@ class MouldList {
   int? get labelReplaceTaskId => _labelReplaceTaskId;
   int? get labelType => _labelType;
   set labelType(int? labelType) => _labelType = labelType;
+  int? get labelTypePre => _labelTypePre;
+  set labelTypePre(int? labelTypePre) => _labelTypePre = labelTypePre;
   // double? get lat => _lat;
   // double? get lng => _lng;
   String? get lat => _lat;
@@ -430,6 +438,7 @@ class MouldList {
     map['distributionTime'] = _distributionTime;
     map['labelReplaceTaskId'] = _labelReplaceTaskId;
     map['labelType'] = _labelType;
+    map['labelTypePre'] = _labelTypePre;
     map['lat'] = _lat;
     map['lng'] = _lng;
     map['manufactureUnits'] = _manufactureUnits;

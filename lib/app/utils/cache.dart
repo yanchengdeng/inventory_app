@@ -59,17 +59,21 @@ class CacheUtils extends GetxController {
   Future<void> saveMouldTask(MouldBindTask? data, bool isLocalSave) async {
     final HomeController homeController = Get.find<HomeController>();
 
-    /// 网络获取 本地存在需要对比保存
+    /// 网络原始数据获取后  需要保存两个临时变量
     if (data != null && data.data != null && data.data?.length != 0) {
       ///设置下发的数据 缓存状态 bindStatusPre 为默认的bindStatus
-      data.data?.forEach((element) {
-        element.mouldList?.forEach((element) {
-          if (element.bindStatus == BIND_STATUS_REBIND ||
-              element.bindStatus == BIND_STATUS_WAITING_BIND) {
-            element.bindStatusPre = element.bindStatus;
-          }
+      ///设置下发数据  读取标签的状态 labelTypePre 为默认的labelType  当标签清除时 标签类型恢复至原始状态
+      if (!isLocalSave) {
+        data.data?.forEach((element) {
+          element.mouldList?.forEach((element) {
+            if (element.bindStatus == BIND_STATUS_REBIND ||
+                element.bindStatus == BIND_STATUS_WAITING_BIND) {
+              element.bindStatusPre = element.bindStatus;
+            }
+            element.labelTypePre = element.labelType;
+          });
         });
-      });
+      }
 
       ///无该用户数据 直接保存 ,本地修改 直接保存
       var cahcheData = StorageService.to.getString(getMouldSaveKey());

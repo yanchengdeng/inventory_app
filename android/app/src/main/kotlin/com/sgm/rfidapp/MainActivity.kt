@@ -151,7 +151,6 @@ TriggerListener {
                 }
 
                 RELEASE_SCAN_AND_RFID ->{
-                    //红外扫描需要 添加和 释放成对出现，否则只会生效一次
                     barcodeReader?.apply {
                         release()
                     }

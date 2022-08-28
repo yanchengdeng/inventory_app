@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/app/entity/LocationInfo.dart';
 import 'package:inventory_app/app/services/location.dart';
 import 'package:inventory_app/app/utils/logger.dart';
 import 'package:inventory_app/app/widgets/toast.dart';
@@ -169,14 +168,12 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       size: 10,
                     ),
                     Text('标签编号 ', style: textBoldNumberBlueStyle()),
-                    InkWell(
-                      child: Text(
-                        controller.locationInfo.value.address == null
-                            ? ""
-                            : "${controller.locationInfo.value.lat},${controller.locationInfo.value.lng}",
-                        style: textSmallTextStyle(),
-                      ),
-                      onTap: () => {controller.getGpsLagLng()},
+                    Text(
+                      (controller.assertBindTaskInfo.value.address?.isEmpty ==
+                              true)
+                          ? ""
+                          : "${controller.assertBindTaskInfo.value.lat ?? ''},${controller.assertBindTaskInfo.value.lng ?? ''}",
+                      style: textSmallTextStyle(),
                     ),
                     Spacer(flex: 1),
                     InkWell(
@@ -188,6 +185,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                             style: textNormalTextBlueStyle()),
                       ),
                       onTap: () => {
+                        controller.isVertifyLable.value = false,
                         //未读到标签时自动切换  有则弹框提醒
                         if (controller.showAllLabels.length == 0)
                           {
@@ -248,7 +246,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                           1) {
                                         ///标签型删除
                                         if (Get.arguments['taskType'] ==
-                                            MOULD_TASK_TYPE_LABEL.toString()) {
+                                            MOULD_TASK_TYPE_LABEL) {
                                           if (controller
                                               .imageUrlMp.isNotEmpty) {
                                             CommonUtils.showCommonDialog(
@@ -260,16 +258,20 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
 
                                                   controller.imageUrlMp.value =
                                                       "";
-                                                  LocationMapService.to
-                                                      .stopLocation();
-                                                  controller.locationInfo
-                                                      .value = LocationInfo();
+                                                  controller.clearGPS();
 
                                                   Get.back();
                                                 });
                                           } else {
                                             controller.showAllLabels
                                                 .removeAt(index);
+
+                                            ///标签删除   经纬度也要删除
+                                            if (controller
+                                                    .showAllLabels.length ==
+                                                0) {
+                                              controller.clearGPS();
+                                            }
                                           }
                                         } else {
                                           if (controller
@@ -286,16 +288,19 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                                                       "";
                                                   controller.imageUrlMp.value =
                                                       "";
-                                                  controller.locationInfo
-                                                      .value = LocationInfo();
 
-                                                  LocationMapService.to
-                                                      .stopLocation();
+                                                  controller.clearGPS();
                                                   Get.back();
                                                 });
                                           } else {
                                             controller.showAllLabels
                                                 .removeAt(index);
+
+                                            if (controller
+                                                    .showAllLabels.length ==
+                                                0) {
+                                              controller.clearGPS();
+                                            }
                                           }
                                         }
                                       } else {
@@ -379,7 +384,7 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
     // 4.3图片只能现场拍照，上传后在右下角加上固定资产编号水印
     // 4.4当供应商读取标签并成功上传整体和铭牌照片，再将标签信息全部删除时，整体和铭牌照片也将被清空，删除最后一个标签前给予提示，“删除所有标签，将会清空已经上传的整体和铭牌照片，是否继续？”-确认/取消
 
-    if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL.toString()) {
+    if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL) {
       return Container(
         margin: EdgeInsetsDirectional.only(top: 20, bottom: 30),
         child: Row(
@@ -390,21 +395,23 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       child:
                           textImageWidget('铭牌照片', controller.imageUrlMp.value)),
                   onTap: () async => {
-                    if (LocationMapService.to.locationResult.value.address ==
-                        null)
-                      {await controller.getGpsLagLng()}
-                    else if (controller.showAllLabels.isEmpty == true)
+                    if (controller.showAllLabels.isEmpty == true)
                       {
-                        controller.locationInfo.value =
-                            LocationMapService.to.locationResult.value,
                         toastInfo(msg: "请先读取标签"),
                       }
                     else
                       {
-                        controller.locationInfo.value =
-                            LocationMapService.to.locationResult.value,
-                        Get.toNamed(Routes.TAKE_PHOTO,
-                            arguments: {'photoType': PHOTO_TYPE_MP})
+                        ///拍照前 如果RFID 读取未关闭则关闭
+                        await controller.stopReadRFID(),
+                        await controller.startReadRFIDForTakePhoto((isOk) => {
+                              if (isOk)
+                                {
+                                  Get.toNamed(Routes.TAKE_PHOTO,
+                                      arguments: {'photoType': PHOTO_TYPE_MP})
+                                }
+                              else
+                                {toastInfo(msg: '请在标签附近拍照上传照片')}
+                            }),
                       }
                   },
                 )),
@@ -425,22 +432,34 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                           child: textImageWidget('${ALL_PHOTO_NAME}',
                               controller.imageUrlAll.value)),
                       onTap: () async => {
-                        if (LocationMapService
-                                .to.locationResult.value.address ==
-                            null)
-                          {await controller.getGpsLagLng()}
-                        else if (controller.showAllLabels.isEmpty == true)
+                        if (controller.showAllLabels.isEmpty == true)
                           {
-                            controller.locationInfo.value =
-                                LocationMapService.to.locationResult.value,
                             toastInfo(msg: "请先读取标签"),
                           }
                         else
                           {
-                            controller.locationInfo.value =
-                                LocationMapService.to.locationResult.value,
-                            Get.toNamed(Routes.TAKE_PHOTO,
-                                arguments: {'photoType': PHOTO_TYPE_ALL})
+                            ///拍照前 如果RFID 读取未关闭则关闭
+                            await controller.stopReadRFID(),
+                            controller.startReadRFIDForTakePhoto((isOk) => {
+                                  if (isOk)
+                                    {
+                                      Get.toNamed(Routes.TAKE_PHOTO,
+                                          arguments: {
+                                            'photoType': PHOTO_TYPE_ALL
+                                          })
+                                    }
+                                  else
+                                    {toastInfo(msg: '请在标签附近拍照上传照片')}
+                                }),
+                            // controller.assertBindTaskInfo.value.address =
+                            //     LocationMapService
+                            //         .to.locationResult.value.address,
+                            // controller.assertBindTaskInfo.value.lat =
+                            //     LocationMapService.to.locationResult.value.lat
+                            //         ?.toString(),
+                            // controller.assertBindTaskInfo.value.lng =
+                            //     LocationMapService.to.locationResult.value.lng
+                            //         ?.toString(),
                           }
                       },
                     )),
@@ -526,22 +545,23 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
           if (title == ALL_PHOTO_NAME)
             {
               ///如果是整体照片删除则对应的 经纬度也删除
-              controller.imageUrlAll.value = "",
-              controller.locationInfo.value = LocationInfo(),
-              LocationMapService.to.stopLocation()
+              if (controller.imageUrlAll.value.isNotEmpty)
+                {controller.imageUrlAll.value = "", controller.clearGPS()}
             }
           else if (title == NAME_PHOTO_NAME)
             {
-              if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL.toString())
+              if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL)
                 {
                   ///如果是标签替换 铭牌照片删除则对应的 经纬度也删除
-                  controller.imageUrlMp.value = "",
-                  controller.locationInfo.value = LocationInfo(),
-                  LocationMapService.to.stopLocation()
+                  if (controller.imageUrlMp.value.isNotEmpty)
+                    {controller.imageUrlMp.value = "", controller.clearGPS()}
                 }
               else
                 {
-                  controller.imageUrlMp.value = "",
+                  if (controller.imageUrlMp.value.isNotEmpty)
+                    {
+                      controller.imageUrlMp.value = "",
+                    }
                 }
             }
           else if (title == CAVITY_PHOTO_NAME)

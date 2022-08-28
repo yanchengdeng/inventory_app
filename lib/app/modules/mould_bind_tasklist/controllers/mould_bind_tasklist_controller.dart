@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:inventory_app/app/utils/cache.dart';
-import 'package:inventory_app/app/utils/logger.dart';
 import '../../../entity/MouldBindTask.dart';
 import '../../home/controllers/home_controller.dart';
 

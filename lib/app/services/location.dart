@@ -41,9 +41,6 @@ class LocationMapService extends GetxController {
     /// [hasAgree] 隐私权政策是否已经取得用户同意
     AMapFlutterLocation.updatePrivacyAgree(true);
 
-    /// 动态申请定位权限
-    // requestPermission();
-
     locationListener = _locationPlugin
         .onLocationChanged()
         .listen((Map<String, Object> result) {
@@ -53,18 +50,6 @@ class LocationMapService extends GetxController {
       locationResult.value.lat = result['latitude'] as double;
       locationResult.value.lng = result['longitude'] as double;
     });
-  }
-
-  /// 动态申请定位权限
-  void requestPermission() async {
-    // 申请权限
-    // bool hasLocationPermission = await requestLocationPermission();
-    bool hasLocationPermission = true;
-    if (hasLocationPermission) {
-      toastInfo(msg: "定位权限申请通过");
-    } else {
-      toastInfo(msg: "定位权限申请不通过");
-    }
   }
 
   /// 申请定位权限

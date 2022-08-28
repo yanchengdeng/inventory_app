@@ -311,14 +311,17 @@ class MouldBindMouldListView extends GetView<MouldBindMouldListController> {
           }
         } else {
           if (mouldList.nameplatePhoto != null &&
-              mouldList.overallPhoto != null) {
+              mouldList.nameplatePhoto?.fullPath?.isNotEmpty == true &&
+              mouldList.overallPhoto != null &&
+              mouldList.overallPhoto?.fullPath?.isNotEmpty == true) {
             return getLabelStr(mouldList.bindLabels);
           } else {
             return getLabelStr(mouldList.bindLabels) + "(缺照片)";
           }
         }
       } else {
-        if (mouldList.nameplatePhoto != null) {
+        if (mouldList.nameplatePhoto != null &&
+            mouldList.nameplatePhoto?.fullPath?.isNotEmpty == true) {
           return getLabelStr(mouldList.bindLabels);
         } else {
           return getLabelStr(mouldList.bindLabels) + "(缺照片)";

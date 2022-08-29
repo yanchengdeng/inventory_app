@@ -205,9 +205,15 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                             else
                               {
                                 CommonUtils.showCommonDialog(
-                                    content: '切换后，已读标签数据将被清除?',
+                                    content: Get.arguments['taskType'] ==
+                                            MOULD_TASK_TYPE_PAY
+                                        ? '切换后，将会清空标签数据以及整体和铭牌照片，是否继续？'
+                                        : '切换后，将会清空标签数据以及铭牌照片，是否继续？',
                                     callback: () => {
                                           controller.showAllLabels.clear(),
+                                          controller.imageUrlAll.value = '',
+                                          controller.imageUrlMp.value = '',
+                                          controller.clearGPS(),
                                           if (controller.isRfidReadStatus.value)
                                             {
                                               controller.isRfidReadStatus
@@ -403,15 +409,28 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                       {
                         ///拍照前 如果RFID 读取未关闭则关闭
                         await controller.stopReadRFID(),
-                        await controller.startReadRFIDForTakePhoto((isOk) => {
-                              if (isOk)
-                                {
-                                  Get.toNamed(Routes.TAKE_PHOTO,
-                                      arguments: {'photoType': PHOTO_TYPE_MP})
-                                }
-                              else
-                                {toastInfo(msg: '请在标签附近拍照上传照片')}
-                            }),
+
+                        ///如果扫描则不必做RFID 读取校验
+                        if (controller.isRfidReadStatus.value)
+                          {
+                            await controller
+                                .startReadRFIDForTakePhoto((isOk) => {
+                                      if (isOk)
+                                        {
+                                          Get.toNamed(Routes.TAKE_PHOTO,
+                                              arguments: {
+                                                'photoType': PHOTO_TYPE_MP
+                                              })
+                                        }
+                                      else
+                                        {toastInfo(msg: '请在标签附近拍照上传照片')}
+                                    }),
+                          }
+                        else
+                          {
+                            Get.toNamed(Routes.TAKE_PHOTO,
+                                arguments: {'photoType': PHOTO_TYPE_MP})
+                          }
                       }
                   },
                 )),
@@ -440,26 +459,27 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                           {
                             ///拍照前 如果RFID 读取未关闭则关闭
                             await controller.stopReadRFID(),
-                            controller.startReadRFIDForTakePhoto((isOk) => {
-                                  if (isOk)
-                                    {
-                                      Get.toNamed(Routes.TAKE_PHOTO,
-                                          arguments: {
-                                            'photoType': PHOTO_TYPE_ALL
-                                          })
-                                    }
-                                  else
-                                    {toastInfo(msg: '请在标签附近拍照上传照片')}
-                                }),
-                            // controller.assertBindTaskInfo.value.address =
-                            //     LocationMapService
-                            //         .to.locationResult.value.address,
-                            // controller.assertBindTaskInfo.value.lat =
-                            //     LocationMapService.to.locationResult.value.lat
-                            //         ?.toString(),
-                            // controller.assertBindTaskInfo.value.lng =
-                            //     LocationMapService.to.locationResult.value.lng
-                            //         ?.toString(),
+
+                            ///如果扫描则不必做RFID 读取校验
+                            if (controller.isRfidReadStatus.value)
+                              {
+                                controller.startReadRFIDForTakePhoto((isOk) => {
+                                      if (isOk)
+                                        {
+                                          Get.toNamed(Routes.TAKE_PHOTO,
+                                              arguments: {
+                                                'photoType': PHOTO_TYPE_ALL
+                                              })
+                                        }
+                                      else
+                                        {toastInfo(msg: '请在标签附近拍照上传照片')}
+                                    }),
+                              }
+                            else
+                              {
+                                Get.toNamed(Routes.TAKE_PHOTO,
+                                    arguments: {'photoType': PHOTO_TYPE_ALL})
+                              }
                           }
                       },
                     )),
@@ -469,13 +489,34 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                           flex: 1,
                           child: textImageWidget('${NAME_PHOTO_NAME}',
                               controller.imageUrlMp.value)),
-                      onTap: () => {
+                      onTap: () async => {
                         if (controller.showAllLabels.isEmpty == true)
                           {toastInfo(msg: "请先读取标签")}
                         else
                           {
-                            Get.toNamed(Routes.TAKE_PHOTO,
-                                arguments: {'photoType': PHOTO_TYPE_MP})
+                            ///拍照前 如果RFID 读取未关闭则关闭
+                            await controller.stopReadRFID(),
+
+                            ///如果扫描则不必做RFID 读取校验
+                            if (controller.isRfidReadStatus.value)
+                              {
+                                controller.startReadRFIDForTakePhoto((isOk) => {
+                                      if (isOk)
+                                        {
+                                          Get.toNamed(Routes.TAKE_PHOTO,
+                                              arguments: {
+                                                'photoType': PHOTO_TYPE_MP
+                                              })
+                                        }
+                                      else
+                                        {toastInfo(msg: '请在标签附近拍照上传照片')}
+                                    }),
+                              }
+                            else
+                              {
+                                Get.toNamed(Routes.TAKE_PHOTO,
+                                    arguments: {'photoType': PHOTO_TYPE_MP})
+                              }
                           }
                       },
                     )),

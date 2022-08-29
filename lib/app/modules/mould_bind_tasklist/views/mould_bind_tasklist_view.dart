@@ -243,7 +243,7 @@ class MouldBindTaskListView extends GetView<MouldBindTaskListController> {
                                                                               .MOULD_BIND_MOULDLIST,
                                                                           arguments: {
                                                                             'taskType':
-                                                                                '${controller.mouldTaskItems[index].taskType}',
+                                                                                controller.mouldTaskItems[index].taskType,
                                                                             'taskNo':
                                                                                 '${controller.mouldTaskItems[index].taskNo}',
                                                                             'bindStatus':

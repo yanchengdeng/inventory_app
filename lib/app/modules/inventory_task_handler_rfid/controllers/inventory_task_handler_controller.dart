@@ -30,6 +30,9 @@ class InventoryTaskHandlerController extends GetxController {
 
   final homeController = Get.find<HomeController>();
 
+  /// 读取该taskNo 下所有标签数据 做扫描对比
+  var taskNoLabels = [];
+
   var locationInfo = LocationInfo().obs;
 
   ///当前是否为rfid  否则为 二维码扫描   需求分开处理盘点   默认为true 即可
@@ -106,6 +109,26 @@ class InventoryTaskHandlerController extends GetxController {
 
     _inventoryTaskHandle.forEach((element) {
       Log.d("找到数据${element?.toJson().toString()}");
+    });
+  }
+
+  ///获取全部标签
+  getAllLables() {
+    var listInventorys = homeController.inventoryList.value.data
+        ?.where((element) => element.taskNo == taskNo)
+        .first
+        .list;
+
+    listInventorys?.forEach((element) {
+      if (element.labelNo != null && element.labelNo?.isNotEmpty == true) {
+        List<String> labels = [];
+        if (element.labelNo?.contains(',') == true) {
+          labels = element.labelNo?.split(',') ?? [];
+        } else {
+          labels = [element.labelNo ?? ''];
+        }
+        taskNoLabels.addAll(labels);
+      }
     });
   }
 
@@ -229,9 +252,14 @@ class InventoryTaskHandlerController extends GetxController {
               if (!showAllLabels.contains(element)) {
                 showAllLabels.add(element);
               } else {
-                toastInfo(msg: '已扫描过该标签');
+                if (taskNoLabels.contains(element)) {
+                  toastInfo(msg: '已扫描过该模具');
+                } else {
+                  toastInfo(msg: '模具不在本次盘点任务中');
+                }
               }
             });
+
             findByParams(taskNo);
           } else {
             toastInfo(msg: '当前盘点方式为读取盘点');
@@ -245,6 +273,8 @@ class InventoryTaskHandlerController extends GetxController {
     });
 
     await platform.invokeMethod(INIT_RFID_AND_SCAN);
+
+    getAllLables();
   }
 
   @override

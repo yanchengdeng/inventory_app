@@ -196,16 +196,10 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
     ///标签类型 只显示 铭牌   如果是传整个json 过来 则无 taskType 直接用 是否有标签id 判断
     if (Get.arguments['taskType'] == MOULD_TASK_TYPE_LABEL.toString() ||
         controller.mouldBindTaskFinished.value.labelReplaceTaskId != 0) {
-      if (controller.mouldBindTaskFinished.value.nameplatePhoto?.fullPath
-              ?.isNotEmpty ==
-          true) {
-        return textImageWidget(
-            '铭牌照片',
-            controller.mouldBindTaskFinished.value.nameplatePhoto?.fullPath ??
-                "");
-      } else {
-        return Icon(Icons.hourglass_empty);
-      }
+      return textImageWidget(
+          '铭牌照片',
+          controller.mouldBindTaskFinished.value.nameplatePhoto?.fullPath ??
+              "");
     } else {
       /// 支付类型的  /// 支付类型 整体照片、铭牌照片、型腔照片
       return Column(
@@ -253,11 +247,13 @@ class MouldResultOnlyViewView extends GetView<MouldResultOnlyViewController> {
           Container(
               margin: EdgeInsetsDirectional.only(top: 10, bottom: 10),
               child: Text(title, style: textNormalListTextStyle())),
-          CachedNetworkImage(
-              fit: BoxFit.fitWidth,
-              imageUrl: controller.getNetImageUrl(imageUrl),
-              height: SizeConstant.IAMGE_SIZE_HEIGHT,
-              width: SizeConstant.IAMGE_SIZE_HEIGHT)
+          (imageUrl != '')
+              ? CachedNetworkImage(
+                  fit: BoxFit.fitWidth,
+                  imageUrl: controller.getNetImageUrl(imageUrl),
+                  height: SizeConstant.IAMGE_SIZE_HEIGHT,
+                  width: SizeConstant.IAMGE_SIZE_HEIGHT)
+              : Icon(Icons.no_photography, size: 80, color: Colors.black12)
         ],
       ),
     );

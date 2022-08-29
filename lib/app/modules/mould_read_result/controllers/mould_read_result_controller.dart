@@ -320,8 +320,8 @@ class MouldReadResultController extends GetxController {
 当模具绑定状态为“待上传”，对内容进行编辑后，以上内容有缺失时，保存后变为“待绑定/重新绑定
    */
   saveInfo(String taskNo, int taskType, int bindId) async {
-    ///检查已读标签是否有和现有模具相同的标签
-    var allLables = [];
+    ///检查已读标签是否有和现有模具相同的标签 key 标签  value ： 模具no
+    var allLables = <String, String>{};
 
     ///是否本地缓存数据存在已读标签
     var isExistSameLable = false;
@@ -331,27 +331,27 @@ class MouldReadResultController extends GetxController {
       elementTask.mouldList?.forEach((element) {
         if (element.bindLabels?.isNotEmpty == true) {
           element.bindLabels?.forEach((label) {
-            if (!allLables.contains(label) &&
+            if (!allLables.keys.contains(label) &&
                 !(taskType == MOULD_TASK_TYPE_PAY
                     ? element.assetBindTaskId == bindId
                     : element.labelReplaceTaskId == bindId)) {
-              allLables.add(label);
+              allLables[label] = element.assetNo ?? '';
             }
           });
         }
       });
     });
 
-    allLables.forEach((element) {
-      if (showAllLabels.contains(element)) {
+    allLables.forEach((lable, assertNo) {
+      if (showAllLabels.contains(lable)) {
         isExistSameLable = true;
       }
     });
 
     if (isExistSameLable) {
-      allLables.forEach((element) {
-        if (showAllLabels.contains(element)) {
-          toastInfo(msg: '标签（${element}）已被其他工装模具绑定');
+      allLables.forEach((lable, assertNo) {
+        if (showAllLabels.contains(lable)) {
+          toastInfo(msg: '标签（${lable}）已被其他工装模具(${assertNo})绑定');
         }
       });
       return;

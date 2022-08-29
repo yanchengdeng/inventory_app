@@ -198,6 +198,12 @@ class CacheUtils extends GetxController {
             }
           });
         }
+
+        ///排序 按下发时间倒序
+        homeController.mouldBindList.value.data?.sort((a, b) =>
+            (b.distributionTimeStamp ?? 0)
+                .compareTo(a.distributionTimeStamp ?? 0));
+
         StorageService.to.setString(
             getMouldSaveKey(), jsonEncode(homeController.mouldBindList.value));
       }
@@ -323,6 +329,12 @@ class CacheUtils extends GetxController {
               inventoryList?.add(inventoryDetail);
             }
           });
+
+          ///排序 按下发时间倒序
+          homeController.inventoryList.value.data?.sort((a, b) =>
+              (b.distributionTimeStamp ?? 0)
+                  .compareTo(a.distributionTimeStamp ?? 0));
+
           saveInventoryTask(homeController.inventoryList.value, true);
         }
       }

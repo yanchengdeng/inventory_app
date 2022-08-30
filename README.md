@@ -84,23 +84,6 @@ e.printStackTrace();
 服务器和本地都有的情况下比对下发时间DISTRIBUTION_DATE：下发时间一致，不动；下发时间不一致，清空对应模具信息再缓存
 因为替换和盘点的labelReplaceTaskId\assetInventoryDetailId  和绑定的assetBindTaskId不一样，相同模具重复下发时的ID是不变的，
 需要借助下发时间做进一步判断是否需要删除缓存
-3. 首页绑定
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

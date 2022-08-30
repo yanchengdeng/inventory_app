@@ -21,12 +21,6 @@ samples, guidance on mobile development, and a full API reference.
 (https://app.quicktype.io/)[https://app.quicktype.io/]
 
 
-
-
-
-
-
-
 ### 接口异常处理
 普通接口token 过期显示585
 文件服务  返回500
@@ -95,21 +89,11 @@ e.printStackTrace();
 
 
 
-4. ## 接口：https://rfid-native-api.apps-qa.saic-gm.com/MidNodeJS/rest/file/token/get   获取获取文件token 会报x-mid-token 过期，这
-## 应该不合理 ，正常用户在操作数据当中 提示过期  是否前面的数据都已经
 
 
 
-#### 设计更改 ：
-1· 详情页的扫描 和读写 用android 原生处理
-2.上传图片地址为   ：上传的uuid  ed6baf02-ca1e-4e17-8751-566c872f8f66 
 
 
-```text
-待处理：
-返回监听 或是 close页面监听 有些状态需要恢复初始值 ： tabselcted  、
-
-```
 
 
 

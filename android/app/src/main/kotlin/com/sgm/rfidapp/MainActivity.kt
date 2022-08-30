@@ -276,6 +276,8 @@ TriggerListener {
 
     private fun read() {
         if (isReaderAvailable()) {
+            //每次读取 需要清除原有数据 ，防止 标签数据也融合进来
+            mTagDataList.clear()
             mReader?.setOnTagReadListener(dataListener)
             mReader?.read(TagAdditionData.get("None"), TagReadOption())
         }

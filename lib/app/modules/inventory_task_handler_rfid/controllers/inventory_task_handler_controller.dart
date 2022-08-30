@@ -92,7 +92,7 @@ class InventoryTaskHandlerController extends GetxController {
   var markUploadCount = 0;
 
   ///定时器 如果是rfid 读取则一分钟后停止
-  var rfidReadTime = const Duration(seconds: 10);
+  var rfidReadTime = const Duration(seconds: 60);
   Timer? timer = null;
 
   ///查找查询数据

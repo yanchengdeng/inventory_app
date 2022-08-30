@@ -144,15 +144,21 @@ class HttpUtil {
         EasyLoading.showError('DP没有开通访问中台权限');
         break;
       case NORMAL_MESSAGE_TIP:
-        if (eInfo.message.isNotEmpty) {
-          EasyLoading.showError('${eInfo.message}');
-        }
+        toastErrorInfo(eInfo.message);
         break;
       default:
-        if (eInfo.message.isNotEmpty) {
-          EasyLoading.showError('${eInfo.message}');
-        }
+        toastErrorInfo(eInfo.message);
         break;
+    }
+  }
+
+  toastErrorInfo(String message) {
+    if (message.isNotEmpty && message != '') {
+      if (message.contains('Socket')) {
+        EasyLoading.showError('请检查网络');
+      } else {
+        EasyLoading.showError('${message}');
+      }
     }
   }
 

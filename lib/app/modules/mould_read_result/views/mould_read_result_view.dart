@@ -171,8 +171,8 @@ class MouldReadResultView extends GetView<MouldReadResultController> {
                     Text(
                       (controller.assertBindTaskInfo.value.address?.isEmpty ==
                               true)
-                          ? ""
-                          : "${controller.assertBindTaskInfo.value.lng ?? ''},${controller.assertBindTaskInfo.value.lat ?? ''}",
+                          ? ''
+                          : '${controller.assertBindTaskInfo.value.lng ?? ''},${controller.assertBindTaskInfo.value.lat ?? ''}',
                       style: textSmallTextStyle(),
                     ),
                     Spacer(flex: 1),
